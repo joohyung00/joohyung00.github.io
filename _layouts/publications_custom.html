@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="{{ page.language | default: site.language | default: 'en' }}">
-{% include head.html %}
-<body>
-  {% include gtm_body.html %}
-  {% include nav.html %}
-  {% include header.html type="page" %}
+---
+layout: base
+---
+
+{% include header.html type="page" %}
 
   <style>
     /* ===== Publications cards ===== */
@@ -150,8 +148,3 @@
       </div>
     </div>
   </main>
-
-  {% include footer.html %}
-  {% include footer-scripts.html %}
-</body>
-</html>
