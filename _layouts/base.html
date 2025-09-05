@@ -75,9 +75,7 @@ common-js:
   </style>
 
   {% assign dir = page.carousel_dir | default: '/assets/img/home-carousel' %}
-  {% assign slides = site.static_files | where: "extname", ".jpg" %}
-  {% assign slides_png = site.static_files | where: "extname", ".png" %}
-  {% assign slides = slides | concat: slides_png | sort: "name" %}
+  {% assign slides = site.static_files | where_exp: 'f', 'f.path contains dir' | sort: 'name' %}
   {% assign slide_count = slides | size %}
 
 
