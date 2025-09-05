@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="{{ page.language | default: site.language | default: 'en' }}">
+{% include head.html %}
+<body>
+  {% include gtm_body.html %}
+  {% include nav.html %}
+  {% include header.html type="page" %}
+
+  <style>
+    /* ===== Publications cards ===== */
+    :root{ --pub-bg:#f6ebc9; } /* 본문 배경(#fcfbf9)보다 살짝 더 진한 노란색 */
+    .pubs-wrap{ margin-top: 1.5rem; }
+    details.pub-card{
+      background: var(--pub-bg);
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
+      overflow: hidden;
+      margin-bottom: 14px;
+      transition: box-shadow .2s ease, transform .2s ease;
+    }
+    details.pub-card:hover{ box-shadow: 0 10px 28px rgba(0,0,0,.12); }
+    details.pub-card[open]{ transform: translateY(-1px); }
+
+    /* header row (clickable) */
+    details.pub-card > summary{
+      list-style: none;
+      cursor: pointer;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 160px 1fr 28px; /* 썸네일 | 본문 | 토글아이콘 */
+      gap: 16px;
+      align-items: center;
+    }
+    details.pub-card > summary::-webkit-details-marker{ display:none; }
+
+    .pub-thumb{
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 10px;
+      background: #e9deb6;   /* placeholder 배경 */
+      overflow: hidden;      /* 둥근 모서리 안쪽으로 클립 */
+    }
+    .pub-thumb img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;     /* 중앙 크롭 */
+      display: block;
+    }
+
+    .pub-badge{ margin-bottom: 6px; }
+    .pub-title{ font-weight: 700; margin: 0; line-height: 1.35; }
+    .pub-meta small{ display:block; opacity:.9; }
+    .pub-emoji{ margin-right:.35rem; }
+
+    .pub-toggle{
+      font-size: 18px;
+      opacity:.7;
+      transition: transform .2s ease;
+    }
+    details.pub-card[open] .pub-toggle{ transform: rotate(180deg); }
+
+    /* body (toggle area) */
+    .pub-extra{
+      border-top: 1px dashed rgba(0,0,0,.12);
+      padding: 14px 16px 18px 16px;
+      background: rgba(255,255,255,.35);
+    }
+
+    /* 모바일 */
+    @media (max-width: 576px){
+      details.pub-card > summary{
+        grid-template-columns: 1fr; /* 세로 스택 */
+      }
+      .pub-toggle{ justify-self: end; }
+    }
+  </style>
+
+  <main class="container-md pubs-wrap">
+    <div class="row">
+      <div class="col-xl-10 offset-xl-1 col-lg-10 offset-lg-1">
+
+        <!-- LILaC -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb"><img src="{{ '/assets/img/pubs/lilac.jpg' | relative_url }}" alt="LILaC preview"></div>
+            <div class="pub-meta">
+              <span class="badge badge-primary pub-badge">Conference</span>
+              <h3 class="pub-title"><span class="pub-emoji" aria-hidden="true">🌸</span>LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval</h3>
+              <small><strong>Yun, J.</strong>, Lee, D., Han, W.</small>
+              <small><em>EMNLP</em>, 2025.</small>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <p>More details (abstract / paper / code / slides) coming soon.</p>
+          </div>
+        </details>
+
+        <!-- HELIOS -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb"><img src="{{ '/assets/img/pubs/helios.jpg' | relative_url }}" alt="HELIOS preview"></div>
+            <div class="pub-meta">
+              <span class="badge badge-primary pub-badge">Conference</span>
+              <h3 class="pub-title"><span class="pub-emoji" aria-hidden="true">☀️</span>HELIOS: Harmonizing Early Fusion, Late Fusion, and LLM Reasoning for Multi-Granular Table-Text Retrieval</h3>
+              <small>Park, S., <strong>Yun, J.</strong>, Lee, J., Han, W.</small>
+              <small><em>ACL</em>, 2025.</small>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <p>More details coming soon.</p>
+          </div>
+        </details>
+
+        <!-- KDD Cup Report -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb"><img src="{{ '/assets/img/pubs/recg.jpg' | relative_url }}" alt="ReCG preview"></div>
+            <div class="pub-meta">
+              <span class="badge badge-info pub-badge">Workshop</span>
+              <h3 class="pub-title"><span class="pub-emoji" aria-hidden="true">🏆</span>KDD Cup Meta CRAG 2024 Technical Report: Three-Step Question-Answering Framework</h3>
+              <small>Park, S., Seok, J., Lee, J., <strong>Yun, J.</strong>, Lee, W.</small>
+              <small><em>KDD Cup Workshop on Retrieval-Augmented Generation</em>, 2024.</small>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <p>More details coming soon.</p>
+          </div>
+        </details>
+
+        <!-- ReCG -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb"><img src="{{ '/assets/img/pubs/kddcup.jpg' | relative_url }}" alt="KDD Cup preview"></div>
+            <div class="pub-meta">
+              <span class="badge badge-secondary pub-badge">Journal</span>
+              <h3 class="pub-title"><span class="pub-emoji" aria-hidden="true">🧩</span>ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework</h3>
+              <small><strong>Yun, J.</strong>, Tak, B., Han, W.</small>
+              <small><em>PVLDB</em>, 2024.</small>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <p>More details coming soon.</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </main>
+
+  {% include footer.html %}
+  {% include footer-scripts.html %}
+</body>
+</html>
