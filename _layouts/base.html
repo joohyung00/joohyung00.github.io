@@ -23,11 +23,91 @@ common-js:
 <html lang="{{ page.language | default: site.language | default: 'en' }}">
 <!-- Beautiful Jekyll 6.0.1 | Copyright Dean Attali 2023 -->
 {% include head.html %}
-
 <body>
-
   {% include gtm_body.html %}
+
   {% include nav.html %}
+
+  <!-- {%- comment -%} -->
+  <!-- =========================
+  ROUNDED IMAGE CAROUSEL
+  =========================
+  - Images loaded from page.carousel_dir
+  - Sorted ascending by filename
+  - Fixed 3:4 aspect ratio (from portrait sample)
+  - Cropped with center focus via object-fit: cover -->
+  <!-- {%- endcomment -%} -->
+
+  <style>
+    /* Rounded, shadowed frame */
+    .home-carousel {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+      background: #fff;
+    }
+    /* Keep a strict 3:4 box regardless of content */
+    .home-carousel { aspect-ratio: 3 / 4; }
+    /* Make slides fill the box and crop centrally */
+    .home-carousel .carousel-item,
+    .home-carousel .carousel-inner { height: 100%; }
+    .home-carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+    }
+    /* Bigger, easier arrows */
+    .home-carousel .carousel-control-prev,
+    .home-carousel .carousel-control-next {
+      width: 12%;
+    }
+    .home-carousel .carousel-control-prev-icon,
+    .home-carousel .carousel-control-next-icon {
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));
+    }
+    /* Dots */
+    .home-carousel .carousel-indicators { bottom: 10px; }
+    .home-carousel .carousel-indicators li {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+  </style>
+
+  {% assign dir = page.carousel_dir | default: '/assets/img/home-carousel' %}
+  {% assign slides = site.static_files | where_exp: 'f', 'f.path contains dir' | sort: 'name' %}
+  {% assign slide_count = slides | size %}
+
+  {% if slide_count > 0 %}
+  <div class="container-md mt-4">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div id="homeCarousel" class="carousel slide home-carousel" data-ride="carousel" data-interval="5000">
+          <ol class="carousel-indicators">
+            {% for f in slides %}
+              <li data-target="#homeCarousel" data-slide-to="{{ forloop.index0 }}" class="{% if forloop.first %}active{% endif %}"></li>
+            {% endfor %}
+          </ol>
+
+          <div class="carousel-inner">
+            {% for f in slides %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ f.path | relative_url }}" alt="slide {{ forloop.index }}">
+              </div>
+            {% endfor %}
+          </div>
+
+          <a class="carousel-control-prev" href="#homeCarousel" role="button" data-slide="prev" aria-label="Previous">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          </a>
+          <a class="carousel-control-next" href="#homeCarousel" role="button" data-slide="next" aria-label="Next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 
   {% if page.url == "/" or page.url == "/index.html" %}
   {% include header.html type="page" %}
