@@ -25,79 +25,153 @@ common-js:
 {% include head.html %}
 
 <body>
-  {% include gtm_body.html %}
 
+  {% include gtm_body.html %}
   {% include nav.html %}
 
   {% if page.url == "/" or page.url == "/index.html" %}
-  <!-- Custom homepage content -->
   {% include header.html type="page" %}
-  
+
   <main class="container-md">
     <div class="row">
       <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
         <div class="homepage-content">
-          
+
+          <!-- ABOUT -->
           <section class="mb-5">
-            <h2>About Me</h2>
-            <p>I am a PhD student in Computer Science at POSTECH, working under the supervision of Professor [Name] in the Database Lab. My research interests lie at the intersection of machine learning and database systems, with a focus on developing intelligent data management solutions that can adapt to changing workloads and optimize performance automatically.</p>
-            
-            <p>Prior to starting my PhD, I completed my Bachelor's degree in Computer Science at [University Name], where I developed a strong foundation in algorithms, data structures, and software engineering. During my undergraduate studies, I was particularly drawn to courses on database systems and machine learning, which ultimately shaped my research direction.</p>
+            <p>
+              Hi — I'm <strong>Joohyung Yun (윤주형)</strong>, a second-year integrated M.S./Ph.D. student in Computer Science at
+              <strong>POSTECH</strong>, advised by <a href="https://wscrony.github.io">Professor Wook-Shin Han</a> in the
+              <a href="https://dslab.postech.ac.kr">Data Systems Lab (STAR Lab)</a>.
+              My research sits at the intersection of <strong>Natural Language Processing</strong> and
+              <strong>Information Retrieval</strong>, with a focus on <strong>Retrieval-Augmented Generation (RAG)</strong> for complex,
+              real-world documents.
+            </p>
+            <p>
+              I'm particularly interested in <strong>multimodal document RAG</strong>: collections that mix text, tables, and images.
+              My recent projects explore <em>multihop</em> reasoning across these modalities and how to combine retrieval with
+              LLM reasoning effectively. This includes late-interaction retrieval over structured components and
+              multi-granular fusion strategies that blend table–text evidence with LLM inference.
+            </p>
+            <p>
+              Before turning to RAG, I worked on <strong>efficient schema discovery from JSON documents</strong>,
+              which led to a first-author publication at PVLDB. I completed my B.S. at POSTECH
+              <em>summa cum laude</em> and previously spent a summer as a full-stack developer at SK hynix.
+            </p>
+            <p class="mb-0"><em>Contact:</em> jhyun@dblab.postech.ac.kr &middot; joohyung00@postech.ac.kr</p>
           </section>
 
+          <!-- RESEARCH FOCUS -->
           <section class="mb-5">
             <h2>Research Focus</h2>
-            <p>My current research focuses on <strong>intelligent database optimization</strong> and <strong>adaptive query processing</strong>. Specifically, I am working on:</p>
+            <p>I’m currently working on methods and systems for:</p>
             <ul>
-              <li><strong>Machine Learning for Query Optimization</strong>: Developing ML-based approaches to improve query execution plans and adapt to changing data patterns</li>
-              <li><strong>Adaptive Database Systems</strong>: Creating self-tuning database systems that can automatically optimize their configuration based on workload characteristics</li>
-              <li><strong>Distributed Data Processing</strong>: Investigating efficient algorithms for processing large-scale data across distributed systems</li>
+              <li><strong>Multimodal &amp; multihop retrieval</strong> over documents composed of text, tables, and figures</li>
+              <li><strong>RAG architectures</strong> that harmonize early/late fusion and LLM reasoning for reliable QA</li>
+              <li><strong>Late interaction over component graphs</strong> for fine-grained retrieval signals across modalities</li>
+              <li><strong>Table-text retrieval</strong> with multi-granular alignment and evidence aggregation</li>
+              <li><strong>Evaluation &amp; robustness</strong> for RAG (evidence attribution, hallucination reduction, and calibration)</li>
+              <li><strong>Efficient indexing</strong> and representation learning for large-scale corpora</li>
             </ul>
           </section>
 
+          <!-- NEWS -->
           <section class="mb-5">
             <h2>News</h2>
             <div class="news-list">
-              <p><strong>January 2025</strong> - Started PhD program at POSTECH Database Lab</p>
-              <p><strong>December 2024</strong> - Graduated with Bachelor's degree in Computer Science</p>
-              <p><strong>November 2024</strong> - Paper accepted to [Conference Name] 2025</p>
-              <p><strong>September 2024</strong> - Presented research at [Workshop Name]</p>
-              <p><strong>August 2024</strong> - Completed summer internship at [Company Name]</p>
+              <p><strong>2025</strong> — <em>LILaC</em> accepted to appear at EMNLP 2025 (Suzhou, China)</p>
+              <p><strong>2025</strong> — <em>HELIOS</em> to appear at ACL 2025 (Vienna, Austria)</p>
+              <p><strong>Aug 2024</strong> — First-author PVLDB paper on JSON schema discovery</p>
+              <p><strong>2024</strong> — Team <em>dRAGonRAnGers</em>: 1st in comparison &amp; post-processing tests at KDD Cup RAG</p>
+              <p><strong>2023</strong> — Started integrated M.S./Ph.D. at POSTECH (Data Systems Lab)</p>
             </div>
           </section>
 
+          <!-- PUBLICATIONS -->
           <section class="mb-5">
             <h2>Publications</h2>
-            
+
             <h4>Conference Papers</h4>
             <ol>
-              <li><strong>Yun, J.</strong>, Kim, S., Lee, H. (2025). "Adaptive Query Optimization Using Reinforcement Learning." In <em>Proceedings of the International Conference on Database Systems (ICDS 2025)</em>. [Paper] [Code] [Slides]</li>
+              <li>
+                <strong>LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval</strong><br>
+                <strong>Yun, J.</strong>, Lee, D., Han, W. — <em>EMNLP 2025</em>, Suzhou, China.
+              </li>
+              <li>
+                <strong>HELIOS: Harmonizing Early Fusion, Late Fusion, and LLM Reasoning for Multi-Granular Table-Text Retrieval</strong><br>
+                Park, S., <strong>Yun, J.</strong>, Lee, J., Han, W. — <em>ACL 2025</em>, Vienna, Austria.
+              </li>
             </ol>
 
-            <h4>Workshop Papers</h4>
+            <h4>Journal Papers</h4>
             <ol>
-              <li><strong>Yun, J.</strong>, Park, M. (2024). "Towards Self-Tuning Database Systems: A Machine Learning Approach." In <em>Workshop on Machine Learning for Systems (MLSys 2024)</em>. [Paper] [Poster]</li>
+              <li>
+                <strong>ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework</strong><br>
+                <strong>Yun, J.</strong>, Tak, B., Han, W. — <em>PVLDB</em>, Aug. 2024.
+              </li>
             </ol>
 
-            <h4>Preprints</h4>
+            <h4>Workshop & Reports</h4>
             <ol>
-              <li><strong>Yun, J.</strong>, et al. (2024). "Distributed Query Processing with Adaptive Load Balancing." <em>arXiv preprint arXiv:2024.xxxxx</em>. [Paper]</li>
+              <li>
+                <strong>KDD Cup Meta CRAG 2024 Technical Report: Three-Step Question-Answering Framework</strong><br>
+                Park, S., Seok, J., Lee, J., <strong>Yun, J.</strong>, Lee, W. — <em>KDD Cup Workshop on Retrieval-Augmented Generation</em>, 2024.
+              </li>
             </ol>
           </section>
 
+          <!-- EXPERIENCE -->
+          <!-- <section class="mb-5">
+            <h2>Selected Experience</h2>
+            <ul>
+              <li><strong>Full-Stack Developer</strong>, SK hynix (Jun–Jul 2021): Selenium/Python for web automation; Spring Boot (Java) backend; Node.js frontend.</li>
+            </ul>
+          </section> -->
+
+          <!-- TEACHING -->
+          <!-- <section class="mb-5">
+            <h2>Teaching</h2>
+            <ul>
+              <li><strong>Teaching Assistant</strong>, Design of Digital System (POSTECH), 2024.</li>
+              <li><strong>Teaching Assistant</strong>, Advanced Machine Learning (Samsung Electronics &amp; Data Systems Lab), 2022.</li>
+              <li><strong>Teaching Assistant</strong>, Data Processing, Distributed Database &amp; Deep Learning (Samsung Electronics &amp; Data Systems Lab), 2021.</li>
+            </ul>
+          </section> -->
+
+          <!-- HONORS -->
+          <!-- <section class="mb-5">
+            <h2>Honors &amp; Awards</h2>
+            <ul>
+              <li><strong>KDD Cup 2024</strong> (Team dRAGonRAnGers): 1st in comparison tests; 1st in post-processing test.</li>
+              <li><strong>National Science &amp; Technology Scholarship</strong> (2021).</li>
+              <li><strong>Global Leadership Program Scholarship</strong> (2020, 2021) — POSTECH CSE.</li>
+              <li><strong>B.S., POSTECH</strong> — <em>Summa Cum Laude</em>; GPA 4.11/4.30.</li>
+            </ul>
+          </section> -->
+
+          <!-- SKILLS -->
+          <section class="mb-5">
+            <!-- <h2>Skills</h2>
+            <ul>
+              <li><strong>Languages</strong>: Korean (native), English (fluent), Japanese (fluent)</li>
+              <li><strong>Coding</strong>: Python, C++, LaTeX</li>
+            </ul>
+          </section> -->
+
           <hr>
-          <p class="text-center"><em>Contact: jhyun@dblab.postech.ac.kr</em></p>
+          <p class="text-center">
+            <em>Email:</em> jhyun@dblab.postech.ac.kr &middot; joohyung00@postech.ac.kr
+          </p>
         </div>
       </div>
     </div>
   </main>
+
   {% else %}
   {{ content }}
   {% endif %}
 
   {% include footer.html %}
-
   {% include footer-scripts.html %}
-
 </body>
 </html>
