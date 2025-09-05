@@ -31,14 +31,12 @@ common-js:
 
   {% if page.url == "/" or page.url == "/index.html" %}
   <!-- Custom homepage content -->
+  {% include header.html type="page" %}
+  
   <main class="container-md">
     <div class="row">
       <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
         <div class="homepage-content">
-          <div class="text-center mb-4">
-            <h1>Joohyung Yun</h1>
-            <h4 class="text-muted">PhD Student in Computer Science</h4>
-          </div>
           
           <section class="mb-5">
             <h2>About Me</h2>
