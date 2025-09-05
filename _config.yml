@@ -20,13 +20,13 @@ author: Joohyung Yun
 ###############################################
 
 navbar-links:
-  About Me: aboutme
-  Publications: publications
-  Teaching: teaching
-  CV: cv
-  Resources:
-    - Beautiful Jekyll: "https://beautifuljekyll.com"
-    - Learn markdown: "https://www.markdowntutorial.com/"
+  About Me:       /
+  Publications:   pages/1_publications
+  Teaching:       pages/4_teaching
+  CV:             pages/5_cv
+  # Resources:
+  #   - Beautiful Jekyll: "https://beautifuljekyll.com"
+  #   - Learn markdown: "https://www.markdowntutorial.com/"
 
 
 ################
@@ -43,6 +43,9 @@ round-avatar: true
 # If you want to have an image logo in the top-left corner instead of having the title of the website,
 # then specify the following parameter
 # title-img: /assets/img/kirby.jpg
+
+# Favicon
+favicon: "/assets/img/kirby.ico"
 
 
 #####################################

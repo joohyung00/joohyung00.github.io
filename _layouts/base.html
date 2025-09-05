@@ -29,7 +29,73 @@ common-js:
 
   {% include nav.html %}
 
+  {% if page.url == "/" or page.url == "/index.html" %}
+  <!-- Custom homepage content -->
+  <main class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="homepage-content">
+          <div class="text-center mb-4">
+            <h1>Joohyung Yun</h1>
+            <h4 class="text-muted">PhD Student in Computer Science</h4>
+          </div>
+          
+          <section class="mb-5">
+            <h2>About Me</h2>
+            <p>I am a PhD student in Computer Science at POSTECH, working under the supervision of Professor [Name] in the Database Lab. My research interests lie at the intersection of machine learning and database systems, with a focus on developing intelligent data management solutions that can adapt to changing workloads and optimize performance automatically.</p>
+            
+            <p>Prior to starting my PhD, I completed my Bachelor's degree in Computer Science at [University Name], where I developed a strong foundation in algorithms, data structures, and software engineering. During my undergraduate studies, I was particularly drawn to courses on database systems and machine learning, which ultimately shaped my research direction.</p>
+          </section>
+
+          <section class="mb-5">
+            <h2>Research Focus</h2>
+            <p>My current research focuses on <strong>intelligent database optimization</strong> and <strong>adaptive query processing</strong>. Specifically, I am working on:</p>
+            <ul>
+              <li><strong>Machine Learning for Query Optimization</strong>: Developing ML-based approaches to improve query execution plans and adapt to changing data patterns</li>
+              <li><strong>Adaptive Database Systems</strong>: Creating self-tuning database systems that can automatically optimize their configuration based on workload characteristics</li>
+              <li><strong>Distributed Data Processing</strong>: Investigating efficient algorithms for processing large-scale data across distributed systems</li>
+            </ul>
+          </section>
+
+          <section class="mb-5">
+            <h2>News</h2>
+            <div class="news-list">
+              <p><strong>January 2025</strong> - Started PhD program at POSTECH Database Lab</p>
+              <p><strong>December 2024</strong> - Graduated with Bachelor's degree in Computer Science</p>
+              <p><strong>November 2024</strong> - Paper accepted to [Conference Name] 2025</p>
+              <p><strong>September 2024</strong> - Presented research at [Workshop Name]</p>
+              <p><strong>August 2024</strong> - Completed summer internship at [Company Name]</p>
+            </div>
+          </section>
+
+          <section class="mb-5">
+            <h2>Publications</h2>
+            
+            <h4>Conference Papers</h4>
+            <ol>
+              <li><strong>Yun, J.</strong>, Kim, S., Lee, H. (2025). "Adaptive Query Optimization Using Reinforcement Learning." In <em>Proceedings of the International Conference on Database Systems (ICDS 2025)</em>. [Paper] [Code] [Slides]</li>
+            </ol>
+
+            <h4>Workshop Papers</h4>
+            <ol>
+              <li><strong>Yun, J.</strong>, Park, M. (2024). "Towards Self-Tuning Database Systems: A Machine Learning Approach." In <em>Workshop on Machine Learning for Systems (MLSys 2024)</em>. [Paper] [Poster]</li>
+            </ol>
+
+            <h4>Preprints</h4>
+            <ol>
+              <li><strong>Yun, J.</strong>, et al. (2024). "Distributed Query Processing with Adaptive Load Balancing." <em>arXiv preprint arXiv:2024.xxxxx</em>. [Paper]</li>
+            </ol>
+          </section>
+
+          <hr>
+          <p class="text-center"><em>Contact: jhyun@dblab.postech.ac.kr</em></p>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% else %}
   {{ content }}
+  {% endif %}
 
   {% include footer.html %}
 
