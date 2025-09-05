@@ -21,9 +21,11 @@ author: Joohyung Yun
 
 navbar-links:
   About Me:       /
-  Publications:   pages/1_publications
-  Teaching:       pages/4_teaching
-  CV:             pages/5_cv
+  Publications:   pages/publications
+  Experiences:    pages/experiences
+  Teaching:       pages/teaching
+  CV:             pages/cv
+  Posts:          pages/posts_home
   # Resources:
   #   - Beautiful Jekyll: "https://beautifuljekyll.com"
   #   - Learn markdown: "https://www.markdowntutorial.com/"
