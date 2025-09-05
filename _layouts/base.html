@@ -74,30 +74,49 @@ common-js:
     }
   </style>
 
-  <!-- {% assign dir = page.carousel_dir | default: '/assets/img/home-carousel' %}
-  {% assign slides = site.static_files | where_exp: 'f', 'f.path contains dir' | sort: 'name' %}
-  {% assign slide_count = slides | size %} -->
-
   {% assign dir = page.carousel_dir | default: '/assets/img/home-carousel' %}
-  {% assign files = site.static_files | sort: 'name' %}
-
-  {%- assign slide_count = 0 -%}
-  {%- for f in files -%}
-    {%- if f.path contains dir and (f.extname == '.jpg' or f.extname == '.jpeg' or f.extname == '.png' or f.extname == '.webp' or f.extname == '.gif') -%}
-      {%- assign slide_count = slide_count | plus: 1 -%}
-    {%- endif -%}
-  {%- endfor -%}
-
+  {% assign slides = site.static_files | where_exp: 'f', 'f.path contains dir' | sort: 'name' %}
+  {% assign slide_count = slides | size %}
 
   {% if page.url == "/" or page.url == "/index.html" %}
   {% include header.html type="page" %}
+
+  <!-- Social Links below subtitle -->
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="text-center mb-4">
+          <div class="social-links">
+            <a href="mailto:jhyun@dblab.postech.ac.kr" class="btn btn-social-icon" title="Email me">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+            <a href="https://github.com/joohyung00" class="btn btn-social-icon" title="GitHub">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+            <a href="https://linkedin.com/in/joohyung-yun-752654326" class="btn btn-social-icon" title="LinkedIn">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   {% if slide_count > 0 %}
   <div class="container-md mt-4">
     <div class="row">
       <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
         <div id="homeCarousel" class="carousel slide home-carousel" data-ride="carousel" data-interval="5000">
-          <!-- <ol class="carousel-indicators">
+          <ol class="carousel-indicators">
             {% for f in slides %}
               <li data-target="#homeCarousel" data-slide-to="{{ forloop.index0 }}" class="{% if forloop.first %}active{% endif %}"></li>
             {% endfor %}
@@ -109,28 +128,6 @@ common-js:
                 <img src="{{ f.path | relative_url }}" alt="slide {{ forloop.index }}">
               </div>
             {% endfor %}
-          </div> -->
-
-          <ol class="carousel-indicators">
-            {%- assign i = 0 -%}
-            {%- for f in files -%}
-              {%- if f.path contains dir and (f.extname == '.jpg' or f.extname == '.jpeg' or f.extname == '.png' or f.extname == '.webp' or f.extname == '.gif') -%}
-                <li data-target="#homeCarousel" data-slide-to="{{ i }}" class="{% if i == 0 %}active{% endif %}"></li>
-                {%- assign i = i | plus: 1 -%}
-              {%- endif -%}
-            {%- endfor -%}
-          </ol>
-
-          <div class="carousel-inner">
-            {%- assign i = 0 -%}
-            {%- for f in files -%}
-              {%- if f.path contains dir and (f.extname == '.jpg' or f.extname == '.jpeg' or f.extname == '.png' or f.extname == '.webp' or f.extname == '.gif') -%}
-                <div class="carousel-item {% if i == 0 %}active{% endif %}">
-                  <img src="{{ f.path | relative_url }}" alt="slide {{ i | plus: 1 }}">
-                </div>
-                {%- assign i = i | plus: 1 -%}
-              {%- endif -%}
-            {%- endfor -%}
           </div>
 
           <a class="carousel-control-prev" href="#homeCarousel" role="button" data-slide="prev" aria-label="Previous">

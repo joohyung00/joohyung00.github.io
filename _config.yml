@@ -57,13 +57,13 @@ favicon: "/assets/img/kirby.ico"
 # Uncomment the links you want to show and add your information to each one.
 social-network-links:
   email: "jhyun@dblab.postech.ac.kr"
-  rss: true  # remove this line if you don't want to show an RSS link at the bottom
-  facebook: "-"
+  # rss: true  # remove this line if you don't want to show an RSS link at the bottom
+  # facebook: "-"
   github: joohyung00
-  twitter: "-"
+  # twitter: "-"
 #  medium: yourname
 #  reddit: yourname or r/yoursubreddit
-#  linkedin: daattali
+  linkedin: joohyung-yun-752654326
 #  xing: yourname
 #  stackoverflow: "3943160/daattali"
 #  snapchat: deanat78
