@@ -71,6 +71,25 @@ layout: base
       }
       .pub-toggle{ justify-self: end; }
     }
+
+    /* pub-extra: hero image + link pills */
+    .pub-hero{
+    display:block; max-width:820px; width:100%; height:auto;
+    margin:0 auto 12px; border-radius:12px;
+    box-shadow:0 4px 16px rgba(0,0,0,.08);
+    }
+    .pub-links{
+    display:flex; justify-content:center; flex-wrap:wrap;
+    gap:.5rem .75rem; margin-bottom:.25rem;
+    }
+    .pub-link{
+    display:inline-flex; align-items:center; gap:.45rem;
+    padding:.5rem .75rem; border-radius:999px;
+    background:#fff7d6; border:1px solid rgba(0,0,0,.08);
+    font-weight:600; color:#1c1c1c; text-decoration:none;
+    }
+    .pub-link:hover{ background:#ffeaa6; text-decoration:none; }
+    .pub-link i{ font-size:1rem; line-height:1; }
   </style>
 
   <main class="container-md pubs-wrap">
@@ -90,7 +109,19 @@ layout: base
             <div class="pub-toggle" aria-hidden="true">▾</div>
           </summary>
           <div class="pub-extra">
-            <p>More details (abstract / paper / code / slides) coming soon.</p>
+            <img class="pub-hero" src="{{ '/assets/img/pubs/lilac_main.jpg' | relative_url }}" alt="LILaC figure">
+            <div class="pub-links">
+                <a class="pub-link" href="{{ '/assets/papers/lilac.pdf' | relative_url }}" target="_blank" rel="noopener" title="Paper (PDF)">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
+                </a>
+                <a class="pub-link" href="{{ '/assets/slides/lilac_slides.pptx' | relative_url }}" target="_blank" rel="noopener" title="Slides (PPTX)">
+                <i class="fa-solid fa-file-powerpoint" aria-hidden="true"></i><span>Slides</span>
+                </a>
+                <a class="pub-link" href="https://github.com/joohyung00/lilac" target="_blank" rel="noopener" title="GitHub Repo">
+                <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
+                </a>
+            </div>
+            <!-- 여기에 간단한 설명 텍스트를 나중에 추가 -->
           </div>
         </details>
 
@@ -107,7 +138,18 @@ layout: base
             <div class="pub-toggle" aria-hidden="true">▾</div>
           </summary>
           <div class="pub-extra">
-            <p>More details coming soon.</p>
+            <img class="pub-hero" src="{{ '/assets/img/pubs/helios_main.jpg' | relative_url }}" alt="HELIOS figure">
+            <div class="pub-links">
+                <a class="pub-link" href="{{ '/assets/papers/helios.pdf' | relative_url }}" target="_blank" rel="noopener" title="Paper (PDF)">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
+                </a>
+                <a class="pub-link" href="{{ '/assets/slides/helios_slides.pptx' | relative_url }}" target="_blank" rel="noopener" title="Slides (PPTX)">
+                <i class="fa-solid fa-file-powerpoint" aria-hidden="true"></i><span>Slides</span>
+                </a>
+                <a class="pub-link" href="https://github.com/joohyung00/helios" target="_blank" rel="noopener" title="GitHub Repo">
+                <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
+                </a>
+            </div>
           </div>
         </details>
 
@@ -124,7 +166,18 @@ layout: base
             <div class="pub-toggle" aria-hidden="true">▾</div>
           </summary>
           <div class="pub-extra">
-            <p>More details coming soon.</p>
+            <img class="pub-hero" src="{{ '/assets/img/pubs/kddcup_main.jpg' | relative_url }}" alt="KDD Cup figure">
+            <div class="pub-links">
+                <a class="pub-link" href="{{ '/assets/papers/kddcup_meta_crag.pdf' | relative_url }}" target="_blank" rel="noopener" title="Paper (PDF)">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
+                </a>
+                <a class="pub-link" href="{{ '/assets/slides/kddcup_slides.pptx' | relative_url }}" target="_blank" rel="noopener" title="Slides (PPTX)">
+                <i class="fa-solid fa-file-powerpoint" aria-hidden="true"></i><span>Slides</span>
+                </a>
+                <a class="pub-link" href="https://github.com/joohyung00/kddcup-meta-crag" target="_blank" rel="noopener" title="GitHub Repo">
+                <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
+                </a>
+            </div>
           </div>
         </details>
 
@@ -141,7 +194,18 @@ layout: base
             <div class="pub-toggle" aria-hidden="true">▾</div>
           </summary>
           <div class="pub-extra">
-            <p>More details coming soon.</p>
+            <img class="pub-hero" src="{{ '/assets/img/pubs/recg_main.jpg' | relative_url }}" alt="ReCG figure">
+            <div class="pub-links">
+                <a class="pub-link" href="{{ '/assets/papers/recg.pdf' | relative_url }}" target="_blank" rel="noopener" title="Paper (PDF)">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
+                </a>
+                <a class="pub-link" href="{{ '/assets/slides/recg_slides.pptx' | relative_url }}" target="_blank" rel="noopener" title="Slides (PPTX)">
+                <i class="fa-solid fa-file-powerpoint" aria-hidden="true"></i><span>Slides</span>
+                </a>
+                <a class="pub-link" href="https://github.com/joohyung00/recg" target="_blank" rel="noopener" title="GitHub Repo">
+                <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
+                </a>
+            </div>
           </div>
         </details>
 
