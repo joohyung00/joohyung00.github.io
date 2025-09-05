@@ -75,8 +75,14 @@ common-js:
   </style>
 
   {% assign dir = page.carousel_dir | default: '/assets/img/home-carousel' %}
-  {% assign slides = site.static_files | where_exp: 'f', 'f.path contains dir' | sort: 'name' %}
+  {% assign slides = site.static_files | where: "extname", ".jpg" %}
+  {% assign slides_png = site.static_files | where: "extname", ".png" %}
+  {% assign slides = slides | concat: slides_png | sort: "name" %}
   {% assign slide_count = slides | size %}
+
+
+  {% if page.url == "/" or page.url == "/index.html" %}
+  {% include header.html type="page" %}
 
   {% if slide_count > 0 %}
   <div class="container-md mt-4">
@@ -109,9 +115,6 @@ common-js:
   </div>
   {% endif %}
 
-  {% if page.url == "/" or page.url == "/index.html" %}
-  {% include header.html type="page" %}
-
   <main class="container-md">
     <div class="row">
       <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
@@ -120,9 +123,9 @@ common-js:
           <!-- ABOUT -->
           <section class="mb-5">
             <p>
-              Hi — I'm <strong>Joohyung Yun (윤주형)</strong>, a second-year integrated M.S./Ph.D. student in Computer Science at
+              Hi! I'm <strong>Joohyung Yun</strong>, a 3rd year integrated M.S./Ph.D. student in Computer Science at
               <strong>POSTECH</strong>, advised by <a href="https://wscrony.github.io">Professor Wook-Shin Han</a> in the
-              <a href="https://dslab.postech.ac.kr">Data Systems Lab (STAR Lab)</a>.
+              <a href="https://dslab.postech.ac.kr">Data Systems Lab</a>.
               My research sits at the intersection of <strong>Natural Language Processing</strong> and
               <strong>Information Retrieval</strong>, with a focus on <strong>Retrieval-Augmented Generation (RAG)</strong> for complex,
               real-world documents.
@@ -144,14 +147,10 @@ common-js:
           <!-- RESEARCH FOCUS -->
           <section class="mb-5">
             <h2>Research Focus</h2>
-            <p>I’m currently working on methods and systems for:</p>
+            <p>I'm currently working on methods and systems for:</p>
             <ul>
-              <li><strong>Multimodal &amp; multihop retrieval</strong> over documents composed of text, tables, and figures</li>
-              <li><strong>RAG architectures</strong> that harmonize early/late fusion and LLM reasoning for reliable QA</li>
-              <li><strong>Late interaction over component graphs</strong> for fine-grained retrieval signals across modalities</li>
-              <li><strong>Table-text retrieval</strong> with multi-granular alignment and evidence aggregation</li>
-              <li><strong>Evaluation &amp; robustness</strong> for RAG (evidence attribution, hallucination reduction, and calibration)</li>
-              <li><strong>Efficient indexing</strong> and representation learning for large-scale corpora</li>
+              <li><strong>Multimodal & multihop retrieval</strong> over documents composed of text, tables, and images</li>
+              <li><strong>RAG architectures</strong> for reliable QA over multimodal documents</li>
             </ul>
           </section>
 
@@ -174,28 +173,32 @@ common-js:
             <h4>Conference Papers</h4>
             <ol>
               <li>
-                <strong>LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval</strong><br>
-                <strong>Yun, J.</strong>, Lee, D., Han, W. — <em>EMNLP 2025</em>, Suzhou, China.
+                <strong>LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval</strong> <br>
+                <strong>Yun, J.</strong>, Lee, D., Han, W. <br>
+                <em>EMNLP</em>, 2025.
               </li>
               <li>
-                <strong>HELIOS: Harmonizing Early Fusion, Late Fusion, and LLM Reasoning for Multi-Granular Table-Text Retrieval</strong><br>
-                Park, S., <strong>Yun, J.</strong>, Lee, J., Han, W. — <em>ACL 2025</em>, Vienna, Austria.
+                <strong>HELIOS: Harmonizing Early Fusion, Late Fusion, and LLM Reasoning for Multi-Granular Table-Text Retrieval</strong> <br>
+                Park, S., <strong>Yun, J.</strong>, Lee, J., Han, W. <br>
+                 <em>ACL</em>, 2025.
               </li>
             </ol>
 
             <h4>Journal Papers</h4>
             <ol>
               <li>
-                <strong>ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework</strong><br>
-                <strong>Yun, J.</strong>, Tak, B., Han, W. — <em>PVLDB</em>, Aug. 2024.
+                <strong>ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework</strong> <br>
+                <strong>Yun, J.</strong>, Tak, B., Han, W. <br>
+                <em>PVLDB</em>, 2024.
               </li>
             </ol>
 
             <h4>Workshop & Reports</h4>
             <ol>
               <li>
-                <strong>KDD Cup Meta CRAG 2024 Technical Report: Three-Step Question-Answering Framework</strong><br>
-                Park, S., Seok, J., Lee, J., <strong>Yun, J.</strong>, Lee, W. — <em>KDD Cup Workshop on Retrieval-Augmented Generation</em>, 2024.
+                <strong>KDD Cup Meta CRAG 2024 Technical Report: Three-Step Question-Answering Framework</strong> <br>
+                Park, S., Seok, J., Lee, J., <strong>Yun, J.</strong>, Lee, W. <br>
+                <em>KDD Cup Workshop on Retrieval-Augmented Generation</em>, 2024.
               </li>
             </ol>
           </section>
