@@ -1,4 +1,4 @@
 ---
-layout: post
+layout: custom_cv
 title: Experiences
 ---

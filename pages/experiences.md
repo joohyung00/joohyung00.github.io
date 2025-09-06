@@ -1,4 +1,4 @@
 ---
-layout: custom_experiences.html
+layout: custom_experiences
 title: Experiences
 ---
