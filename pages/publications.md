@@ -1,4 +1,4 @@
 ---
-layout: publications_custom
+layout: custom_publications
 title: Publications
 ---
