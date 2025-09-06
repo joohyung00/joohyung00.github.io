@@ -41,7 +41,8 @@ layout: base
     .pub-thumb img{
       width: 100%;
       height: 100%;
-      object-fit: cover;     /* 중앙 크롭 */
+      object-fit: contain;   /* 긴 변 기준 축소, 비율 유지, 크롭 없음 */
+      object-position: center;
       display: block;
     }
 
