@@ -59,6 +59,13 @@ title: CV
     .cv-item{ grid-template-columns: 1fr; }
     .cv-when{ justify-self:start; }
   }
+
+  /* Top PDF button: right-aligned + same gap as section spacing */
+  .cv-topbar{
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 1.25rem;  /* .cv-section의 margin-bottom과 동일 */
+  }
 </style>
 
 <main class="container-md cv-wrap">
