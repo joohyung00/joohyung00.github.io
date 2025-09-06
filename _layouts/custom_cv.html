@@ -1,5 +1,279 @@
 ---
 layout: base
+title: CV
 ---
 
 {% include header.html type="page" %}
+
+<style>
+  :root{
+    --cv-bg: #f6ebc9;            /* slightly deeper yellow than site background */
+    --cv-chip: #e8d9a8;
+  }
+  .cv-wrap{ margin-top: 1.25rem; }
+
+  /* section block */
+  .cv-section{ margin-bottom: 1.25rem; }
+  .cv-card{
+    background: var(--cv-bg);
+    border-radius: 18px;
+    box-shadow: 0 8px 26px rgba(0,0,0,.10);
+    overflow: hidden;
+  }
+  .cv-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 18px; border-bottom: 1px dashed rgba(0,0,0,.12);
+  }
+  .cv-title{ margin:0; font-weight:800; }
+  .cv-dl a{
+    display:inline-flex; align-items:center; gap:.5rem;
+    background:#fff7d6; border:1px solid rgba(0,0,0,.08);
+    padding:.4rem .7rem; border-radius: 999px; font-weight:600; color:#1c1c1c;
+    text-decoration:none;
+  }
+  .cv-body{ padding: 14px 18px 18px; }
+
+  /* rows in a block */
+  .cv-item{
+    display:grid; grid-template-columns: 160px 1fr; gap: 14px;
+    padding: 10px 0;
+  }
+  .cv-item + .cv-item{ border-top: 1px solid rgba(0,0,0,.06); }
+  .cv-when{
+    align-self:start; white-space:nowrap;
+    background: var(--cv-chip);
+    border-radius: 999px; padding: .25rem .6rem; font-weight:700;
+    text-align:center; display:inline-block;
+  }
+  .cv-role{ margin:0; font-weight:700; }
+  .cv-sub{ margin: 2px 0 6px; opacity:.9; }
+  .cv-list{ margin:0; padding-left: 1.1rem; }
+  .cv-list li{ margin:.15rem 0; }
+
+  /* publication list inside the card */
+  .pub-entry{ margin:0 0 .8rem; }
+  .pub-entry .pub-title{ font-weight:700; margin:0; }
+  .pub-meta{ font-style:italic; opacity:.9; }
+
+  @media (max-width: 576px){
+    .cv-item{ grid-template-columns: 1fr; }
+    .cv-when{ justify-self:start; }
+  }
+</style>
+
+<main class="container-md cv-wrap">
+  <div class="row">
+    <div class="col-xl-10 offset-xl-1 col-lg-10 offset-lg-1">
+
+      <!-- Education -->
+      <section id="education" class="cv-section">
+        <div class="cv-card">
+          <div class="cv-head">
+            <h2 class="cv-title">Education</h2>
+            <div class="cv-dl">
+              <a href="{{ '/cv.pdf' | relative_url }}" target="_blank" rel="noopener">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i> PDF
+              </a>
+            </div>
+          </div>
+          <div class="cv-body">
+
+            <div class="cv-item">
+              <div class="cv-when">2023–Present</div>
+              <div>
+                <h3 class="cv-role">POSTECH — Integrated M.S./Ph.D., Computer Science</h3>
+                <p class="cv-sub">Data Systems Lab (advisor: Prof. Wook-Shin Han)</p>
+              </div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-when">2019–2023</div>
+              <div>
+                <h3 class="cv-role">POSTECH — B.S., Computer Science</h3>
+                <p class="cv-sub">Summa Cum Laude (GPA 4.11 / 4.30)</p>
+              </div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-when">2016–2019</div>
+              <div>
+                <h3 class="cv-role">Hyundai Chungun High School</h3>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Publications -->
+      <section id="publications" class="cv-section">
+        <div class="cv-card">
+          <div class="cv-head">
+            <h2 class="cv-title">Publications</h2>
+          </div>
+          <div class="cv-body">
+
+            <div class="pub-entry">
+              <p class="pub-title">LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval</p>
+              <div class="pub-meta">Yun, J., Lee, D., Han, W. — EMNLP 2025, Suzhou, China.</div>
+            </div>
+
+            <div class="pub-entry">
+              <p class="pub-title">HELIOS: Harmonizing Early Fusion, Late Fusion, and LLM Reasoning for Multi-Granular Table-Text Retrieval</p>
+              <div class="pub-meta">Park, S., Yun, J., Lee, J., Han, W. — ACL 2025, Vienna, Austria.</div>
+            </div>
+
+            <div class="pub-entry">
+              <p class="pub-title">KDD Cup Meta CRAG 2024 Technical Report: Three-Step Question-Answering Framework</p>
+              <div class="pub-meta">Park, S., Seok, J., Lee, J., Yun, J., Lee, W. — KDD Cup Workshop on Retrieval-Augmented Generation, 2024.</div>
+            </div>
+
+            <div class="pub-entry">
+              <p class="pub-title">ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework</p>
+              <div class="pub-meta">Yun, J., Tak, B., Han, W. — PVLDB 2024.</div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Work Experiences -->
+      <section id="work" class="cv-section">
+        <div class="cv-card">
+          <div class="cv-head">
+            <h2 class="cv-title">Work Experiences</h2>
+          </div>
+          <div class="cv-body">
+
+            <div class="cv-item">
+              <div class="cv-when">Jun–Jul 2021</div>
+              <div>
+                <h3 class="cv-role">Full-Stack Developer — SK hynix Inc., Icheon, South Korea</h3>
+                <ul class="cv-list">
+                  <li>Web interface manipulation via Selenium (Python).</li>
+                  <li>Server development using Spring Boot (Java).</li>
+                  <li>Frontend development using Node.js (JavaScript).</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Honors & Awards -->
+      <section id="awards" class="cv-section">
+        <div class="cv-card">
+          <div class="cv-head">
+            <h2 class="cv-title">Honors & Awards</h2>
+          </div>
+          <div class="cv-body">
+
+            <div class="cv-item">
+              <div class="cv-when">2024</div>
+              <div>
+                <h3 class="cv-role">KDD Cup 2024 — Team dRAGonRAnGers</h3>
+                <ul class="cv-list">
+                  <li>1st in comparison tests.</li>
+                  <li>1st in post-processing test.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-when">2021</div>
+              <div>
+                <h3 class="cv-role">National Science & Technology Scholarship</h3>
+              </div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-when">2021</div>
+              <div>
+                <h3 class="cv-role">Global Leadership Program Scholarship (POSTECH CSE)</h3>
+              </div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-when">2020</div>
+              <div>
+                <h3 class="cv-role">Global Leadership Program Scholarship (POSTECH CSE)</h3>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Teaching Experiences -->
+      <section id="teaching" class="cv-section">
+        <div class="cv-card">
+          <div class="cv-head">
+            <h2 class="cv-title">Teaching Experiences</h2>
+          </div>
+          <div class="cv-body">
+
+            <div class="cv-item">
+              <div class="cv-when">2024</div>
+              <div>
+                <h3 class="cv-role">Teaching Assistant — Design of Digital System (CSED273), POSTECH</h3>
+              </div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-when">2022</div>
+              <div>
+                <h3 class="cv-role">Teaching Assistant — Advanced Machine Learning, Samsung Electronics</h3>
+                <p class="cv-sub">Under Data Systems Lab program.</p>
+              </div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-when">2021</div>
+              <div>
+                <h3 class="cv-role">Teaching Assistant — Data Processing, Distributed Database & Deep Learning, Samsung Electronics</h3>
+                <p class="cv-sub">Under Data Systems Lab program.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section id="skills" class="cv-section">
+        <div class="cv-card">
+          <div class="cv-head">
+            <h2 class="cv-title">Skills</h2>
+          </div>
+          <div class="cv-body">
+
+            <div class="cv-item">
+              <div class="cv-when">Languages</div>
+              <div>
+                <ul class="cv-list">
+                  <li>Korean (native)</li>
+                  <li>English (fluent)</li>
+                  <li>Japanese (fluent)</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-when">Coding</div>
+              <div>
+                <ul class="cv-list">
+                  <li>Python</li>
+                  <li>C++</li>
+                  <li>LaTeX</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>

@@ -1,4 +1,4 @@
 ---
 layout: custom_cv
-title: Experiences
+title: Curriculum Vitae
 ---
