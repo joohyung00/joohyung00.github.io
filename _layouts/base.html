@@ -95,6 +95,14 @@ common-js:
       .news-list .news-date{ margin-bottom: .125rem; }
     }
 
+    /* Social Links - Rounded Square Buttons */
+    .social-links .btn-social-icon .fa-circle {
+      border-radius: 15% !important;
+    }
+    .social-links .btn-social-icon .fa-stack-2x {
+      border-radius: 15%;
+    }
+
   </style>
 
   {% assign dir = page.carousel_dir | default: '/assets/img/home-carousel' %}
@@ -126,6 +134,18 @@ common-js:
               <span class="fa-stack fa-lg">
                 <i class="fas fa-circle fa-stack-2x"></i>
                 <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+            <a href="https://scholar.google.com/citations?user=y_7wqtIAAAAJ" class="btn btn-social-icon" title="Google Scholar">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fa fa-graduation-cap fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+            <a href="https://openreview.net/profile?id=~Joohyung_Yun1" class="btn btn-social-icon" title="OpenReview">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-microscope fa-stack-1x fa-inverse"></i>
               </span>
             </a>
           </div>
