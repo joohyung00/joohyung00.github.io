@@ -307,6 +307,18 @@
   </li>
   {%- endif -%}
 
+  {%- if network[0] == "openreview" -%}
+  <li class="list-inline-item">
+    <a href="{{ network[1] }}" title="OpenReview">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-file-alt fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">OpenReview</span>
+    </a>
+  </li>
+  {%- endif -%}
+
   {%- if network[0] == "patreon" -%}
   <li class="list-inline-item">
     <a href="https://patreon.com/{{ network[1] }}" title="Patreon">
