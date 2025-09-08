@@ -7,16 +7,41 @@ title: My Posts
   {% for post in site.posts %}
   <article class="post-preview">
     <a href="{{ post.url | relative_url }}">
+      
+      <!-- Post Thumbnail -->
+      {% capture thumbnail %}
+        {% if post.thumbnail %}
+          {{ post.thumbnail }}
+        {% elsif post.cover-img %}
+          {% if post.cover-img.first %}
+            {{ post.cover-img[0].first.first }}
+          {% else %}
+            {{ post.cover-img }}
+          {% endif %}
+        {% else %}
+          /assets/img/default-thumbnail.jpg  <!-- placeholder if no thumbnail -->
+        {% endif %}
+      {% endcapture %}
+
+      {% assign thumbnail=thumbnail | strip %}
+      {% if thumbnail != "" %}
+      <div class="post-thumbnail">
+        <img src="{{ thumbnail | relative_url }}" alt="Thumbnail for {{ post.title }}">
+      </div>
+      {% endif %}
+
+      <!-- Post Title and Excerpt -->
       <h2 class="post-title">{{ post.title }}</h2>
       {% if post.subtitle %}
-      <h3 class="post-subtitle">{{ post.subtitle }}</h3>
+        <h3 class="post-subtitle">{{ post.subtitle }}</h3>
       {% endif %}
+
     </a>
 
     <p class="post-meta">
       Posted on {{ post.date | date: "%B %d, %Y" }}
       {% if post.author %}
-      by {{ post.author }}
+        by {{ post.author }}
       {% endif %}
     </p>
 

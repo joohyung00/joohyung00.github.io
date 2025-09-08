@@ -1124,3 +1124,12 @@ pre {
     display: inline-block;
   }
 }
+
+/* Styling for post thumbnails */
+.post-thumbnail img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px; /* Rounded corners like in the reference */
+  object-fit: cover; /* Ensures the image fills the container without distorting */
+  display: block;
+}
