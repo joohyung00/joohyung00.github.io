@@ -10,8 +10,8 @@ title: My Posts
       
       <!-- Post Thumbnail -->
       {% capture thumbnail %}
-        {% if post.thumbnail %}
-          {{ post.thumbnail }}
+        {% if post.thumbnail-img %}
+          {{ post.thumbnail-img }}
         {% elsif post.cover-img %}
           {% if post.cover-img.first %}
             {{ post.cover-img[0].first.first }}
@@ -19,7 +19,7 @@ title: My Posts
             {{ post.cover-img }}
           {% endif %}
         {% else %}
-          /assets/img/default-thumbnail.jpg  <!-- placeholder if no thumbnail -->
+          {% assign thumbnail = "" %}
         {% endif %}
       {% endcapture %}
 
