@@ -14,7 +14,7 @@ title: My Posts
           {{ post.thumbnail-img }}
         {% elsif post.cover-img %}
           {% if post.cover-img.first %}
-            {{ post.cover-img[0].first.first }}
+            {{ post.cover-img[0].first.first }}ww
           {% else %}
             {{ post.cover-img }}
           {% endif %}
