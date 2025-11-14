@@ -1,0 +1,36 @@
+/* ===== custom thumbnail‑right style for posts list ===== */
+.posts-list .post-preview {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.posts-list .post-preview .post-thumbnail {
+  flex: 0 0 auto;
+  width: 150px; /* thumbnail width */
+  margin-left: 1rem;
+}
+
+.posts-list .post-preview .post-thumbnail img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+}
+
+.posts-list .post-preview .post-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+@media (max-width: 576px) {
+  .posts-list .post-preview {
+    display: block;
+  }
+  .posts-list .post-preview .post-thumbnail {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 1rem;
+  }
+}
