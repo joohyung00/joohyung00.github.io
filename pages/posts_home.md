@@ -1,29 +1,7 @@
----
-layout: page
-title: My Posts
----
-
 <div class="posts-list">
   {% for post in site.posts %}
   
   <article class="post-preview">
-    <a href="{{ post.url | relative_url }}">
-      {% capture thumbnail %}
-        {% if post.thumbnail-img %}
-          {{ post.thumbnail-img }}
-        {% elsif post.cover-img %}
-          {% if post.cover-img.first %}
-            {{ post.cover-img[0].first.first }}
-          {% else %}
-            {{ post.cover-img }}
-          {% endif %}
-        {% else %}
-          {% assign thumbnail = "" %}
-        {% endif %}
-      {% endcapture %}
-      {% assign thumbnail = thumbnail | strip %}
-    </a>
-
     <div class="post-content">
       <a href="{{ post.url | relative_url }}">
         <h2 class="post-title">{{ post.title }}</h2>
@@ -59,13 +37,29 @@ title: My Posts
       {% endif %}
     </div>
 
+    {% capture thumbnail %}
+      {% if post.thumbnail-img %}
+        {{ post.thumbnail-img }}
+      {% elsif post.cover-img %}
+        {% if post.cover-img.first %}
+          {{ post.cover-img[0].first.first }}
+        {% else %}
+          {{ post.cover-img }}
+        {% endif %}
+      {% else %}
+        {% assign thumbnail = "" %}
+      {% endif %}
+    {% endcapture %}
+    {% assign thumbnail = thumbnail | strip %}
+    
     {% if thumbnail != "" %}
       <div class="post-thumbnail">
-        <img src="{{ thumbnail | relative_url }}" alt="Thumbnail for {{ post.title }}">
+        <a href="{{ post.url | relative_url }}">
+          <img src="{{ thumbnail | relative_url }}" alt="Thumbnail for {{ post.title }}">
+        </a>
       </div>
     {% endif %}
   </article>
-
-
+  
   {% endfor %}
 </div>
