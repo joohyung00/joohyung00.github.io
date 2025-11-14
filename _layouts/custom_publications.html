@@ -121,8 +121,9 @@ layout: base
                 <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
                 </a>
             </div>
-            Coming soon!
-            <!-- 여기에 간단한 설명 텍스트를 나중에 추가 -->
+            <p><strong>Problem:</strong> Multimodal document retrieval, where data comes from text, tables, and images, requires both granular retrieval and the ability to reason across different documents. The key issue is balancing retrieval precision and enabling complex reasoning across these different modalities.</p>
+            <p><strong>Existing Research Issues:</strong> Current methods like VisRAG (which treats everything as visual content) face problems with insufficient granularity and poor multihop reasoning. They often miss interdependencies between components or the relationships within documents.</p>
+            <p><strong>Our Research:</strong> LILaC introduces a two-layered component graph for multimodal retrieval. The coarse layer supports efficient candidate generation, while the fine-grained layer facilitates detailed reasoning. Using a late-interaction strategy, LILaC dynamically traverses the graph to retrieve relevant subgraphs, improving both precision and recall in multihop scenarios. Extensive experiments show that LILaC outperforms existing systems in terms of both retrieval accuracy and reasoning.</p>
           </div>
         </details>
 
@@ -151,6 +152,9 @@ layout: base
                 <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
                 </a>
             </div>
+            <p><strong>Problem:</strong> Multimodal document retrieval, especially when combining text, tables, and images, is challenging due to the need for effective reasoning across these different modalities and the issue of insufficient retrieval granularity.</p>
+            <p><strong>Existing Research Issues:</strong> Prior methods like early fusion (which pre-aligns tables with passages) and late fusion (which aligns components dynamically) face limitations. Early fusion may retrieve irrelevant contexts, while late fusion risks missing important contexts, and both struggle with advanced reasoning tasks like multi-hop reasoning.</p>
+            <p><strong>Our Research:</strong> We propose HELIOS, a framework that combines both early and late fusion techniques, followed by a reasoning step that uses LLMs to perform logical inference. By leveraging a layered graph structure, HELIOS achieves both high retrieval accuracy and efficient reasoning, outperforming existing systems across multiple benchmarks.</p>
           </div>
         </details>
 
@@ -172,13 +176,13 @@ layout: base
                 <a class="pub-link" href="https://openreview.net/pdf?id=G4Ei2QlKnv" target="_blank" rel="noopener" title="Paper (PDF)">
                 <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
                 </a>
-                <!-- <a class="pub-link" href="https://openreview.net/pdf?id=G4Ei2QlKnv" target="_blank" rel="noopener" title="Slides (PPTX)">
-                <i class="fa-solid fa-file-powerpoint" aria-hidden="true"></i><span>Slides</span>
-                </a> -->
                 <a class="pub-link" href="https://github.com/joohyung00/kdd_cup_2024_crag" target="_blank" rel="noopener" title="GitHub Repo">
                 <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
                 </a>
             </div>
+            <p><strong>Problem:</strong> Large language models (LLMs) face challenges in question-answering tasks, particularly with hallucination—where answers deviate from real-world facts. The challenge is how to efficiently and accurately answer complex queries while minimizing hallucinations.</p>
+            <p><strong>Existing Research Issues:</strong> Existing methods, such as Retrieval-Augmented Generation (RAG), attempt to improve LLMs by retrieving external knowledge, but often suffer from inefficiency, unnecessary retrievals, and propagation of incorrect information.</p>
+            <p><strong>Our Research:</strong> We propose a three-step framework that improves the traditional RAG approach. First, it leverages LLM's parameterized knowledge to avoid unnecessary retrievals. Then, external sources are incorporated only when necessary. Finally, a verification step reassesses generated answers to ensure factual correctness, improving both accuracy and efficiency. Our approach has demonstrated significant improvements in multiple benchmarks.</p>
           </div>
         </details>
 
@@ -207,8 +211,12 @@ layout: base
                 <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
                 </a>
             </div>
+            <p><strong>Problem:</strong> JSON documents are often schemaless, making it difficult to perform operations like querying, validation, and data management. Existing approaches for JSON schema discovery are top-down, which limits their ability to make accurate schema decisions for complex data.</p>
+            <p><strong>Existing Research Issues:</strong> Top-down schema discovery methods struggle with incomplete visibility into child nodes, relying on heuristics that can lead to incorrect schema decisions. These methods also fail to handle heterogeneous data effectively.</p>
+            <p><strong>Our Research:</strong> ReCG presents a bottom-up approach for discovering JSON schemas, starting from leaf nodes and generalizing upwards. This approach uses a clustering technique to identify schema patterns and minimizes schema complexity through the Minimum Description Length (MDL) principle. Our results show that ReCG significantly improves schema accuracy (up to 47%) and runs faster than state-of-the-art methods.</p>
           </div>
         </details>
+
 
       </div>
     </div>
