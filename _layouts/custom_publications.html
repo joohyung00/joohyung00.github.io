@@ -111,6 +111,12 @@ layout: base
           <div class="pub-extra">
             <img class="pub-hero" src="{{ '/assets/img/publications/fif_overview.png' | relative_url }}" alt="FiF figure">
             <div class="pub-links">
+                <a class="pub-link" href="https://failureisfeedback.github.io/" target="_blank" rel="noopener" title="Project Page">
+                <i class="fa-solid fa-globe" aria-hidden="true"></i><span>Project</span>
+                </a>
+                <a class="pub-link" href="https://arxiv.org/abs/2602.03432" target="_blank" rel="noopener" title="arXiv">
+                <i class="fa-solid fa-file-lines" aria-hidden="true"></i><span>arXiv</span>
+                </a>
                 <a class="pub-link" href="https://arxiv.org/pdf/2602.03432" target="_blank" rel="noopener" title="Paper (PDF)">
                 <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
                 </a>
@@ -183,6 +189,37 @@ layout: base
           </div>
         </details>
 
+        <!-- ReCG -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb"><img src="{{ '/assets/img/publications/recg_thumb.jpeg' | relative_url }}" alt="ReCG preview"></div>
+            <div class="pub-meta">
+              <span class="badge badge-primary pub-badge">Conference</span>
+              <h3 class="pub-title"><span class="pub-emoji" aria-hidden="true">🧩</span>ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework</h3>
+              <small><strong>Yun, J.</strong>, Tak, B., Han, W.</small>
+              <small><em>PVLDB</em>, 2024.</small>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <img class="pub-hero" src="{{ '/assets/img/publications/recg.png' | relative_url }}" alt="ReCG figure">
+            <div class="pub-links">
+                <a class="pub-link" href="https://dl.acm.org/doi/pdf/10.14778/3681954.3682019" target="_blank" rel="noopener" title="Paper (PDF)">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
+                </a>
+                <a class="pub-link" href="{{ '/assets/slides/recg.pptx' | relative_url }}" target="_blank" rel="noopener" title="Slides (PPTX)">
+                <i class="fa-solid fa-file-powerpoint" aria-hidden="true"></i><span>Slides</span>
+                </a>
+                <a class="pub-link" href="https://github.com/joohyung00/recg_vldb_2024" target="_blank" rel="noopener" title="GitHub Repo">
+                <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
+                </a>
+            </div>
+            <p><strong>Problem:</strong> JSON documents are often schemaless, making it difficult to perform operations like querying, validation, and data management. Existing approaches for JSON schema discovery are top-down, which limits their ability to make accurate schema decisions for complex data.</p>
+            <p><strong>Existing Research Issues:</strong> Top-down schema discovery methods struggle with incomplete visibility into child nodes, relying on heuristics that can lead to incorrect schema decisions. These methods also fail to handle heterogeneous data effectively.</p>
+            <p><strong>Our Research:</strong> ReCG presents a bottom-up approach for discovering JSON schemas, starting from leaf nodes and generalizing upwards. This approach uses a clustering technique to identify schema patterns and minimizes schema complexity through the Minimum Description Length (MDL) principle. Our results show that ReCG significantly improves schema accuracy (up to 47%) and runs faster than state-of-the-art methods.</p>
+          </div>
+        </details>
+
         <!-- KDD Cup Report -->
         <details class="pub-card">
           <summary>
@@ -208,37 +245,6 @@ layout: base
             <p><strong>Problem:</strong> Large language models (LLMs) face challenges in question-answering tasks, particularly with hallucination—where answers deviate from real-world facts. The challenge is how to efficiently and accurately answer complex queries while minimizing hallucinations.</p>
             <p><strong>Existing Research Issues:</strong> Existing methods, such as Retrieval-Augmented Generation (RAG), attempt to improve LLMs by retrieving external knowledge, but often suffer from inefficiency, unnecessary retrievals, and propagation of incorrect information.</p>
             <p><strong>Our Research:</strong> We propose a three-step framework that improves the traditional RAG approach. First, it leverages LLM's parameterized knowledge to avoid unnecessary retrievals. Then, external sources are incorporated only when necessary. Finally, a verification step reassesses generated answers to ensure factual correctness, improving both accuracy and efficiency. Our approach has demonstrated significant improvements in multiple benchmarks.</p>
-          </div>
-        </details>
-
-        <!-- ReCG -->
-        <details class="pub-card">
-          <summary>
-            <div class="pub-thumb"><img src="{{ '/assets/img/publications/recg_thumb.jpeg' | relative_url }}" alt="KDD Cup preview"></div>
-            <div class="pub-meta">
-              <span class="badge badge-primary pub-badge">Conference</span>
-              <h3 class="pub-title"><span class="pub-emoji" aria-hidden="true">🧩</span>ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework</h3>
-              <small><strong>Yun, J.</strong>, Tak, B., Han, W.</small>
-              <small><em>PVLDB</em>, 2024.</small>
-            </div>
-            <div class="pub-toggle" aria-hidden="true">▾</div>
-          </summary>
-          <div class="pub-extra">
-            <img class="pub-hero" src="{{ '/assets/img/publications/recg.png' | relative_url }}" alt="ReCG figure">
-            <div class="pub-links">
-                <a class="pub-link" href="https://dl.acm.org/doi/pdf/10.14778/3681954.3682019" target="_blank" rel="noopener" title="Paper (PDF)">
-                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
-                </a>
-                <a class="pub-link" href="{{ '/assets/slides/recg.pptx' | relative_url }}" target="_blank" rel="noopener" title="Slides (PPTX)">
-                <i class="fa-solid fa-file-powerpoint" aria-hidden="true"></i><span>Slides</span>
-                </a>
-                <a class="pub-link" href="https://github.com/joohyung00/recg_vldb_2024" target="_blank" rel="noopener" title="GitHub Repo">
-                <i class="fa-brands fa-github" aria-hidden="true"></i><span>Code</span>
-                </a>
-            </div>
-            <p><strong>Problem:</strong> JSON documents are often schemaless, making it difficult to perform operations like querying, validation, and data management. Existing approaches for JSON schema discovery are top-down, which limits their ability to make accurate schema decisions for complex data.</p>
-            <p><strong>Existing Research Issues:</strong> Top-down schema discovery methods struggle with incomplete visibility into child nodes, relying on heuristics that can lead to incorrect schema decisions. These methods also fail to handle heterogeneous data effectively.</p>
-            <p><strong>Our Research:</strong> ReCG presents a bottom-up approach for discovering JSON schemas, starting from leaf nodes and generalizing upwards. This approach uses a clustering technique to identify schema patterns and minimizes schema complexity through the Minimum Description Length (MDL) principle. Our results show that ReCG significantly improves schema accuracy (up to 47%) and runs faster than state-of-the-art methods.</p>
           </div>
         </details>
 
