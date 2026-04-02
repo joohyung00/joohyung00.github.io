@@ -96,6 +96,31 @@ layout: base
     <div class="row">
       <div class="col-xl-10 offset-xl-1 col-lg-10 offset-lg-1">
 
+        <!-- FiF -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb"><img src="{{ '/assets/img/publications/fif_thumb.jpg' | relative_url }}" alt="FiF preview"></div>
+            <div class="pub-meta">
+              <span class="badge badge-secondary pub-badge">Under Review</span>
+              <h3 class="pub-title"><span class="pub-emoji" aria-hidden="true">🔄</span>Failure is Feedback: History-Aware Backtracking for Agentic Traversal in Multimodal Graphs</h3>
+              <small><strong>Yun, J.</strong>, Lee, D., Han, W.</small>
+              <small><em>arXiv 2025</em>, Under review at ICML 2026.</small>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <img class="pub-hero" src="{{ '/assets/img/publications/fif_thumb.jpg' | relative_url }}" alt="FiF figure">
+            <div class="pub-links">
+                <a class="pub-link" href="#" target="_blank" rel="noopener" title="Paper (PDF)">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Paper (Coming Soon)</span>
+                </a>
+            </div>
+            <p><strong>Problem:</strong> Agentic retrieval systems need to traverse complex multimodal graphs to answer multi-hop questions. However, when agents make wrong retrieval decisions, they often lack the ability to recover effectively from these failures.</p>
+            <p><strong>Existing Research Issues:</strong> Current agentic RAG approaches typically follow greedy traversal strategies without mechanisms for error recovery. When agents reach dead ends or retrieve irrelevant information, they cannot learn from these mistakes to improve subsequent traversal decisions.</p>
+            <p><strong>Our Research:</strong> We propose FiF (Failure is Feedback), a history-aware backtracking framework for agentic traversal in multimodal graphs. Our approach treats failed retrieval attempts as valuable feedback, enabling agents to backtrack intelligently and explore alternative paths. By maintaining a history of traversal decisions and their outcomes, FiF allows agents to make more informed decisions and recover from errors during complex multi-hop reasoning tasks.</p>
+          </div>
+        </details>
+
         <!-- LILaC -->
         <details class="pub-card">
           <summary>
