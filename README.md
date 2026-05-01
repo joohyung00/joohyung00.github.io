@@ -305,6 +305,10 @@ cd /Users/joohyung/MyFiles/GithubRepositories/joohyung00.github.io && eval "$(rb
 
 ## Changelog (Recent Updates)
 
+- **2026-05**: FiF accepted to ICML 2026 — updated badge (Under Review → Conference), venue text, and added news entry in the following files:
+  - `_layouts/base.html`: News section (added entry), Publications list (badge + venue)
+  - `_layouts/custom_publications.html`: Publication card (badge + venue)
+  - `_layouts/custom_cv.html`: Publication entry (venue)
 - **2026-04**: Added FiF publication (Failure is Feedback) to all pages
 - **2026-04**: Updated summary to 4th year Ph.D., added Agentic RAG and Enterprise RAG research focus
 - **2026-04**: Added NYU visiting researcher experience
