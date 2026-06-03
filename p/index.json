@@ -1,9 +1,20 @@
 {
-  "generated": "2026-06-03T09:15:23+00:00",
+  "generated": "2026-06-03T09:15:29+00:00",
   "site_url": "https://joohyung00.github.io",
   "folder": "p",
-  "count": 1,
+  "count": 2,
   "pages": [
+    {
+      "slug": "theme-demo-indigo",
+      "file": "theme-demo-indigo.html",
+      "title": "indigo_slides 테마 데모",
+      "url": "/p/theme-demo-indigo.html",
+      "created": "2026-06-03T09:15:29+00:00",
+      "updated": "2026-06-03T09:15:29+00:00",
+      "excerpt": "1 THEME · INDIGO_SLIDES 밝고 정돈된 슬라이드 덱 Pretendard 글꼴, 인디고 포인트 컬러, 카드와 콜아웃 중심의 문서/발표용 테마입니다. 💡 한 줄 요약 — 표·카드·태그가 많은 정보형 페이지에 잘 맞아요. 2 COMPONENTS 카드 그리드 Primary 핵심 개념을 담는 기본 강조 카드. Success 잘된 점 good Warn",
+      "text": "1 THEME · INDIGO_SLIDES 밝고 정돈된 슬라이드 덱 Pretendard 글꼴, 인디고 포인트 컬러, 카드와 콜아웃 중심의 문서/발표용 테마입니다. 💡 한 줄 요약 — 표·카드·태그가 많은 정보형 페이지에 잘 맞아요. 2 COMPONENTS 카드 그리드 Primary 핵심 개념을 담는 기본 강조 카드. Success 잘된 점 good Warn 주의할 점 caution 3 TABLE 비교 표 테마 분위기 적합한 글 lilac_scroll 다크 · 인터랙티브 스토리텔링 · 발표 indigo_slides 라이트 · 정보형 문서 · 비교 · 정리 4 DARK SLIDE 반전 슬라이드 같은 테마 안에서 <section class=\"slide dark\"> 로 어두운 슬라이드를 섞을 수 있어요. 강조 구간에 유용합니다.",
+      "hash": "c4d9b8cb4f3f93b2ab1120b61ed1aa0355cbfbea"
+    },
     {
       "slug": "theme-demo-lilac",
       "file": "theme-demo-lilac.html",
