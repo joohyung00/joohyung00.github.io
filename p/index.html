@@ -105,7 +105,7 @@ max-width:820px;margin:0 auto;padding:40px 20px;color:#222}</style>
     itemsEl.innerHTML = slice.map(function (p) {
       return '<li><a href="' + esc(p.url) + '">' + highlight(p.title || p.slug, q) + "</a>"
         + '<div class="mp-meta">' + fmtDate(p.created)
-        + (p.updated && p.updated !== p.created ? " · 수정 " + fmtDate(p.updated) : "") + "</div>"
+        + (p.updated && p.updated !== p.created ? " · updated " + fmtDate(p.updated) : "") + "</div>"
         + '<p class="mp-excerpt">' + highlight((p.excerpt || "").slice(0, 180), q) + "</p></li>";
     }).join("");
 
