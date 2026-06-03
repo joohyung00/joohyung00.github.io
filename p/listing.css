@@ -1,0 +1,27 @@
+/* Inherit the host site's fonts so the widget matches the page (form controls do
+     NOT inherit font by default — that was the "alien font" in the search box). */
+  #mypage-list { --mp-accent:#2a7ae2; margin: 1em 0 2em; font-family: inherit; }
+  #mypage-list .mp-bar { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  #mypage-list #mp-q {
+    flex:1; padding:9px 13px; font-family: inherit; font-size:15px; border:1px solid #ccc;
+    border-radius:8px; outline:none;
+  }
+  #mypage-list #mp-q:focus { border-color: var(--mp-accent); box-shadow:0 0 0 2px rgba(42,122,226,.18); }
+  #mypage-list .mp-count { color:#888; font-size:13px; white-space:nowrap; }
+  #mypage-list .mp-items { list-style:none; padding:0; margin:0; }
+  #mypage-list .mp-items li { padding:14px 2px; border-bottom:1px solid #eee; }
+  /* titles use the site's header font (e.g. beautiful-jekyll --header-font), like native posts */
+  #mypage-list .mp-items a { font-family: var(--header-font, inherit); font-size:20px; font-weight:700;
+    color:var(--mp-accent); text-decoration:none; }
+  #mypage-list .mp-items a:hover { text-decoration:underline; }
+  #mypage-list .mp-meta { color:#999; font-size:12.5px; margin:3px 0 5px; }
+  #mypage-list .mp-excerpt { color:#555; font-size:14px; line-height:1.55; margin:0; }
+  #mypage-list .mp-empty { color:#999; padding:24px 0; text-align:center; }
+  #mypage-list .mp-pager { display:flex; justify-content:center; gap:6px; margin-top:18px; flex-wrap:wrap; }
+  #mypage-list .mp-pager button {
+    min-width:34px; padding:6px 10px; border:1px solid #ddd; background:#fff; border-radius:6px;
+    cursor:pointer; font-family: inherit; font-size:14px; color:#333;
+  }
+  #mypage-list .mp-pager button[disabled] { opacity:.4; cursor:default; }
+  #mypage-list .mp-pager button.active { background:var(--mp-accent); color:#fff; border-color:var(--mp-accent); }
+  #mypage-list mark { background:#fff2a8; padding:0 1px; }
