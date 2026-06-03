@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-03T09:43:00+00:00",
+  "generated": "2026-06-03T09:58:15+00:00",
   "site_url": "https://joohyung00.github.io",
-  "folder": "p",
+  "folder": "mypages",
   "count": 2,
   "pages": [
     {
       "slug": "theme-demo-indigo",
       "file": "theme-demo-indigo.html",
       "title": "indigo_slides 테마 데모",
-      "url": "/p/theme-demo-indigo.html",
-      "created": "2026-06-03T09:15:29+00:00",
-      "updated": "2026-06-03T09:15:29+00:00",
+      "url": "/mypages/theme-demo-indigo.html",
+      "created": "2026-06-03T09:58:15+00:00",
+      "updated": "2026-06-03T09:58:15+00:00",
       "excerpt": "1 THEME · INDIGO_SLIDES 밝고 정돈된 슬라이드 덱 Pretendard 글꼴, 인디고 포인트 컬러, 카드와 콜아웃 중심의 문서/발표용 테마입니다. 💡 한 줄 요약 — 표·카드·태그가 많은 정보형 페이지에 잘 맞아요. 2 COMPONENTS 카드 그리드 Primary 핵심 개념을 담는 기본 강조 카드. Success 잘된 점 good Warn",
       "text": "1 THEME · INDIGO_SLIDES 밝고 정돈된 슬라이드 덱 Pretendard 글꼴, 인디고 포인트 컬러, 카드와 콜아웃 중심의 문서/발표용 테마입니다. 💡 한 줄 요약 — 표·카드·태그가 많은 정보형 페이지에 잘 맞아요. 2 COMPONENTS 카드 그리드 Primary 핵심 개념을 담는 기본 강조 카드. Success 잘된 점 good Warn 주의할 점 caution 3 TABLE 비교 표 테마 분위기 적합한 글 lilac_scroll 다크 · 인터랙티브 스토리텔링 · 발표 indigo_slides 라이트 · 정보형 문서 · 비교 · 정리 4 DARK SLIDE 반전 슬라이드 같은 테마 안에서 <section class=\"slide dark\"> 로 어두운 슬라이드를 섞을 수 있어요. 강조 구간에 유용합니다.",
       "hash": "c4d9b8cb4f3f93b2ab1120b61ed1aa0355cbfbea"
@@ -19,9 +19,9 @@
       "slug": "theme-demo-lilac",
       "file": "theme-demo-lilac.html",
       "title": "lilac_scroll 테마 데모",
-      "url": "/p/theme-demo-lilac.html",
-      "created": "2026-06-03T09:15:23+00:00",
-      "updated": "2026-06-03T09:15:23+00:00",
+      "url": "/mypages/theme-demo-lilac.html",
+      "created": "2026-06-03T09:58:15+00:00",
+      "updated": "2026-06-03T09:58:15+00:00",
       "excerpt": "THEME · LILAC_SCROLL 스크롤하면 살아나는 다크 테마 아래로 스크롤해 보세요. 섹션이 시야에 들어올 때마다 부드럽게 나타나고, 오른쪽 점 네비게이션과 상단 진행 바가 위치를 알려줍니다. WHEN TO USE 이 테마가 어울리는 글 잘 맞음 개념을 단계적으로 풀어가는 설명형 글, 발표 자료, 비주얼 스토리텔링. 한 화면에 한 메시지. 덜 맞음 ",
       "text": "THEME · LILAC_SCROLL 스크롤하면 살아나는 다크 테마 아래로 스크롤해 보세요. 섹션이 시야에 들어올 때마다 부드럽게 나타나고, 오른쪽 점 네비게이션과 상단 진행 바가 위치를 알려줍니다. WHEN TO USE 이 테마가 어울리는 글 잘 맞음 개념을 단계적으로 풀어가는 설명형 글, 발표 자료, 비주얼 스토리텔링. 한 화면에 한 메시지. 덜 맞음 표·레퍼런스가 빽빽한 문서나 긴 본문 위주의 글에는 indigo_slides 가 더 편할 수 있어요. BUILDING BLOCKS 담을 수 있는 것들 코드 python my_page.py add --title \"내 글\" --theme lilac_scroll --file body.html 표 요소 클래스 섹션 section.scene 강조 텍스트 h2 > .hl 등장 애니메이션 .reveal .d1–.d5 tip 섹션에 data-label 을 주면 점 네비에 이름이 떠요. 이렇게 한 장 이 완성됩니다 콘텐츠 조각만 쓰면 테마가 hero·네비·애니메이션을 입혀 독립 HTML로 발행해 줍니다.",
       "hash": "4d6583c27579d5b4e4a44244b4fcecbe7f702114"

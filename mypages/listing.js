@@ -1,5 +1,5 @@
 (function () {
-  var FOLDER = "p";
+  var FOLDER = "mypages";
   var PER_PAGE = parseInt("10", 10) || 10;
   var root = document.getElementById("mypage-list");
   if (!root) return;

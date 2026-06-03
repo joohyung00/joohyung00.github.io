@@ -18,6 +18,6 @@ title: My Posts
   <div id="mp-empty" class="mp-empty" hidden>No posts yet.</div>
   <div id="mp-pager" class="mp-pager"></div>
 </div>
-<link rel="stylesheet" href="/p/listing.css?v=76a1e071">
-<script src="/p/listing.js?v=76a1e071"></script>
+<link rel="stylesheet" href="/mypages/listing.css?v=703030da">
+<script src="/mypages/listing.js?v=703030da"></script>
 <!-- MY-PAGE:END -->
