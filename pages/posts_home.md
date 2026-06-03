@@ -12,25 +12,30 @@ title: My Posts
      terminate that block early and break the build. -->
 <div id="mypage-list">
   <div class="mp-bar">
-    <input id="mp-q" type="search" placeholder="검색 (제목·내용)… / search title &amp; content" autocomplete="off">
+    <input id="mp-q" type="search" placeholder="Search posts…" autocomplete="off">
     <span id="mp-count" class="mp-count"></span>
   </div>
   <ul id="mp-items" class="mp-items"></ul>
-  <div id="mp-empty" class="mp-empty" hidden>아직 페이지가 없습니다.</div>
+  <div id="mp-empty" class="mp-empty" hidden>No posts yet.</div>
   <div id="mp-pager" class="mp-pager"></div>
 </div>
 
 <style>
-  #mypage-list { --mp-accent:#2a7ae2; margin: 1em 0 2em; }
+  /* Inherit the host site's fonts so the widget matches the page (form controls do
+     NOT inherit font by default — that was the "alien font" in the search box). */
+  #mypage-list { --mp-accent:#2a7ae2; margin: 1em 0 2em; font-family: inherit; }
   #mypage-list .mp-bar { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
   #mypage-list #mp-q {
-    flex:1; padding:9px 13px; font-size:15px; border:1px solid #ccc; border-radius:8px; outline:none;
+    flex:1; padding:9px 13px; font-family: inherit; font-size:15px; border:1px solid #ccc;
+    border-radius:8px; outline:none;
   }
   #mypage-list #mp-q:focus { border-color: var(--mp-accent); box-shadow:0 0 0 2px rgba(42,122,226,.18); }
   #mypage-list .mp-count { color:#888; font-size:13px; white-space:nowrap; }
   #mypage-list .mp-items { list-style:none; padding:0; margin:0; }
   #mypage-list .mp-items li { padding:14px 2px; border-bottom:1px solid #eee; }
-  #mypage-list .mp-items a { font-size:18px; font-weight:600; color:var(--mp-accent); text-decoration:none; }
+  /* titles use the site's header font (e.g. beautiful-jekyll --header-font), like native posts */
+  #mypage-list .mp-items a { font-family: var(--header-font, inherit); font-size:20px; font-weight:700;
+    color:var(--mp-accent); text-decoration:none; }
   #mypage-list .mp-items a:hover { text-decoration:underline; }
   #mypage-list .mp-meta { color:#999; font-size:12.5px; margin:3px 0 5px; }
   #mypage-list .mp-excerpt { color:#555; font-size:14px; line-height:1.55; margin:0; }
@@ -38,7 +43,7 @@ title: My Posts
   #mypage-list .mp-pager { display:flex; justify-content:center; gap:6px; margin-top:18px; flex-wrap:wrap; }
   #mypage-list .mp-pager button {
     min-width:34px; padding:6px 10px; border:1px solid #ddd; background:#fff; border-radius:6px;
-    cursor:pointer; font-size:14px; color:#333;
+    cursor:pointer; font-family: inherit; font-size:14px; color:#333;
   }
   #mypage-list .mp-pager button[disabled] { opacity:.4; cursor:default; }
   #mypage-list .mp-pager button.active { background:var(--mp-accent); color:#fff; border-color:var(--mp-accent); }
@@ -70,7 +75,7 @@ title: My Posts
     text = esc(text);
     if (!q) return text;
     try {
-      var re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+      var re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\]/g, "\$&") + ")", "ig");
       return text.replace(re, "<mark>$1</mark>");
     } catch (e) { return text; }
   }
@@ -90,7 +95,7 @@ title: My Posts
     var total = filtered.length;
     var pages = Math.max(1, Math.ceil(total / PER_PAGE));
     if (page > pages) page = pages;
-    countEl.textContent = total ? (total + "개") : "";
+    countEl.textContent = total ? (total + (total === 1 ? " post" : " posts")) : "";
     emptyEl.hidden = total !== 0;
 
     var start = (page - 1) * PER_PAGE;
@@ -131,7 +136,7 @@ title: My Posts
     })
     .catch(function (e) {
       emptyEl.hidden = false;
-      emptyEl.textContent = "목록을 불러오지 못했습니다 (" + e.message + ").";
+      emptyEl.textContent = "Couldn't load the list (" + e.message + ").";
     });
 
   qEl.addEventListener("input", applyFilter);
