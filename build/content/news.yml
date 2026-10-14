@@ -3,9 +3,9 @@
   text: "<b>FiF</b> accepted to ICML 2026."
 - date: "2026.04"
   text: "Started a visiting-researcher stay at <b>New York University</b> (Apr–Aug 2026), funded by the IITP Global AI Frontier Lab."
-- date: "2026.01"            # TODO confirm month (placeholder)
+- date: "2026.02"            # TODO confirm month: applied 2026-01-26 (deadline ~01-29), schedule fixed by 02-10 → selection most likely Feb
   text: "Selected for POSTECH's 2026 Overseas Dispatch Program for Graduate Students (long-term)."
-- date: "2025.12"            # TODO confirm month (placeholder)
+- date: "2025.12"            # TODO confirm month: applications submitted 12-08 (Research Excellence) / 12-11 (Fellowship), results not found in mail
   text: "Received the 2025 POSTECH <b>Research Excellence Award</b>, the CSE Outstanding Paper Award, and the BK POSTECHIAN Fellowship."
 - date: "2025.11"
   text: "<b>LILaC</b> accepted to EMNLP 2025 (Suzhou, China)."
