@@ -1,6 +1,7 @@
-# Newest first. `detail` (optional, HTML) is shown under a "more" toggle.
+# Newest first. `detail` (optional, HTML) is shown under a "more" toggle; `logo` = square image in assets/img/exp/ (160px WebP).
 - period: "2026.04 – 08"
   title: Visiting Researcher · New York University
+  logo: assets/img/exp/nyu.webp
   sub: New York, USA · funded by the IITP Global AI Frontier Lab
   detail: >-
     Joint research collaboration from April to August 2026, funded by the Global AI Frontier Lab of IITP
@@ -8,15 +9,18 @@
     international research visits for graduate students.
 - period: "2025.10"
   title: Workshop Chair · KJMD 2025
+  logo: assets/img/exp/kjmd2025.webp
   sub: 7th Korea–Japan Workshop on Management of Data, Busan
   detail: >-
     Oversaw the technical program of the binational workshop (Oct 24–26, 2025): shaped the program structure,
     coordinated submission handling, and introduced the accepted papers during the sessions.
 - period: "2024.08"
   title: Session Chair · VLDB 2024 PhD Workshop
+  logo: assets/img/exp/vldb2024.webp
   sub: Guangzhou, China
   detail: >-
     Moderated a technical session of the PhD Workshop at VLDB 2024: introduced speakers, kept time, and ran the Q&amp;A.
 - period: "2021.06 – 07"
   title: Full-stack Developer Intern · SK hynix
+  logo: assets/img/exp/skhynix.webp
   sub: Icheon, Korea · Selenium, Spring Boot, Node.js

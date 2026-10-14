@@ -126,7 +126,7 @@
   <div class="lab"><h2>Experience</h2></div>
   <div>
     {% for e in experience %}
-    <div class="row"><span class="p">{{ e.period }}</span><div><div class="t">{{ e.title | safe }}</div>{% if e.sub %}<div class="s">{{ e.sub | safe }}</div>{% endif %}
+    <div class="row{% if e.logo %} logo{% endif %}"><span class="p">{{ e.period }}</span>{% if e.logo %}<img class="lg" src="{{ e.logo }}" alt="" width="40" height="40" loading="lazy">{% endif %}<div><div class="t">{{ e.title | safe }}</div>{% if e.sub %}<div class="s">{{ e.sub | safe }}</div>{% endif %}
       {% if e.detail %}<details class="more"><summary>more</summary><p>{{ e.detail | safe }}</p></details>{% endif %}</div></div>
     {% endfor %}
   </div>
