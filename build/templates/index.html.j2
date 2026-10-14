@@ -126,7 +126,7 @@
 {# ============================================================ 09 recent posts
    Baked at build time from mypages/index.json (the my-page manifest), then refreshed at runtime
    from the live manifest so new posts appear without a rebuild. Full list lives at /mypages/. #}
-<section class="sec tight" id="posts" data-posts="{{ profile.posts_url }}index.json"{% if not recent_posts %} hidden{% endif %}>
+<section class="sec tight" id="posts" data-posts="{{ profile.posts_url }}index.json" data-posts-exclude="{{ (profile.posts_exclude or []) | join(',') }}"{% if not recent_posts %} hidden{% endif %}>
   <div class="lab"><h2>Recent posts</h2><div class="sub"><a href="{{ profile.posts_url }}">all posts ↗</a></div></div>
   <div class="postlist">
     {% for p in recent_posts %}

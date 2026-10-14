@@ -18,6 +18,9 @@ email2: joohyung00@postech.ac.kr
 scholar: "https://scholar.google.com/citations?user=y_7wqtIAAAAJ"
 cv_pdf: assets/cv/cv.pdf
 posts_url: /mypages/
+posts_exclude:                # slugs never shown in the home "Recent posts" (still listed at /mypages/)
+  - theme-demo-indigo
+  - theme-demo-lilac
 legacy_url: legacy/
 chips:
   - multimodal document RAG

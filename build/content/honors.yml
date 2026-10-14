@@ -1,8 +1,9 @@
-# year "—" = year not recorded in the CV yet
+# Years as in assets/cv/cv.pdf (Honors & Awards).
 - {year: "2026", text: "Overseas Dispatch Program for Graduate Students (long-term) · POSTECH"}
 - {year: "2025", text: "Research Excellence Award · POSTECH"}
 - {year: "2025", text: "CSE Outstanding Paper Award · POSTECH"}
 - {year: "2025", text: "BK POSTECHIAN Fellowship · BK21"}
 - {year: "2024", text: "1st place, comparison &amp; post-processing tests · KDD Cup 2024 Meta CRAG"}
-- {year: "—", text: "National Science &amp; Technology Scholarship · Korea"}
-- {year: "—", text: "Global Leadership Program Scholarship · POSTECH (twice)"}
+- {year: "2021", text: "National Science &amp; Technology Scholarship · Korea"}
+- {year: "2021", text: "Global Leadership Program Scholarship · POSTECH"}
+- {year: "2020", text: "Global Leadership Program Scholarship · POSTECH"}

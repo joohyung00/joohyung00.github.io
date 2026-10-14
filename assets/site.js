@@ -70,8 +70,11 @@
   var ps = document.querySelector('[data-posts]');
   if (ps && window.fetch) {
     fetch(ps.getAttribute('data-posts'), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
-      if (!m || !m.pages || !m.pages.length) return;
-      var pages = m.pages.slice().sort(function (a, b) { return (b.created || '').localeCompare(a.created || ''); }).slice(0, 3);
+      if (!m || !m.pages) return;
+      var skip = (ps.getAttribute('data-posts-exclude') || '').split(',').filter(Boolean);   // profile.yml posts_exclude
+      var pages = m.pages.filter(function (p) { return skip.indexOf(p.slug) < 0; });
+      if (!pages.length) return;
+      pages = pages.sort(function (a, b) { return (b.created || '').localeCompare(a.created || ''); }).slice(0, 3);
       var box = ps.querySelector('.postlist');
       box.innerHTML = '';
       pages.forEach(function (p) {

@@ -32,8 +32,9 @@ def bold_self(authors, me):
     return authors.replace(me, f"<b>{me}</b>")
 
 
-def recent_posts(n=3):
-    """Latest n posts from the my-page manifest (mypages/index.json), or [] if it is missing."""
+def recent_posts(n=3, exclude=()):
+    """Latest n posts from the my-page manifest (mypages/index.json), or [] if it is missing.
+    Slugs in `exclude` (profile.yml posts_exclude, e.g. theme demos) are skipped here and at runtime."""
     path = os.path.join(ROOT, "mypages", "index.json")
     if not os.path.exists(path):
         return []
@@ -42,6 +43,7 @@ def recent_posts(n=3):
         pages = json.load(open(path, encoding="utf-8")).get("pages", [])
     except Exception:
         return []
+    pages = [p for p in pages if p.get("slug") not in set(exclude)]
     pages = sorted(pages, key=lambda p: p.get("created", ""), reverse=True)[:n]
     out = []
     for p in pages:
@@ -57,7 +59,7 @@ def render(inline=False):
     env.filters["bold_self"] = bold_self
     data = load_content()
     ctx = dict(data)
-    ctx["recent_posts"] = recent_posts()
+    ctx["recent_posts"] = recent_posts(exclude=data["profile"].get("posts_exclude") or [])
     ctx["build_date"] = datetime.date.today().strftime("%Y-%m")
     ctx["build_month"] = datetime.date.today().strftime("%B %Y")
     ctx["year"] = datetime.date.today().year
