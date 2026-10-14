@@ -28,3 +28,6 @@ the Slides Hub go through `python build/html_deck_pdf.py <deck dir> out.pdf` fir
 manuscripts under review never go here.
 
 The home page shows the three latest talks, seminars and posts; the nav is Talks / Seminars / Posts / CV (the PDF).
+
+CV: `assets/cv/cv.pdf` is built from LaTeX (Awesome-CV, XeLaTeX). Keep the Overleaf project's files in `cv/` and run
+`bash build/cv_build.sh` after editing; it compiles with latexmk and copies the PDF into `assets/cv/`. Commit both.
