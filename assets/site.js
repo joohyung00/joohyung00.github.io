@@ -80,14 +80,32 @@
       warm(idx + 1); warm(idx + 2); warm(idx - 1);
       if (history.replaceState && (!location.hash || /^#s\d+$/.test(location.hash))) history.replaceState(null, '', '#s' + (idx + 1));
     }
+    // html decks: a slide page may have build steps (.st[data-s], shown one by one by its own ArrowRight/ArrowLeft
+    // handler). Forward the keys into the current slide's iframe until its steps are used up, like PowerPoint.
+    function stepState(i) {
+      var f = figs[i], fr = f && f.querySelector('iframe'); if (!fr) return null;
+      try {
+        var d = fr.contentDocument, st = d && d.querySelectorAll('.st'); if (!st || !st.length) return null;
+        var left = 0, done = 0;
+        [].forEach.call(st, function (e) { if (e.classList.contains('shown')) { if (+e.getAttribute('data-s') > 0) done++; } else left++; });
+        return { doc: d, left: left, done: done };
+      } catch (e) { return null; }
+    }
+    function key(d, k) { d.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true })); }
+    function next() { var s = stepState(idx); if (s && s.left) { key(s.doc, 'ArrowRight'); return; } go(idx + 1); }
+    function prev() {
+      var s = stepState(idx); if (s && s.done) { key(s.doc, 'ArrowLeft'); return; }
+      go(idx - 1);
+      var p = stepState(idx); if (p) for (var k = 0; k < p.left; k++) key(p.doc, 'ArrowRight');   // show the previous slide fully built
+    }
     function go(i, instant) {
       var prev = idx;
       idx = Math.max(0, Math.min(n - 1, i)); lock = true;
       track.scrollTo({ left: figs[idx].offsetLeft, behavior: (instant || Math.abs(idx - prev) > 3) ? 'auto' : 'smooth' });  // long jumps: no animation
       paint(); setTimeout(function () { lock = false; }, 450);
     }
-    v.querySelector('.prev').addEventListener('click', function () { go(idx - 1); });
-    v.querySelector('.next').addEventListener('click', function () { go(idx + 1); });
+    v.querySelector('.prev').addEventListener('click', prev);
+    v.querySelector('.next').addEventListener('click', next);
     thumbs.forEach(function (b) { b.addEventListener('click', function () { go(+b.getAttribute('data-i')); }); });
     var lastW = track.clientWidth;
     track.addEventListener('scroll', function () {
@@ -99,8 +117,8 @@
     }, { passive: true });
     document.addEventListener('keydown', function (e) {
       if (e.altKey || e.ctrlKey || e.metaKey || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
-      if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(idx + 1); }
-      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(idx - 1); }
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
       else if (e.key === 'Home') { e.preventDefault(); go(0); }
       else if (e.key === 'End') { e.preventDefault(); go(n - 1); }
     });
