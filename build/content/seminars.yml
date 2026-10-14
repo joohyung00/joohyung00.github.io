@@ -10,14 +10,6 @@
   date: "2026.10"
   paper: {authors: "Kang et al.", venue: "EMNLP 2025", url: "https://aclanthology.org/2025.emnlp-main.1318/"}
   summary: "Long-term memory for multi-session dialogue agents organised like an operating system: short-, mid- and long-term tiers, topic segments with a heat score that drives eviction and promotion, and retrieval across the tiers at every turn; results on LoCoMo and GVD. HTML deck."
-- key: qwen38-next-2026-10
-  title: "On the Design of Qwen3.8-Next Architecture: Evaluation, Efficiency, and Training Stability"
-  kind: Paper reading
-  venue: DSLab NLP seminar
-  where: POSTECH
-  date: "2026.10.13"
-  paper: {authors: "Qwen Team", venue: "arXiv 2026", url: "https://arxiv.org/abs/2608.30320"}
-  summary: "Four replacements for the standard Transformer's cost bottlenecks (Gated DeltaNet and sparse attention for token mixing, a gated widened residual stream, host-memory n-gram embeddings) plus the training recipe, each scored on quality, cost and stability. The cases where the three axes disagree are the point. HTML deck."
 - key: hikey-tree-search-2026-09
   title: "Recent Work in Hierarchical Document Retrieval & HiKEY"
   kind: Paper reading
