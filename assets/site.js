@@ -160,7 +160,9 @@
       box.innerHTML = '';
       pages.forEach(function (p) {
         var d = (p.created || '').slice(0, 10);
-        var ex = (p.excerpt || '').replace(/\s+/g, ' ').trim(); if (ex.length > 140) ex = ex.slice(0, 140) + '…';
+        var ex = (p.excerpt || '').replace(/\s+/g, ' ').trim(), tt = p.title || '';
+        if (tt && ex.toLowerCase().indexOf(tt.toLowerCase()) === 0) ex = ex.slice(tt.length).replace(/^[\s·—–\-:|]+/, '');   // drop the repeated title
+        if (ex.length > 140) ex = ex.slice(0, 140) + '…';
         var el = document.createElement('div'); el.className = 'post';
         el.innerHTML = '<span class="d"></span><div><a class="t"></a><div class="x"></div></div>';
         el.querySelector('.d').textContent = d;

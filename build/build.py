@@ -48,8 +48,11 @@ def recent_posts(n=3, exclude=()):   # n=None → every post
     out = []
     for p in pages:
         ex = re.sub(r"\s+", " ", p.get("excerpt", "")).strip()
+        title = p.get("title") or p.get("slug", "")
+        if title and ex.lower().startswith(title.lower()):          # the manifest excerpt repeats the page title first
+            ex = ex[len(title):].lstrip(" ·—–-:|")
         out.append({"date": (p.get("created") or "")[:10], "url": p.get("url", "#"),
-                    "title": p.get("title") or p.get("slug", ""), "excerpt": (ex[:140] + "…") if len(ex) > 140 else ex})
+                    "title": title, "excerpt": (ex[:140] + "…") if len(ex) > 140 else ex})
     return out
 
 
