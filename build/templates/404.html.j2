@@ -1,0 +1,13 @@
+{% extends "base.html.j2" %}
+{% block title %}Not found · {{ profile.name }}{% endblock %}
+{% block canonical %}404.html{% endblock %}
+{% block body %}
+<section class="hero" style="grid-template-columns:1fr">
+  <div>
+    <div class="mono pre">404</div>
+    <h1 class="name">Not here<span class="dot">.</span></h1>
+    <p class="tag">That page does not exist. Looking for an older version of the site? It lives under <a href="/legacy/">/legacy/</a>.</p>
+    <div class="links"><a href="/">Home</a><a href="{{ profile.posts_url }}">Posts</a><a href="/legacy/">legacy</a></div>
+  </div>
+</section>
+{% endblock %}

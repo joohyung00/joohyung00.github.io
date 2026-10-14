@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 6.0.1 | Copyright Dean Attali 2023 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  
+
+  <title>Teaching</title>
+
+  
+  
+  <meta name="author" content="Joohyung Yun">
+  
+
+  <meta name="description" content="">
+
+  
+
+  
+
+  
+  <link rel="alternate" type="application/rss+xml" title="Joohyung's Homepage" href="../feed.xml">
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="../assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="../assets/css/beautifuljekyll.css">
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="../assets/css/custom-styles.css">
+    
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Joohyung's Homepage">
+  <meta property="og:title" content="Teaching">
+  <meta property="og:description" content="">
+
+  
+  <meta property="og:image" content="https://joohyung00.github.io/assets/img/me_a_square.jpg">
+  
+
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://joohyung00.github.io/pages/teaching/">
+  <link rel="canonical" href="teaching.html">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@">
+  <meta name="twitter:creator" content="@">
+
+  <meta property="twitter:title" content="Teaching">
+  <meta property="twitter:description" content="">
+
+  
+  <meta name="twitter:image" content="https://joohyung00.github.io/assets/img/me_a_square.jpg">
+  
+
+  
+
+
+  
+
+  
+  
+  <link rel="icon" href="../favicon.ico" />
+  
+
+  
+
+</head>
+
+<body>
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="../index.html">Joohyung's Homepage</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">About Me</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="publications.html">Publications</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="experiences.html">Experiences</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="teaching.html">Teaching</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="cv.html">CV</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="posts_home.html">Posts</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="../index.html">
+          <img alt="Navigation bar avatar" class="avatar-img" src="../assets/img/me_a_square.jpg" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+
+
+
+  <!---->
+
+  <style>
+    /* Rounded, shadowed frame */
+    .home-carousel {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+      background: #fff;
+    }
+    /* Keep a strict 3:4 box regardless of content */
+    .home-carousel { aspect-ratio: 3 / 4; }
+    /* Make slides fill the box and crop centrally */
+    .home-carousel .carousel-item,
+    .home-carousel .carousel-inner { height: 100%; }
+    .home-carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+    }
+    /* Bigger, easier arrows */
+    .home-carousel .carousel-control-prev,
+    .home-carousel .carousel-control-next {
+      width: 12%;
+    }
+    .home-carousel .carousel-control-prev-icon,
+    .home-carousel .carousel-control-next-icon {
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));
+    }
+    /* Dots */
+    .home-carousel .carousel-indicators { bottom: 10px; }
+    .home-carousel .carousel-indicators li {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+
+    /* News: 두 컬럼(날짜 | 내용) 정렬 */
+    .news-list{
+      display: grid;
+      grid-template-columns: max-content 1fr; /* 날짜 폭 = 내용과 무관, 내용은 남은 폭 */
+      column-gap: 1.25rem;
+      row-gap: .75rem;
+      align-items: start;
+    }
+    .news-list .news-date{ 
+      font-weight: 700; 
+      white-space: nowrap;   /* 줄바꿈 없이 날짜 유지 */
+    }
+    .news-list p{ 
+      margin: 0;             /* 행 간격은 row-gap으로만 제어 */
+    }
+
+    /* 모바일에서는 한 줄씩 세로 배치 */
+    @media (max-width: 576px){
+      .news-list{ grid-template-columns: 1fr; }
+      .news-list .news-date{ margin-bottom: .125rem; }
+    }
+
+    /* Social Links - Rounded Square Buttons */
+    .social-links .btn-social-icon .fa-circle {
+      border-radius: 15% !important;
+    }
+    .social-links .btn-social-icon .fa-stack-2x {
+      border-radius: 15%;
+    }
+
+  </style>
+
+  
+  
+  
+
+  
+  
+
+
+
+<header class="header-section ">
+<div class="intro-header ">
+  
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="page-heading">
+          <h1>Teaching</h1>
+          
+          
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+</div>
+
+
+
+</header>
+
+
+<style>
+  :root{ --card-bg:#f6ebc9; }  /* slightly deeper yellow to match site theme */
+  .teach-wrap{ margin-top: 1.5rem; }
+
+  /* Card */
+  .teach-card{
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .teach-row{
+    display: grid;
+    grid-template-columns: 160px 1fr; /* thumbnail | content */
+    gap: 16px;
+    align-items: center;
+    padding: 16px;
+  }
+
+  /* Thumbnail (center-cropped) */
+  .teach-thumb{ width:100%; aspect-ratio:4/3; border-radius:10px; background:#e9deb6; overflow:hidden; }
+  .teach-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* Body */
+  .teach-title{ margin:0; font-weight: 800; line-height:1.35; }
+  .teach-sub{ margin:.15rem 0 .35rem; opacity:.9; }
+  .teach-chip{
+    display:inline-block; font-weight:700;
+    background:#e8d9a8; border-radius:999px; padding:.25rem .6rem;
+    margin-right:.4rem;
+  }
+
+  @media (max-width: 576px){
+    .teach-row{ grid-template-columns: 1fr; }
+  }
+</style>
+
+<main class="container-md teach-wrap">
+  <div class="row">
+    <div class="col-xl-10 offset-xl-1 col-lg-10 offset-lg-1">
+
+      <!-- 2024 CSED273 -->
+      <div class="teach-card">
+        <div class="teach-row">
+          <div class="teach-thumb">
+            <img src="../assets/img/teaching/dds.png" alt="Design of Digital System (CSED273) thumbnail">
+          </div>
+          <div class="teach-meta">
+            <div class="teach-chip">2024</div>
+            <h3 class="teach-title">Teaching Assistant — Design of Digital System (CSED273)</h3>
+            <p class="teach-sub">POSTECH, Dept. of Computer Science & Engineering</p>
+            <ul class="mb-0">
+              <li>Managed labs/assignments and assisted grading</li>
+              <li>Prepared course materials; handled Q&amp;A and office hours</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2022 Advanced Machine Learning (Samsung Electronics × DSLab) -->
+      <div class="teach-card">
+        <div class="teach-row">
+          <div class="teach-thumb">
+            <img src="../assets/img/teaching/aml.png" alt="Advanced Machine Learning thumbnail">
+          </div>
+          <div class="teach-meta">
+            <div class="teach-chip">2022</div>
+            <h3 class="teach-title">Teaching Assistant — Advanced Machine Learning</h3>
+            <p class="teach-sub">Samsung Electronics &amp; Data Systems Lab (POSTECH)</p>
+            <ul class="mb-0">
+              <li>Assisted practice-oriented lectures and managed assignments/projects</li>
+              <li>Supported ML theory and hands-on sessions</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2021 Data Processing / Distributed DB / Deep Learning (Samsung Electronics × DSLab) -->
+      <div class="teach-card">
+        <div class="teach-row">
+          <div class="teach-thumb">
+            <img src="../assets/img/teaching/dpdddl.png" alt="Data Processing & Distributed DB & Deep Learning thumbnail">
+          </div>
+          <div class="teach-meta">
+            <div class="teach-chip">2021</div>
+            <h3 class="teach-title">Teaching Assistant — Data Processing, Distributed Database &amp; Deep Learning</h3>
+            <p class="teach-sub">Samsung Electronics &amp; Data Systems Lab (POSTECH)</p>
+            <ul class="mb-0">
+              <li>Supported modules on Data Processing, Distributed Databases, and Deep Learning</li>
+              <li>Set up lab environments and graded assignments</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+  
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      
+<ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="mailto:jhyun@dblab.postech.ac.kr" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/joohyung00" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://linkedin.com/in/joohyung-yun-a1a881318" title="LinkedIn">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">LinkedIn</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://scholar.google.com/citations?user=y_7wqtIAAAAJ" title="Google Scholar">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fa fa-graduation-cap fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Google Scholar</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="https://openreview.net/profile?id=~Joohyung_Yun1" title="OpenReview">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-microscope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">OpenReview</span>
+    </a>
+  </li></ul>
+
+
+      
+      <p class="copyright text-muted">
+      
+        Joohyung Yun
+        &nbsp;&bull;&nbsp;
+      
+      2026
+
+      <!-- 
+
+      
+
+      
+        &nbsp;&bull;&nbsp;
+        <a title="Edit this page on GitHub" href="https://github.com/joohyung00/joohyung00.github.io/edit/master/pages/teaching.md" class="text_muted">Edit page</a>
+        -->
+
+      </p>
+      <!-- <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p> -->
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="../assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+</body>
+</html>

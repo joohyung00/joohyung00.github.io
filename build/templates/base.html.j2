@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ profile.name }}{% endblock %}</title>
+<meta name="description" content="{{ profile.description }}">
+<link rel="canonical" href="{{ profile.site_url }}/{% block canonical %}{% endblock %}">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ profile.description }}">
+<meta property="og:image" content="{{ profile.site_url }}/assets/img/portrait.jpg">
+<meta property="og:url" content="{{ profile.site_url }}/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="assets/img/kirby.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+{% if inline %}
+<style>{{ inline_css | safe }}</style>
+{% else %}
+<link rel="stylesheet" href="assets/site.css">
+{% endif %}
+<script>
+/* apply the saved theme before first paint */
+(function(){try{var m=localStorage.getItem('mode');if(!m&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)m='dark';if(m)document.documentElement.setAttribute('data-mode',m);}catch(e){}})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"{{ profile.name }}","url":"{{ profile.site_url }}/","email":"{{ profile.email }}","affiliation":{"@type":"Organization","name":"{{ profile.univ }}"},"sameAs":["{{ profile.scholar }}","https://github.com/joohyung00"]}
+</script>
+</head>
+<body id="top">
+<div class="nav"><div class="in">
+  <a class="brand" href="#top">JY<span>.</span></a>
+  <nav aria-label="Sections">
+    <a href="#about">About</a><a href="#research">Research</a><a href="#news">News</a><a href="#pubs">Publications</a><a href="#cv">CV</a>
+  </nav>
+  <a class="ext" href="{{ profile.posts_url }}">Posts ↗</a>
+  <button class="themeToggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">☾</button>
+</div></div>
+<div class="wrap">
+{% block body %}{% endblock %}
+<footer>
+  <span><a href="mailto:{{ profile.email }}">{{ profile.email }}</a> · last updated {{ build_date }}</span>
+  <span><a href="{{ profile.posts_url }}">Posts ↗</a> · <a href="{{ profile.legacy_url }}" title="Previous versions of this site">legacy ↗</a> · <a href="#top">top ↑</a></span>
+</footer>
+</div>
+{% if inline %}
+<script>{{ inline_js | safe }}</script>
+{% else %}
+<script src="assets/site.js" defer></script>
+{% endif %}
+</body>
+</html>

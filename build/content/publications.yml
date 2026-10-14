@@ -1,0 +1,71 @@
+# Newest first. `authors` as a plain string; profile.me is bolded automatically.
+# links: ordered mapping label -> url. thumb/figure are repo-relative paths.
+- key: fif
+  venue: ICML 2026
+  title: "Failure is Feedback: History-Aware Backtracking for Agentic Traversal in Multimodal Graphs"
+  authors: "Yun, J., Lee, D., Han, W."
+  thumb: assets/img/pubs/fif_thumb.jpg
+  figure: assets/img/pubs/fif_fig.png
+  links:
+    Project: https://failureisfeedback.github.io/
+    arXiv: https://arxiv.org/abs/2602.03432
+    PDF: https://arxiv.org/pdf/2602.03432
+  summary: >-
+    Agentic retrieval over multimodal documents must commit to a path without exploring every alternative.
+    FiF treats a failed step as feedback: it backtracks to the last decision point and uses the failure to choose
+    a different branch, reaching state-of-the-art accuracy on MultimodalQA, MMCoQA, and WebQA at lower cost.
+- key: lilac
+  venue: EMNLP 2025
+  title: "LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval"
+  authors: "Yun, J., Lee, D., Han, W."
+  thumb: assets/img/pubs/lilac_thumb.jpg
+  figure: assets/img/pubs/lilac_fig.png
+  links:
+    Paper: https://aclanthology.org/2025.emnlp-main.1037/
+    Slides: assets/slides/lilac.pptx
+    Code: https://github.com/joohyung00/lilac
+  summary: >-
+    LILaC indexes a document collection as a two-layer component graph: a coarse layer for fast candidate generation
+    and a fine layer for reasoning across text, tables, and images. A late-interaction traversal retrieves the relevant
+    subgraph, improving both precision and recall on multihop queries.
+- key: helios
+  venue: ACL 2025
+  title: "HELIOS: Harmonizing Early Fusion, Late Fusion, and LLM Reasoning for Multi-Granular Table-Text Retrieval"
+  authors: "Park, S., Yun, J., Lee, J., Han, W."
+  thumb: assets/img/pubs/helios_thumb.jpg
+  figure: assets/img/pubs/helios_fig.png
+  links:
+    Paper: https://aclanthology.org/2025.acl-long.1559.pdf
+    Slides: assets/slides/helios.pdf
+    Code: https://github.com/pshlego/HELIOS
+  summary: >-
+    Early fusion pre-aligns tables with passages and over-retrieves; late fusion aligns on the fly and under-retrieves.
+    HELIOS combines both over a layered graph and adds an LLM reasoning step, giving higher retrieval accuracy on
+    table-text benchmarks with efficient inference.
+- key: recg
+  venue: PVLDB 2024
+  title: "ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework"
+  authors: "Yun, J., Tak, B., Han, W."
+  thumb: assets/img/pubs/recg_thumb.jpg
+  figure: assets/img/pubs/recg_fig.png
+  links:
+    Paper: https://dl.acm.org/doi/pdf/10.14778/3681954.3682019
+    Slides: assets/slides/recg.pptx
+    Code: https://github.com/joohyung00/recg_vldb_2024
+  summary: >-
+    Top-down schema discovery decides a node's type before seeing its children and gets heterogeneous data wrong.
+    ReCG works bottom-up, clustering leaf patterns and generalizing upward under a minimum-description-length objective,
+    improving schema accuracy by up to 47% while running faster than prior methods.
+- key: kddcup
+  venue: KDD Cup 2024 · RAG Workshop
+  title: "KDD Cup Meta CRAG 2024 Technical Report: Three-Step Question-Answering Framework"
+  authors: "Park, S., Seok, J., Lee, J., Yun, J., Lee, W."
+  thumb: assets/img/pubs/kddcup_thumb.jpg
+  figure: assets/img/pubs/kddcup_fig.png
+  links:
+    Paper: https://openreview.net/pdf?id=G4Ei2QlKnv
+    Code: https://github.com/joohyung00/kdd_cup_2024_crag
+  summary: >-
+    A three-step framework for the Meta CRAG challenge: answer from parametric knowledge when it suffices, retrieve
+    external evidence only when needed, and verify the generated answer before returning it, cutting hallucination
+    while keeping retrieval cost low.

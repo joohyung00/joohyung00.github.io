@@ -1,0 +1,21 @@
+# Newest first. `text` is HTML. Papers under review are not listed.
+- date: "2026.05"
+  text: "<b>FiF</b> accepted to ICML 2026."
+- date: "2026.04"
+  text: "Started a visiting-researcher stay at <b>New York University</b> (Apr–Aug 2026), funded by the IITP Global AI Frontier Lab."
+- date: "2026.01"            # TODO confirm month (placeholder)
+  text: "Selected for POSTECH's 2026 Overseas Dispatch Program for Graduate Students (long-term)."
+- date: "2025.12"            # TODO confirm month (placeholder)
+  text: "Received the 2025 POSTECH <b>Research Excellence Award</b>, the CSE Outstanding Paper Award, and the BK POSTECHIAN Fellowship."
+- date: "2025.11"
+  text: "<b>LILaC</b> accepted to EMNLP 2025 (Suzhou, China)."
+- date: "2025.10"
+  text: "Served as workshop chair of <b>KJMD 2025</b>, the 7th Korea–Japan Workshop on Management of Data (Busan)."
+- date: "2025.07"
+  text: "<b>HELIOS</b> to appear at ACL 2025 (Vienna, Austria)."
+- date: "2024.08"
+  text: "<b>ReCG</b> accepted to PVLDB (bottom-up JSON schema discovery)."
+- date: "2024.07"
+  text: "Team <b>dRAGonRAnGers</b> placed 1st in the comparison &amp; post-processing tests at KDD Cup 2024 (Meta CRAG)."
+- date: "2023.09"
+  text: "Started the integrated M.S./Ph.D. program at POSTECH Data Systems Lab."

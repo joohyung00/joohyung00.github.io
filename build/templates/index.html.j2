@@ -1,0 +1,136 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ profile.name }} · {{ profile.lab }}, {{ profile.univ }}{% endblock %}
+{% block body %}
+
+{# ============================================================ hero #}
+<header class="hero">
+  <div>
+    <div class="mono pre">{{ profile.role }} · {{ profile.lab }}, {{ profile.univ }}</div>
+    <h1 class="name">{{ profile.name }}<span class="dot">.</span><span class="kr">{{ profile.name_kr }}</span></h1>
+    <p class="tag">{{ profile.tagline }}</p>
+    <div class="links">
+      {% for c in profile.contacts %}<a href="{{ c.url }}">{{ c.label }}</a>{% endfor %}
+    </div>
+    <div>{% for ch in profile.chips %}<span class="chip">{{ ch }}</span>{% endfor %}</div>
+  </div>
+  <div>
+    <img class="portrait" src="assets/img/portrait.jpg" alt="{{ profile.name }}" width="232" height="232">
+    <div class="cap">{{ profile.location }}</div>
+  </div>
+</header>
+
+{# ============================================================ 01 about #}
+<section class="sec" id="about">
+  <div class="lab"><div class="n">01</div><h2>About</h2><div class="sub">advised by <a href="{{ profile.advisor_url }}">{{ profile.advisor }}</a></div></div>
+  <div>{% for p in profile.about %}<p>{{ p | safe }}</p>{% endfor %}</div>
+</section>
+
+{# ============================================================ 02 research #}
+<section class="sec" id="research">
+  <div class="lab"><div class="n">02</div><h2>Research</h2><div class="sub">{{ profile.research | length }} directions</div></div>
+  <div class="research">
+    {% for r in profile.research %}
+    <div><b>{{ r.topic | safe }}</b><span>{{ r.text | safe }}</span><span class="pp">{{ r.papers }}</span></div>
+    {% endfor %}
+  </div>
+</section>
+
+{# ============================================================ 03 news #}
+<section class="sec" id="news">
+  <div class="lab"><div class="n">03</div><h2>News</h2><div class="sub">{{ news | length }} items</div></div>
+  <ul class="news" data-visible="{{ profile.news_visible }}">
+    {% for n in news %}
+    <li{% if loop.index > profile.news_visible %} class="extra"{% endif %}><span class="d">{{ n.date }}</span><span>{{ n.text | safe }}</span></li>
+    {% endfor %}
+    {% if news | length > profile.news_visible %}
+    <li class="more"><button type="button" class="linkbtn" data-toggle-news>show all ({{ news | length - profile.news_visible }} more) ▾</button></li>
+    {% endif %}
+  </ul>
+</section>
+
+{# ============================================================ 04 publications #}
+<section class="sec" id="pubs">
+  <div class="lab"><div class="n">04</div><h2>Publications</h2><div class="sub">{{ publications | length }} papers · <a href="{{ profile.scholar }}">scholar ↗</a></div></div>
+  <div>
+    {% for p in publications %}
+    <article class="pub" id="pub-{{ p.key }}">
+      <img src="{{ p.thumb }}" alt="" width="72" height="72" loading="lazy">
+      <div>
+        <span class="badge">{{ p.venue }}</span>
+        <h3>{{ p.title }}</h3>
+        <div class="au">{{ p.authors | bold_self(profile.me) | safe }}</div>
+        <div class="links">{% for label, url in p.links.items() %}<a href="{{ url }}">{{ label }}</a>{% endfor %}</div>
+        <details>
+          <summary>summary</summary>
+          <p>{{ p.summary }}</p>
+          {% if p.figure %}<img class="fig" src="{{ p.figure }}" alt="{{ p.title }} overview" loading="lazy">{% endif %}
+        </details>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+{# ============================================================ 05–08 cv block #}
+<div id="cv">
+<section class="sec tight" id="experience">
+  <div class="lab"><div class="n">05</div><h2>Experience</h2></div>
+  <div>
+    {% for e in experience %}
+    <div class="row"><span class="p">{{ e.period }}</span><div><div class="t">{{ e.title | safe }}</div>{% if e.sub %}<div class="s">{{ e.sub | safe }}</div>{% endif %}
+      {% if e.detail %}<details class="more"><summary>more</summary><p>{{ e.detail | safe }}</p></details>{% endif %}</div></div>
+    {% endfor %}
+  </div>
+</section>
+<section class="sec tight" id="teaching">
+  <div class="lab"><div class="n">06</div><h2>Teaching</h2></div>
+  <div>
+    {% for t in teaching %}
+    <div class="row"><span class="p">{{ t.period }}</span><div><div class="t">{{ t.title | safe }}</div>{% if t.sub %}<div class="s">{{ t.sub | safe }}</div>{% endif %}</div></div>
+    {% endfor %}
+  </div>
+</section>
+<section class="sec tight" id="honors">
+  <div class="lab"><div class="n">07</div><h2>Honors &amp; Patents</h2></div>
+  <div class="two">
+    <div><div class="h2m">Awards</div>
+      {% for h in honors %}<div class="row"><span class="p">{{ h.year }}</span><div class="t light">{{ h.text | safe }}</div></div>{% endfor %}
+    </div>
+    <div><div class="h2m">Patents</div>
+      {% for pt in patents %}<div class="row one"><div><div class="t light">{{ pt.title | safe }}</div><div class="s">{{ pt.sub | safe }}</div></div></div>{% endfor %}
+    </div>
+  </div>
+</section>
+<section class="sec tight" id="education">
+  <div class="lab"><div class="n">08</div><h2>Education</h2><div class="sub"><a href="{{ profile.cv_pdf }}">cv.pdf ↗</a></div></div>
+  <div>
+    {% for e in education %}
+    <div class="row"><span class="p">{{ e.period }}</span><div><div class="t">{{ e.title | safe }}</div>{% if e.sub %}<div class="s">{{ e.sub | safe }}</div>{% endif %}</div></div>
+    {% endfor %}
+    <div class="row"><span class="p">Languages</span><div class="t light">{{ profile.languages | safe }}</div></div>
+  </div>
+</section>
+</div>
+
+{# ============================================================ 09 photos #}
+{% if photos %}
+<section class="sec tight" id="photos">
+  <div class="lab"><div class="n">09</div><h2>Photos</h2><div class="sub">{{ photos | length }} photos</div></div>
+  <div class="carousel" data-carousel>
+    <div class="track" tabindex="0">
+      {% for ph in photos %}<figure><img src="{{ ph.src }}" alt="{{ ph.alt }}" loading="lazy" width="1200" height="900"></figure>{% endfor %}
+    </div>
+    <button type="button" class="arrow prev" aria-label="Previous photo">‹</button>
+    <button type="button" class="arrow next" aria-label="Next photo">›</button>
+    <div class="dots" role="tablist"></div>
+  </div>
+</section>
+{% endif %}
+
+{# ============================================================ 10 recent posts (filled at runtime from /mypages/index.json) #}
+<section class="sec tight" id="posts" data-posts="{{ profile.posts_url }}index.json" hidden>
+  <div class="lab"><div class="n">10</div><h2>Recent posts</h2><div class="sub"><a href="{{ profile.posts_url }}">all posts ↗</a></div></div>
+  <div class="postlist"></div>
+</section>
+
+{% endblock %}

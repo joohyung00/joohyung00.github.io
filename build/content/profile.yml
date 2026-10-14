@@ -1,0 +1,48 @@
+# Hero + metadata. Edit here, then: python build/build.py
+name: Joohyung Yun
+name_kr: 윤주형
+me: "Yun, J."                 # how my name appears in author lists (gets bolded)
+role: Ph.D. student
+lab: Data Systems Lab
+lab_url: https://dslab.postech.ac.kr
+univ: POSTECH
+univ_url: https://postech.ac.kr
+advisor: Wook-Shin Han
+advisor_url: https://wscrony.github.io
+location: POSTECH · Pohang, Korea
+tagline: Retrieval that reasons over text, tables, and images.
+description: Joohyung Yun, Ph.D. student at POSTECH Data Systems Lab. Retrieval-augmented generation over real-world documents that mix text, tables, and images; agentic and multihop retrieval.
+site_url: https://joohyung00.github.io
+email: jhyun@dblab.postech.ac.kr
+email2: joohyung00@postech.ac.kr
+scholar: "https://scholar.google.com/citations?user=y_7wqtIAAAAJ"
+cv_pdf: assets/cv/cv.pdf
+posts_url: /mypages/
+legacy_url: legacy/
+chips:
+  - multimodal document RAG
+  - agentic retrieval
+  - multihop QA
+contacts:                     # shown in the hero, in this order
+  - {label: jhyun@dblab.postech.ac.kr, url: "mailto:jhyun@dblab.postech.ac.kr"}
+  - {label: GitHub, url: "https://github.com/joohyung00"}
+  - {label: Scholar, url: "https://scholar.google.com/citations?user=y_7wqtIAAAAJ"}
+  - {label: OpenReview, url: "https://openreview.net/profile?id=~Joohyung_Yun1"}
+  - {label: LinkedIn, url: "https://linkedin.com/in/joohyung-yun-a1a881318"}
+  - {label: "CV (PDF)", url: "assets/cv/cv.pdf"}
+about:
+  - >-
+    I am a fourth-year integrated M.S./Ph.D. student (second year of the Ph.D.) in Computer Science at
+    <a href="https://postech.ac.kr">POSTECH</a>, advised by Prof. <a href="https://wscrony.github.io">Wook-Shin Han</a>
+    in the <a href="https://dslab.postech.ac.kr">Data Systems Lab</a>. I work where natural language processing meets
+    information retrieval: <b>retrieval-augmented generation</b> over complex, real-world documents that mix text, tables, and images.
+  - >-
+    My recent work treats retrieval as something an <b>agent</b> does rather than a single lookup: traversing document
+    structure, noticing when a path fails, and backtracking with that feedback. Next, I want these systems to be trustworthy
+    at <b>enterprise scale</b>: verifiable answers over knowledge graphs and multimodal corpora.
+research:
+  - {topic: Multimodal multihop retrieval, text: "Finding evidence scattered across the text, tables, and images of many documents, at the right granularity.", papers: "LILaC · HELIOS"}
+  - {topic: Agentic document RAG, text: "Agents that traverse document structure, detect a failed path, and backtrack using that failure as feedback.", papers: "FiF · ongoing"}
+  - {topic: "Structured &amp; enterprise data", text: "Schema discovery, knowledge graphs, and verifiable answers over heterogeneous enterprise data.", papers: "ReCG · CRAG"}
+languages: Korean (native) · English (fluent) · Japanese (fluent)
+news_visible: 6               # how many news rows are shown before "show all"

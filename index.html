@@ -1,28 +1,217 @@
----
-layout: base
-title: Joohyung Yun
-subtitle: Ph.D. Student in POSTECH DSLab
----
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joohyung Yun · Data Systems Lab, POSTECH</title>
+<meta name="description" content="Joohyung Yun, Ph.D. student at POSTECH Data Systems Lab. Retrieval-augmented generation over real-world documents that mix text, tables, and images; agentic and multihop retrieval.">
+<link rel="canonical" href="https://joohyung00.github.io/">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Joohyung Yun · Data Systems Lab, POSTECH">
+<meta property="og:description" content="Joohyung Yun, Ph.D. student at POSTECH Data Systems Lab. Retrieval-augmented generation over real-world documents that mix text, tables, and images; agentic and multihop retrieval.">
+<meta property="og:image" content="https://joohyung00.github.io/assets/img/portrait.jpg">
+<meta property="og:url" content="https://joohyung00.github.io/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="assets/img/kirby.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+/* apply the saved theme before first paint */
+(function(){try{var m=localStorage.getItem('mode');if(!m&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)m='dark';if(m)document.documentElement.setAttribute('data-mode',m);}catch(e){}})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Joohyung Yun","url":"https://joohyung00.github.io/","email":"jhyun@dblab.postech.ac.kr","affiliation":{"@type":"Organization","name":"POSTECH"},"sameAs":["https://scholar.google.com/citations?user=y_7wqtIAAAAJ","https://github.com/joohyung00"]}
+</script>
+</head>
+<body id="top">
+<div class="nav"><div class="in">
+  <a class="brand" href="#top">JY<span>.</span></a>
+  <nav aria-label="Sections">
+    <a href="#about">About</a><a href="#research">Research</a><a href="#news">News</a><a href="#pubs">Publications</a><a href="#cv">CV</a>
+  </nav>
+  <a class="ext" href="/mypages/">Posts ↗</a>
+  <button class="themeToggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">☾</button>
+</div></div>
+<div class="wrap">
 
-<div style="text-align: center; margin-bottom: 2rem;">
-  <img src="{{ '/assets/img/me_a_square.jpg' | relative_url }}" alt="Joohyung Yun" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
-  <h1 style="margin-top: 1rem;">Joohyung Yun (윤주형)</h1>
-  <p>
-    <a href="mailto:jhyun@dblab.postech.ac.kr">jhyun@dblab.postech.ac.kr</a>
-  </p>
-  <p>
-    4th year integrated M.S./Ph.D. student (2nd year Ph.D.) at POSTECH<br>
-    <a href="https://dslab.postech.ac.kr">Data Systems Lab (STAR Lab)</a><br>
-    Advisor: Professor <a href="https://wscrony.github.io">Wook-Shin Han</a>
-  </p>
+<header class="hero">
+  <div>
+    <div class="mono pre">Ph.D. student · Data Systems Lab, POSTECH</div>
+    <h1 class="name">Joohyung Yun<span class="dot">.</span><span class="kr">윤주형</span></h1>
+    <p class="tag">Retrieval that reasons over text, tables, and images.</p>
+    <div class="links">
+<a href="mailto:jhyun@dblab.postech.ac.kr">jhyun@dblab.postech.ac.kr</a><a href="https://github.com/joohyung00">GitHub</a><a href="https://scholar.google.com/citations?user=y_7wqtIAAAAJ">Scholar</a><a href="https://openreview.net/profile?id=~Joohyung_Yun1">OpenReview</a><a href="https://linkedin.com/in/joohyung-yun-a1a881318">LinkedIn</a><a href="assets/cv/cv.pdf">CV (PDF)</a>    </div>
+    <div><span class="chip">multimodal document RAG</span><span class="chip">agentic retrieval</span><span class="chip">multihop QA</span></div>
+  </div>
+  <div>
+    <img class="portrait" src="assets/img/portrait.jpg" alt="Joohyung Yun" width="232" height="232">
+    <div class="cap">POSTECH · Pohang, Korea</div>
+  </div>
+</header>
+
+<section class="sec" id="about">
+  <div class="lab"><div class="n">01</div><h2>About</h2><div class="sub">advised by <a href="https://wscrony.github.io">Wook-Shin Han</a></div></div>
+  <div><p>I am a fourth-year integrated M.S./Ph.D. student (second year of the Ph.D.) in Computer Science at <a href="https://postech.ac.kr">POSTECH</a>, advised by Prof. <a href="https://wscrony.github.io">Wook-Shin Han</a> in the <a href="https://dslab.postech.ac.kr">Data Systems Lab</a>. I work where natural language processing meets information retrieval: <b>retrieval-augmented generation</b> over complex, real-world documents that mix text, tables, and images.</p><p>My recent work treats retrieval as something an <b>agent</b> does rather than a single lookup: traversing document structure, noticing when a path fails, and backtracking with that feedback. Next, I want these systems to be trustworthy at <b>enterprise scale</b>: verifiable answers over knowledge graphs and multimodal corpora.</p></div>
+</section>
+
+<section class="sec" id="research">
+  <div class="lab"><div class="n">02</div><h2>Research</h2><div class="sub">3 directions</div></div>
+  <div class="research">
+    <div><b>Multimodal multihop retrieval</b><span>Finding evidence scattered across the text, tables, and images of many documents, at the right granularity.</span><span class="pp">LILaC · HELIOS</span></div>
+    <div><b>Agentic document RAG</b><span>Agents that traverse document structure, detect a failed path, and backtrack using that failure as feedback.</span><span class="pp">FiF · ongoing</span></div>
+    <div><b>Structured &amp; enterprise data</b><span>Schema discovery, knowledge graphs, and verifiable answers over heterogeneous enterprise data.</span><span class="pp">ReCG · CRAG</span></div>
+  </div>
+</section>
+
+<section class="sec" id="news">
+  <div class="lab"><div class="n">03</div><h2>News</h2><div class="sub">10 items</div></div>
+  <ul class="news" data-visible="6">
+    <li><span class="d">2026.05</span><span><b>FiF</b> accepted to ICML 2026.</span></li>
+    <li><span class="d">2026.04</span><span>Started a visiting-researcher stay at <b>New York University</b> (Apr–Aug 2026), funded by the IITP Global AI Frontier Lab.</span></li>
+    <li><span class="d">2026.01</span><span>Selected for POSTECH's 2026 Overseas Dispatch Program for Graduate Students (long-term).</span></li>
+    <li><span class="d">2025.12</span><span>Received the 2025 POSTECH <b>Research Excellence Award</b>, the CSE Outstanding Paper Award, and the BK POSTECHIAN Fellowship.</span></li>
+    <li><span class="d">2025.11</span><span><b>LILaC</b> accepted to EMNLP 2025 (Suzhou, China).</span></li>
+    <li><span class="d">2025.10</span><span>Served as workshop chair of <b>KJMD 2025</b>, the 7th Korea–Japan Workshop on Management of Data (Busan).</span></li>
+    <li class="extra"><span class="d">2025.07</span><span><b>HELIOS</b> to appear at ACL 2025 (Vienna, Austria).</span></li>
+    <li class="extra"><span class="d">2024.08</span><span><b>ReCG</b> accepted to PVLDB (bottom-up JSON schema discovery).</span></li>
+    <li class="extra"><span class="d">2024.07</span><span>Team <b>dRAGonRAnGers</b> placed 1st in the comparison &amp; post-processing tests at KDD Cup 2024 (Meta CRAG).</span></li>
+    <li class="extra"><span class="d">2023.09</span><span>Started the integrated M.S./Ph.D. program at POSTECH Data Systems Lab.</span></li>
+    <li class="more"><button type="button" class="linkbtn" data-toggle-news>show all (4 more) ▾</button></li>
+  </ul>
+</section>
+
+<section class="sec" id="pubs">
+  <div class="lab"><div class="n">04</div><h2>Publications</h2><div class="sub">5 papers · <a href="https://scholar.google.com/citations?user=y_7wqtIAAAAJ">scholar ↗</a></div></div>
+  <div>
+    <article class="pub" id="pub-fif">
+      <img src="assets/img/pubs/fif_thumb.jpg" alt="" width="72" height="72" loading="lazy">
+      <div>
+        <span class="badge">ICML 2026</span>
+        <h3>Failure is Feedback: History-Aware Backtracking for Agentic Traversal in Multimodal Graphs</h3>
+        <div class="au"><b>Yun, J.</b>, Lee, D., Han, W.</div>
+        <div class="links"><a href="https://failureisfeedback.github.io/">Project</a><a href="https://arxiv.org/abs/2602.03432">arXiv</a><a href="https://arxiv.org/pdf/2602.03432">PDF</a></div>
+        <details>
+          <summary>summary</summary>
+          <p>Agentic retrieval over multimodal documents must commit to a path without exploring every alternative. FiF treats a failed step as feedback: it backtracks to the last decision point and uses the failure to choose a different branch, reaching state-of-the-art accuracy on MultimodalQA, MMCoQA, and WebQA at lower cost.</p>
+<img class="fig" src="assets/img/pubs/fif_fig.png" alt="Failure is Feedback: History-Aware Backtracking for Agentic Traversal in Multimodal Graphs overview" loading="lazy">        </details>
+      </div>
+    </article>
+    <article class="pub" id="pub-lilac">
+      <img src="assets/img/pubs/lilac_thumb.jpg" alt="" width="72" height="72" loading="lazy">
+      <div>
+        <span class="badge">EMNLP 2025</span>
+        <h3>LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval</h3>
+        <div class="au"><b>Yun, J.</b>, Lee, D., Han, W.</div>
+        <div class="links"><a href="https://aclanthology.org/2025.emnlp-main.1037/">Paper</a><a href="assets/slides/lilac.pptx">Slides</a><a href="https://github.com/joohyung00/lilac">Code</a></div>
+        <details>
+          <summary>summary</summary>
+          <p>LILaC indexes a document collection as a two-layer component graph: a coarse layer for fast candidate generation and a fine layer for reasoning across text, tables, and images. A late-interaction traversal retrieves the relevant subgraph, improving both precision and recall on multihop queries.</p>
+<img class="fig" src="assets/img/pubs/lilac_fig.png" alt="LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval overview" loading="lazy">        </details>
+      </div>
+    </article>
+    <article class="pub" id="pub-helios">
+      <img src="assets/img/pubs/helios_thumb.jpg" alt="" width="72" height="72" loading="lazy">
+      <div>
+        <span class="badge">ACL 2025</span>
+        <h3>HELIOS: Harmonizing Early Fusion, Late Fusion, and LLM Reasoning for Multi-Granular Table-Text Retrieval</h3>
+        <div class="au">Park, S., <b>Yun, J.</b>, Lee, J., Han, W.</div>
+        <div class="links"><a href="https://aclanthology.org/2025.acl-long.1559.pdf">Paper</a><a href="assets/slides/helios.pdf">Slides</a><a href="https://github.com/pshlego/HELIOS">Code</a></div>
+        <details>
+          <summary>summary</summary>
+          <p>Early fusion pre-aligns tables with passages and over-retrieves; late fusion aligns on the fly and under-retrieves. HELIOS combines both over a layered graph and adds an LLM reasoning step, giving higher retrieval accuracy on table-text benchmarks with efficient inference.</p>
+<img class="fig" src="assets/img/pubs/helios_fig.png" alt="HELIOS: Harmonizing Early Fusion, Late Fusion, and LLM Reasoning for Multi-Granular Table-Text Retrieval overview" loading="lazy">        </details>
+      </div>
+    </article>
+    <article class="pub" id="pub-recg">
+      <img src="assets/img/pubs/recg_thumb.jpg" alt="" width="72" height="72" loading="lazy">
+      <div>
+        <span class="badge">PVLDB 2024</span>
+        <h3>ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework</h3>
+        <div class="au"><b>Yun, J.</b>, Tak, B., Han, W.</div>
+        <div class="links"><a href="https://dl.acm.org/doi/pdf/10.14778/3681954.3682019">Paper</a><a href="assets/slides/recg.pptx">Slides</a><a href="https://github.com/joohyung00/recg_vldb_2024">Code</a></div>
+        <details>
+          <summary>summary</summary>
+          <p>Top-down schema discovery decides a node&#39;s type before seeing its children and gets heterogeneous data wrong. ReCG works bottom-up, clustering leaf patterns and generalizing upward under a minimum-description-length objective, improving schema accuracy by up to 47% while running faster than prior methods.</p>
+<img class="fig" src="assets/img/pubs/recg_fig.png" alt="ReCG: Bottom-Up JSON Schema Discovery Using a Repetitive Cluster-and-Generalize Framework overview" loading="lazy">        </details>
+      </div>
+    </article>
+    <article class="pub" id="pub-kddcup">
+      <img src="assets/img/pubs/kddcup_thumb.jpg" alt="" width="72" height="72" loading="lazy">
+      <div>
+        <span class="badge">KDD Cup 2024 · RAG Workshop</span>
+        <h3>KDD Cup Meta CRAG 2024 Technical Report: Three-Step Question-Answering Framework</h3>
+        <div class="au">Park, S., Seok, J., Lee, J., <b>Yun, J.</b>, Lee, W.</div>
+        <div class="links"><a href="https://openreview.net/pdf?id=G4Ei2QlKnv">Paper</a><a href="https://github.com/joohyung00/kdd_cup_2024_crag">Code</a></div>
+        <details>
+          <summary>summary</summary>
+          <p>A three-step framework for the Meta CRAG challenge: answer from parametric knowledge when it suffices, retrieve external evidence only when needed, and verify the generated answer before returning it, cutting hallucination while keeping retrieval cost low.</p>
+<img class="fig" src="assets/img/pubs/kddcup_fig.png" alt="KDD Cup Meta CRAG 2024 Technical Report: Three-Step Question-Answering Framework overview" loading="lazy">        </details>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div id="cv">
+<section class="sec tight" id="experience">
+  <div class="lab"><div class="n">05</div><h2>Experience</h2></div>
+  <div>
+    <div class="row"><span class="p">2026.04 – 08</span><div><div class="t">Visiting Researcher · New York University</div><div class="s">New York, USA · funded by the IITP Global AI Frontier Lab</div><details class="more"><summary>more</summary><p>Joint research collaboration from April to August 2026, funded by the Global AI Frontier Lab of IITP (Institute of Information &amp; Communications Technology Planning &amp; Evaluation), which supports long-term international research visits for graduate students.</p></details></div></div>
+    <div class="row"><span class="p">2025.10</span><div><div class="t">Workshop Chair · KJMD 2025</div><div class="s">7th Korea–Japan Workshop on Management of Data, Busan</div><details class="more"><summary>more</summary><p>Oversaw the technical program of the binational workshop (Oct 24–26, 2025): shaped the program structure, coordinated submission handling, and introduced the accepted papers during the sessions.</p></details></div></div>
+    <div class="row"><span class="p">2024.08</span><div><div class="t">Session Chair · VLDB 2024 PhD Workshop</div><div class="s">Guangzhou, China</div><details class="more"><summary>more</summary><p>Moderated a technical session of the PhD Workshop at VLDB 2024: introduced speakers, kept time, and ran the Q&amp;A.</p></details></div></div>
+    <div class="row"><span class="p">2021.06 – 07</span><div><div class="t">Full-stack Developer Intern · SK hynix</div><div class="s">Icheon, Korea · Selenium, Spring Boot, Node.js</div></div></div>
+  </div>
+</section>
+<section class="sec tight" id="teaching">
+  <div class="lab"><div class="n">06</div><h2>Teaching</h2></div>
+  <div>
+    <div class="row"><span class="p">2024</span><div><div class="t">TA · Design of Digital Systems (CSED273)</div><div class="s">POSTECH</div></div></div>
+    <div class="row"><span class="p">2022</span><div><div class="t">TA · Advanced Machine Learning</div><div class="s">Samsung Electronics × Data Systems Lab</div></div></div>
+    <div class="row"><span class="p">2021</span><div><div class="t">TA · Data Processing, Distributed DB &amp; Deep Learning</div><div class="s">Samsung Electronics × Data Systems Lab</div></div></div>
+  </div>
+</section>
+<section class="sec tight" id="honors">
+  <div class="lab"><div class="n">07</div><h2>Honors &amp; Patents</h2></div>
+  <div class="two">
+    <div><div class="h2m">Awards</div>
+<div class="row"><span class="p">2026</span><div class="t light">Overseas Dispatch Program for Graduate Students (long-term) · POSTECH</div></div><div class="row"><span class="p">2025</span><div class="t light">Research Excellence Award · POSTECH</div></div><div class="row"><span class="p">2025</span><div class="t light">CSE Outstanding Paper Award · POSTECH</div></div><div class="row"><span class="p">2025</span><div class="t light">BK POSTECHIAN Fellowship · BK21</div></div><div class="row"><span class="p">2024</span><div class="t light">1st place, comparison &amp; post-processing tests · KDD Cup 2024 Meta CRAG</div></div><div class="row"><span class="p">—</span><div class="t light">National Science &amp; Technology Scholarship · Korea</div></div><div class="row"><span class="p">—</span><div class="t light">Global Leadership Program Scholarship · POSTECH (twice)</div></div>    </div>
+    <div><div class="h2m">Patents</div>
+<div class="row one"><div><div class="t light">Subgraph Retrieval System Based on Layered Component Graph for Open-Domain Multimodal Document Retrieval</div><div class="s">KR 10-2025-0195617 · Han, W., Yun, J.</div></div></div><div class="row one"><div><div class="t light">Apparatus and Method for Table and Document Retrieval Based on Questions</div><div class="s">PCT/KR2025/003037 · Han, W., Park, S., Yun, J., Lee, J.</div></div></div><div class="row one"><div><div class="t light">AI Technology for Predicting On-site Safety Accidents in Hazardous Chemical Facilities</div><div class="s">KR 10-2024-0167340 · Han, W., Ha, J., Yun, J.</div></div></div>    </div>
+  </div>
+</section>
+<section class="sec tight" id="education">
+  <div class="lab"><div class="n">08</div><h2>Education</h2><div class="sub"><a href="assets/cv/cv.pdf">cv.pdf ↗</a></div></div>
+  <div>
+    <div class="row"><span class="p">2023 –</span><div><div class="t">Integrated M.S./Ph.D., Computer Science · POSTECH</div><div class="s">Data Systems Lab · advisor Prof. Wook-Shin Han</div></div></div>
+    <div class="row"><span class="p">2019 – 2023</span><div><div class="t">B.S., Computer Science · POSTECH</div><div class="s">summa cum laude · GPA 4.11 / 4.30</div></div></div>
+    <div class="row"><span class="p">2016 – 2019</span><div><div class="t">Hyundai Chungun High School</div></div></div>
+    <div class="row"><span class="p">Languages</span><div class="t light">Korean (native) · English (fluent) · Japanese (fluent)</div></div>
+  </div>
+</section>
 </div>
 
----
+<section class="sec tight" id="photos">
+  <div class="lab"><div class="n">09</div><h2>Photos</h2><div class="sub">4 photos</div></div>
+  <div class="carousel" data-carousel>
+    <div class="track" tabindex="0">
+<figure><img src="assets/img/photos/01.jpg" alt="" loading="lazy" width="1200" height="900"></figure><figure><img src="assets/img/photos/02.jpg" alt="" loading="lazy" width="1200" height="900"></figure><figure><img src="assets/img/photos/03.jpg" alt="" loading="lazy" width="1200" height="900"></figure><figure><img src="assets/img/photos/04.jpg" alt="" loading="lazy" width="1200" height="900"></figure>    </div>
+    <button type="button" class="arrow prev" aria-label="Previous photo">‹</button>
+    <button type="button" class="arrow next" aria-label="Next photo">›</button>
+    <div class="dots" role="tablist"></div>
+  </div>
+</section>
 
-## About Me
+<section class="sec tight" id="posts" data-posts="/mypages/index.json" hidden>
+  <div class="lab"><div class="n">10</div><h2>Recent posts</h2><div class="sub"><a href="/mypages/">all posts ↗</a></div></div>
+  <div class="postlist"></div>
+</section>
 
-Hi! I'm Joohyung Yun, a 4th year integrated M.S./Ph.D. student (2nd year Ph.D.) in Computer Science at POSTECH, advised by Professor Wook-Shin Han in the Data Systems Lab. My research sits at the intersection of Natural Language Processing and Information Retrieval, with a focus on **Retrieval-Augmented Generation (RAG)** for complex, real-world documents.
-
-I'm particularly interested in **multimodal document RAG**: collections that mix text, tables, and images. My recent projects explore **multihop reasoning** across these modalities and how to combine retrieval with LLM reasoning effectively. Currently, I'm extending this work toward **Agentic RAG**—building autonomous, data-centric systems that go beyond simple retrieval into complex reasoning with history-aware backtracking and adaptive traversal strategies.
-
-Looking ahead, I aim to scale these ideas to **Enterprise-level RAG**: high-velocity, high-trust systems powered by Knowledge Graphs and Multi-Modal RAG that deliver verifiable, multi-modal insights. My long-term vision is to contribute to cost-efficient, data-centric platforms designed for AGI-level reasoning and agentic autonomy across enterprise ecosystems.
+<footer>
+  <span><a href="mailto:jhyun@dblab.postech.ac.kr">jhyun@dblab.postech.ac.kr</a> · last updated 2026-10</span>
+  <span><a href="/mypages/">Posts ↗</a> · <a href="legacy/" title="Previous versions of this site">legacy ↗</a> · <a href="#top">top ↑</a></span>
+</footer>
+</div>
+<script src="assets/site.js" defer></script>
+</body>
+</html>

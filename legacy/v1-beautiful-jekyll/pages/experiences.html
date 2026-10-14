@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 6.0.1 | Copyright Dean Attali 2023 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  
+
+  <title>Experiences</title>
+
+  
+  
+  <meta name="author" content="Joohyung Yun">
+  
+
+  <meta name="description" content="">
+
+  
+
+  
+
+  
+  <link rel="alternate" type="application/rss+xml" title="Joohyung's Homepage" href="../feed.xml">
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="../assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="../assets/css/beautifuljekyll.css">
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="../assets/css/custom-styles.css">
+    
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Joohyung's Homepage">
+  <meta property="og:title" content="Experiences">
+  <meta property="og:description" content="">
+
+  
+  <meta property="og:image" content="https://joohyung00.github.io/assets/img/me_a_square.jpg">
+  
+
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://joohyung00.github.io/pages/experiences/">
+  <link rel="canonical" href="experiences.html">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@">
+  <meta name="twitter:creator" content="@">
+
+  <meta property="twitter:title" content="Experiences">
+  <meta property="twitter:description" content="">
+
+  
+  <meta name="twitter:image" content="https://joohyung00.github.io/assets/img/me_a_square.jpg">
+  
+
+  
+
+
+  
+
+  
+  
+  <link rel="icon" href="../favicon.ico" />
+  
+
+  
+
+</head>
+
+<body>
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="../index.html">Joohyung's Homepage</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">About Me</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="publications.html">Publications</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="experiences.html">Experiences</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="teaching.html">Teaching</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="cv.html">CV</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="posts_home.html">Posts</a>
+          </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="../index.html">
+          <img alt="Navigation bar avatar" class="avatar-img" src="../assets/img/me_a_square.jpg" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+
+
+
+  <!---->
+
+  <style>
+    /* Rounded, shadowed frame */
+    .home-carousel {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+      background: #fff;
+    }
+    /* Keep a strict 3:4 box regardless of content */
+    .home-carousel { aspect-ratio: 3 / 4; }
+    /* Make slides fill the box and crop centrally */
+    .home-carousel .carousel-item,
+    .home-carousel .carousel-inner { height: 100%; }
+    .home-carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+    }
+    /* Bigger, easier arrows */
+    .home-carousel .carousel-control-prev,
+    .home-carousel .carousel-control-next {
+      width: 12%;
+    }
+    .home-carousel .carousel-control-prev-icon,
+    .home-carousel .carousel-control-next-icon {
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.45));
+    }
+    /* Dots */
+    .home-carousel .carousel-indicators { bottom: 10px; }
+    .home-carousel .carousel-indicators li {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+
+    /* News: 두 컬럼(날짜 | 내용) 정렬 */
+    .news-list{
+      display: grid;
+      grid-template-columns: max-content 1fr; /* 날짜 폭 = 내용과 무관, 내용은 남은 폭 */
+      column-gap: 1.25rem;
+      row-gap: .75rem;
+      align-items: start;
+    }
+    .news-list .news-date{ 
+      font-weight: 700; 
+      white-space: nowrap;   /* 줄바꿈 없이 날짜 유지 */
+    }
+    .news-list p{ 
+      margin: 0;             /* 행 간격은 row-gap으로만 제어 */
+    }
+
+    /* 모바일에서는 한 줄씩 세로 배치 */
+    @media (max-width: 576px){
+      .news-list{ grid-template-columns: 1fr; }
+      .news-list .news-date{ margin-bottom: .125rem; }
+    }
+
+    /* Social Links - Rounded Square Buttons */
+    .social-links .btn-social-icon .fa-circle {
+      border-radius: 15% !important;
+    }
+    .social-links .btn-social-icon .fa-stack-2x {
+      border-radius: 15%;
+    }
+
+  </style>
+
+  
+  
+  
+
+  
+  
+
+
+
+<header class="header-section ">
+<div class="intro-header ">
+  
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="page-heading">
+          <h1>Experiences</h1>
+          
+          
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+</div>
+
+
+
+</header>
+
+
+  <style>
+    /* ===== Publications cards ===== */
+    :root{ --pub-bg:#f6ebc9; } /* 본문 배경(#fcfbf9)보다 살짝 더 진한 노란색 */
+    .pubs-wrap{ margin-top: 1.5rem; }
+    details.pub-card{
+      background: var(--pub-bg);
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
+      overflow: hidden;
+      margin-bottom: 14px;
+      transition: box-shadow .2s ease, transform .2s ease;
+    }
+    details.pub-card:hover{ box-shadow: 0 10px 28px rgba(0,0,0,.12); }
+    details.pub-card[open]{ transform: translateY(-1px); }
+
+    /* header row (clickable) */
+    details.pub-card > summary{
+      list-style: none;
+      cursor: pointer;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 160px 1fr 28px; /* 썸네일 | 본문 | 토글아이콘 */
+      gap: 16px;
+      align-items: center;
+    }
+    details.pub-card > summary::-webkit-details-marker{ display:none; }
+
+    .pub-thumb{
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 10px;
+      background: #e9deb6;   /* placeholder 배경 */
+      overflow: hidden;      /* 둥근 모서리 안쪽으로 클립 */
+    }
+    .pub-thumb img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;   /* 긴 변 기준 축소, 비율 유지, 크롭 없음 */
+      object-position: center;
+      display: block;
+    }
+
+    .pub-badge{ margin-bottom: 6px; }
+    .pub-title{ font-weight: 700; margin: 0; line-height: 1.35; }
+    .pub-meta small{ display:block; opacity:.9; }
+    .pub-emoji{ margin-right:.35rem; }
+
+    .pub-toggle{
+      font-size: 18px;
+      opacity:.7;
+      transition: transform .2s ease;
+    }
+    details.pub-card[open] .pub-toggle{ transform: rotate(180deg); }
+
+    /* body (toggle area) */
+    .pub-extra{
+      border-top: 1px dashed rgba(0,0,0,.12);
+      padding: 14px 16px 18px 16px;
+      background: rgba(255,255,255,.35);
+    }
+
+    /* 모바일 */
+    @media (max-width: 576px){
+      details.pub-card > summary{
+        grid-template-columns: 1fr; /* 세로 스택 */
+      }
+      .pub-toggle{ justify-self: end; }
+    }
+
+    /* pub-extra: hero image + link pills */
+    .pub-hero{
+      display:block; max-width:820px; width:100%; height:auto;
+      margin:0 auto 12px; border-radius:12px;
+      box-shadow:0 4px 16px rgba(0,0,0,.08);
+    }
+    .pub-links{
+      display:flex; justify-content:center; flex-wrap:wrap;
+      gap:.5rem .75rem; margin-bottom:.25rem;
+    }
+    .pub-link{
+      display:inline-flex; align-items:center; gap:.45rem;
+      padding:.5rem .75rem; border-radius:999px;
+      background:#fff7d6; border:1px solid rgba(0,0,0,.08);
+      font-weight:600; color:#1c1c1c; text-decoration:none;
+    }
+    .pub-link:hover{ background:#ffeaa6; text-decoration:none; }
+    .pub-link i{ font-size:1rem; line-height:1; }
+  </style>
+
+  <main class="container-md pubs-wrap">
+    <div class="row">
+      <div class="col-xl-10 offset-xl-1 col-lg-10 offset-lg-1">
+
+        <!-- NYU Visiting Researcher -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb">
+              <img src="../assets/img/experiences/nyu.jpg" alt="NYU thumbnail">
+            </div>
+            <div class="pub-meta">
+              <h3 class="pub-title">Visiting Researcher at New York University (NYU)</h3>
+              <small>Apr. 2026 – Aug. 2026 | New York, USA</small>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <p>
+              From April to August 2026, I will be a visiting researcher at New York University (NYU), engaging in joint research collaboration. This visit is funded by the Global AI Frontier Lab of IITP (Institute of Information & Communications Technology Planning & Evaluation), which supports long-term international research visits for outstanding graduate students.
+            </p>
+          </div>
+        </details>
+
+        <!-- KJMD 2025: Workshop Chair -->
+        <details class="pub-card">
+          <summary>
+            <!-- 썸네일: 원하면 경로만 바꾸세요 -->
+            <div class="pub-thumb">
+              <img src="../assets/img/experiences/kjmd2024.png" alt="KJMD 2025 thumbnail">
+            </div>
+            <div class="pub-meta">
+              <h3 class="pub-title">Workshop Chair at KJMD 2025</h3>
+              <!-- 저자/컨퍼런스 정보는 필요 없어서 제거 -->
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <!-- 토글 상단 대표 이미지 -->
+            <img class="pub-hero" src="../assets/img/experiences/kjmd2024.png" alt="KJMD 2025 hero image">
+            <!-- 링크 아이콘 (1개) -->
+            <div class="pub-links">
+              <a class="pub-link" href="https://kjmd-po.github.io/kjmd2025/" target="_blank" rel="noopener" title="KJMD 2025 Website">
+                <i class="fa-solid fa-link" aria-hidden="true"></i><span>Link</span>
+              </a>
+            </div>
+            <p>
+              KJMD 2025, the 7th Joint Korea–Japan Workshop on Management of Data, is a binational workshop that brings together researchers from Korea and Japan working on data management and data systems. The 2025 edition is held in Busan, Republic of Korea, from October 24–26, and features keynotes and presentations that foster discussion and collaboration on emerging topics in database technologies and real-world data applications.
+            </p>
+            <p>
+              At KJMD 2025, I serve as the program chair (workshop chair), overseeing the overall technical program and its smooth execution. I helped shape the program structure, coordinated the management and supervision of submissions, and introduced the accepted papers during the sessions. I also supervised the workshop logistics from a technical-program perspective, ensuring that the talks formed a coherent story and that both speakers and participants could engage in productive discussions.
+            </p>
+          </div>
+        </details>
+
+        <!-- VLDB 2024 PhD Workshop: Session Chair -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb">
+              <img src="../assets/img/experiences/vldb2024.png" alt="VLDB 2024 PhD Workshop thumbnail">
+            </div>
+            <div class="pub-meta">
+              <h3 class="pub-title">Session Chair at VLDB 2024: PhD Workshop</h3>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <img class="pub-hero" src="../assets/img/experiences/vldb2024.png" alt="VLDB 2024 PhD Workshop hero image">
+            <div class="pub-links">
+              <a class="pub-link" href="https://vldb.org/2024/?program-schedule-phd-workshop" target="_blank" rel="noopener" title="VLDB 2024 PhD Workshop">
+                <i class="fa-solid fa-link" aria-hidden="true"></i><span>Link</span>
+              </a>
+            </div>
+            <p>
+              VLDB 2024, the 50th International Conference on Very Large Databases, is one of the flagship international conferences in data management, scalable data science, and database systems. The 2024 edition took place in Guangzhou, China, from August 26–30, and offered a rich program of research and industry talks, keynotes, tutorials, demonstrations, and workshops, including the VLDB PhD Workshop dedicated to early-stage research in the community.
+            </p>
+            <p>
+              During VLDB 2024, I served as a session chair for the PhD Workshop. In this role, I was responsible for moderating one of the technical sessions: introducing the speakers, managing session timing, and facilitating the Q&amp;A to encourage constructive feedback for the presenters. I also helped ensure that the session ran smoothly on site and that the discussion connected the individual PhD projects to broader research themes within the VLDB community.
+            </p>
+          </div>
+        </details>
+
+        <!-- SK Hynix Intern -->
+        <details class="pub-card">
+          <summary>
+            <div class="pub-thumb">
+              <img src="../assets/img/experiences/skhynix.webp" alt="SK Hynix thumbnail">
+            </div>
+            <div class="pub-meta">
+              <h3 class="pub-title">Full Stack Developer (Intern) at SK Hynix Inc.</h3>
+              <small>Jun. 2021 – Jul. 2021 | Icheon, South Korea</small>
+            </div>
+            <div class="pub-toggle" aria-hidden="true">▾</div>
+          </summary>
+          <div class="pub-extra">
+            <p>
+              During the summer of 2021, I worked as a full-stack developer intern at SK Hynix Inc. in Icheon, South Korea. My responsibilities included:
+            </p>
+            <ul>
+              <li>Web interface manipulation via Selenium (Python)</li>
+              <li>Server development using Spring Boot (Java)</li>
+              <li>Frontend development using Node.js (JavaScript)</li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </main>
+
+  
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      
+<ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="mailto:jhyun@dblab.postech.ac.kr" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/joohyung00" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://linkedin.com/in/joohyung-yun-a1a881318" title="LinkedIn">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">LinkedIn</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://scholar.google.com/citations?user=y_7wqtIAAAAJ" title="Google Scholar">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fa fa-graduation-cap fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Google Scholar</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a href="https://openreview.net/profile?id=~Joohyung_Yun1" title="OpenReview">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-microscope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">OpenReview</span>
+    </a>
+  </li></ul>
+
+
+      
+      <p class="copyright text-muted">
+      
+        Joohyung Yun
+        &nbsp;&bull;&nbsp;
+      
+      2026
+
+      <!-- 
+
+      
+
+      
+        &nbsp;&bull;&nbsp;
+        <a title="Edit this page on GitHub" href="https://github.com/joohyung00/joohyung00.github.io/edit/master/pages/experiences.md" class="text_muted">Edit page</a>
+        -->
+
+      </p>
+      <!-- <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p> -->
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="../assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+</body>
+</html>
