@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build joohyung00.github.io from build/content/*.yml + build/templates/*.j2.
 
-    python build/build.py                 # writes index.html, 404.html, talks/index.html, talks/<key>/index.html
-    python build/build.py --inline out.html [--page talks/index.html]
+    python build/build.py                 # writes index.html, 404.html, talks/…, seminars/… (index + one viewer page per deck)
+    python build/build.py --inline out.html [--page seminars/index.html]
                                           # single-file bundle (CSS/JS inlined, images as data URIs)
                                           # for previewing on the my-page Preview Hub
 
@@ -66,7 +66,8 @@ def render(inline=False):
     if inline:
         ctx["inline_css"] = open(os.path.join(ROOT, "assets", "site.css"), encoding="utf-8").read()
         ctx["inline_js"] = open(os.path.join(ROOT, "assets", "site.js"), encoding="utf-8").read()
-    ctx["talks"] = load_talks(data)
+    ctx["talks"] = load_decks(data, "talks", "talks")
+    ctx["seminars"] = load_decks(data, "seminars", "seminars")
 
     def page(tpl, root, **extra):
         # `root` = relative path back to the site root ("" / "../" / "../../"); the inline bundle
@@ -74,31 +75,62 @@ def render(inline=False):
         return env.get_template(tpl).render(**dict(ctx, root="" if inline else root, **extra))
 
     pages = {"index.html": page("index.html.j2", ""),
-             "404.html": page("404.html.j2", ""),
-             "talks/index.html": page("talks.html.j2", "../", nav_on="talks")}
-    for t in ctx["talks"]:
-        pages[f"talks/{t['key']}/index.html"] = page("talk.html.j2", "../../", t=t, nav_on="talks")
+             "404.html": page("404.html.j2", "")}
+    for sec in SECTIONS:
+        items = ctx[sec["slug"]]
+        pages[f"{sec['slug']}/index.html"] = page("decks.html.j2", "../", sec=sec, items=items, nav_on=sec["slug"])
+        for t in items:
+            pages[f"{sec['slug']}/{t['key']}/index.html"] = page("deck.html.j2", "../../", sec=sec, t=t, nav_on=sec["slug"])
     if inline:
         site = data["profile"]["site_url"].rstrip("/")
         pages = {k: absolutize_links(inline_images(v), site) for k, v in pages.items()}
     return pages
 
 
-def load_talks(data):
-    """talks.yml entries joined with their publication and with assets/talks/<key>/meta.json
-    (slide count, poster size) written by talks_import.py."""
+SECTIONS = [
+    {"slug": "talks", "title": "Talks & posters", "nav": "Talks",
+     "intro": "Slides and posters from my conference presentations and seminar talks on my papers. Decks open in the browser; PDFs are attached."},
+    {"slug": "seminars", "title": "Seminars & paper readings", "nav": "Seminars",
+     "intro": "Decks from lab seminars: presentations of my own work to the lab, and papers by others that I presented in our NLP reading group."},
+]
+
+
+def load_decks(data, name, folder):
+    """<name>.yml entries (talks.yml / seminars.yml) normalised for the deck templates and joined with
+    assets/<folder>/<key>/meta.json (slide count, poster size) written by talks_import.py.
+    Fields after normalisation: title, authors, badge, links (label -> url), pubs (my papers covered),
+    slides (int), poster ({"w","h"} or None)."""
     pubs = {p["key"]: p for p in data.get("publications", []) or []}
     out = []
-    for t in data.get("talks", []) or []:
+    for t in data.get(name, []) or []:
         t = dict(t)
-        t["pub"] = pubs[t["pub"]]
-        meta_path = os.path.join(ROOT, "assets", "talks", t["key"], "meta.json")
+        pub = pubs[t["pub"]] if t.get("pub") else None
+        covered = [pubs[k] for k in (t.get("pubs") or ([t["pub"]] if t.get("pub") else []))]
+        t["pub"] = pub
+        t["pubs"] = covered
+        t["title"] = t.get("title") or pub["title"]
+        t["authors"] = t.get("authors") or (pub["authors"] if pub else "")
+        t["badge"] = t.get("kind") or t["venue"]
+        links = {}
+        if pub:                                    # one paper: carry its paper/code links (Slides/Poster point back here)
+            links.update({k.lower(): v for k, v in pub["links"].items() if k not in ("Slides", "Poster")})
+        else:
+            for p in covered:                      # several of my papers: one "paper" link per venue
+                if p["links"].get("Paper"):
+                    links[f"{p['venue']} paper".lower()] = p["links"]["Paper"]
+        for key, label in (("paper", "paper"), ("extra", None)):   # paper readings: the paper (and a warm-up paper)
+            ref = t.get(key)
+            if ref and ref.get("url"):
+                links[label or f"{ref['title']} paper".lower()] = ref["url"]
+        t["links"] = links
+        meta_path = os.path.join(ROOT, "assets", folder, t["key"], "meta.json")
         meta = json.load(open(meta_path, encoding="utf-8")) if os.path.exists(meta_path) else {}
         t["slides"] = meta.get("slides", 0)
         t["poster"] = meta.get("poster")
         if not (t["slides"] or t["poster"]):
-            print(f"warning: talks/{t['key']} has no slides or poster (run build/talks_import.py)", file=sys.stderr)
+            print(f"warning: {folder}/{t['key']} has no slides or poster (run build/talks_import.py)", file=sys.stderr)
         out.append(t)
+    out.sort(key=lambda t: str(t.get("date", "")), reverse=True)   # newest first, whatever the yml order
     return out
 
 
@@ -123,7 +155,7 @@ def inline_images(html):
         with open(path, "rb") as f:
             b64 = base64.b64encode(f.read()).decode()
         return f'{m.group(1)}="data:{mime};base64,{b64}"'
-    return re.sub(r'(src|content)="(assets/(?:img|talks)/[^"]+)"', repl, html)
+    return re.sub(r'(src|content)="(assets/(?:img|talks|seminars)/[^"]+)"', repl, html)
 
 
 def main():

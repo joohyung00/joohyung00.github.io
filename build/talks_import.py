@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Import a talk (slides and/or poster) into assets/talks/<key>/ for the Talks page.
+"""Import a talk (slides and/or poster) into assets/talks/<key>/ for the Talks page,
+or a seminar deck into assets/seminars/<key>/ with --into assets/seminars.
 
-    python build/talks_import.py <key> [--slides deck.pptx|deck.pdf] [--poster poster.pptx|poster.pdf]
+    python build/talks_import.py <key> [--slides deck.pptx|deck.pdf] [--poster poster.pptx|poster.pdf] [--into assets/seminars]
 
 Writes, under assets/talks/<key>/:
     slides/NN.webp         1280px-wide slide images        (from --slides)
@@ -50,10 +51,11 @@ def main():
     ap.add_argument("key")
     ap.add_argument("--slides")
     ap.add_argument("--poster")
+    ap.add_argument("--into", default="assets/talks", help="destination folder under the repo root (default assets/talks; use assets/seminars for seminars.yml entries)")
     a = ap.parse_args()
     if not (a.slides or a.poster):
         ap.error("give --slides and/or --poster")
-    dest = os.path.join(ROOT, "assets", "talks", a.key)
+    dest = os.path.join(ROOT, *a.into.strip("/").split("/"), a.key)
     meta_path = os.path.join(dest, "meta.json")
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {}
     with tempfile.TemporaryDirectory() as tmp:

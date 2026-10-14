@@ -1,0 +1,78 @@
+# Seminars & paper readings, newest first. Files live in assets/seminars/<key>/ — made with:
+#   python build/talks_import.py <key> --slides deck.pptx|deck.pdf --into assets/seminars
+# `pubs` = my papers the deck is about (keys in publications.yml); `paper` = the paper read (for paper readings);
+# `extra` = a second paper summarised at the start of the same session. The slide count comes from meta.json.
+- key: lab-2026-02-realworld
+  title: "From LILaC and FiF to Real-World Multimodal Retrieval"
+  kind: Lab seminar
+  venue: DSLab seminar (lab-wide)
+  where: POSTECH
+  date: "2026.02.12"
+  pubs: [lilac, fif]
+  summary: "What my two papers solved, what a practical web-scale multimodal retriever still needs (raw HTML, reactive pages, more modalities, grounding, budgets), how recent work approaches each gap, and four research directions."
+- key: lab-2025-07-lilac
+  title: "LILaC: Late Interacting in Layered Component Graph for Open-domain Multimodal Multihop Retrieval"
+  kind: Lab seminar
+  venue: DSLab seminar
+  where: POSTECH
+  date: "2025.07.17"
+  pubs: [lilac]
+  summary: "A lab-internal walkthrough of LILaC: why TextRAG and VisRAG lose information, the layered component graph, LLM-driven query decomposition, edge-level late interaction, and the ablation and runtime results."
+- key: uniir-2025-03
+  title: "UniIR: Training and Benchmarking Universal Multimodal Information Retrievers"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2025.03.21"
+  paper: {authors: "Wei et al.", venue: "ECCV 2024", url: "https://arxiv.org/abs/2311.17136"}
+  summary: "Instruction-guided retrieval across modalities: score-level versus feature-level fusion, how the M-BEIR benchmark was assembled, and what the experiments say about instructions and the two fusion designs."
+- key: murag-2024-12
+  title: "MuRAG: Multimodal Retrieval-Augmented Generator for Open Question Answering over Images and Text"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2024.12.11"
+  paper: {authors: "Chen et al.", venue: "EMNLP 2022", url: "https://arxiv.org/abs/2210.02928"}
+  extra: {title: "ACORN", authors: "Patel et al.", venue: "SIGMOD 2024", url: "https://arxiv.org/abs/2403.04871"}
+  summary: "Multimodal RAG with one universal encoder and decoder: the two challenges (handling mixed modalities, training them), in-batch pretraining, two-stage fine-tuning, and the error analysis. Opens with a six-slide recap of ACORN, predicate-agnostic hybrid vector search."
+- key: kaping-2024-11
+  title: "Knowledge-Augmented Language Model Prompting for Zero-Shot Knowledge Graph Question Answering"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2024.11.13"
+  paper: {authors: "Baek, Aji, Saffari", venue: "ACL 2023 NLRSE workshop", url: "https://aclanthology.org/2023.nlrse-1.7/"}
+  summary: "KAPING: retrieve question-relevant triples (entity matching, then triple retrieval), prepend them to the prompt, no training. Three limitations of the method and two of its experiments, as I read them."
+- key: grag-2024-11
+  title: "GRAG: Graph Retrieval-Augmented Generation"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2024.11.13"
+  paper: {authors: "Hu et al.", venue: "arXiv 2024", url: "https://arxiv.org/abs/2405.16506"}
+  summary: "RAG over textual graphs: retrieving a query-relevant subgraph with a soft pruner, feeding the subgraph's text and structure to the LLM, and results on WebQSP and ExplaGraphs."
+- key: retro-2024-10
+  title: "Improving Language Models by Retrieving from Trillions of Tokens (RETRO)"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2024.10.07"
+  paper: {authors: "Borgeaud et al.", venue: "ICML 2022", url: "https://arxiv.org/abs/2112.04426"}
+  extra: {title: "DiskANN", authors: "Subramanya et al.", venue: "NeurIPS 2019", url: "https://papers.nips.cc/paper/2019/hash/09853c7fb1d3f8ee67a61b6bf4a7f8e6-Abstract.html"}
+  summary: "Token-level RAG built up on one diagram: why per-token retrieval is slow, then chunked retrieval, chunked cross-attention, and frozen BERT embedders, each introduced as the fix to a specific problem. Opens with a seven-slide recap of DiskANN."
+- key: gram-2024-09
+  title: "GRAM: Generative Retrieval Augmented Matching of Data Schemas in the Context of Data Security"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2024.09.05"
+  paper: {authors: "Liu et al.", venue: "KDD 2024", url: "https://arxiv.org/abs/2406.01876"}
+  summary: "LLM-based schema matching for data ingestion when the data itself cannot be shown: object-type detection, reducing the task to attribute mapping, NER and double-RAG filters, the key detector, and the ablations. Ends with my own take."
+- key: stark-2024-05
+  title: "STaRK: Benchmarking LLM Retrieval on Textual and Relational Knowledge Bases"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2024.05.21"
+  paper: {authors: "Wu et al.", venue: "NeurIPS 2024 Datasets & Benchmarks", url: "https://arxiv.org/abs/2404.13207"}
+  summary: "A benchmark for retrieval over semi-structured knowledge bases: how the three SKBs and the query/answer sets are generated in four steps, the analyses of the queries, and the baseline retrievers."

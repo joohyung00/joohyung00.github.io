@@ -32,10 +32,9 @@
 <body id="top">
 <div class="nav"><div class="in">
   <a class="brand" href="{{ root }}#top">{{ profile.name }}</a>
-  <nav aria-label="Sections">
-    <a href="{{ root }}#about">About</a><a href="{{ root }}#research">Research</a><a href="{{ root }}#news">News</a><a href="{{ root }}#pubs">Publications</a><a href="{{ root }}talks/"{% if nav_on == "talks" %} class="on"{% endif %}>Talks</a><a href="{{ root }}#cv">CV</a>
+  <nav aria-label="Pages">
+    <a href="{{ root }}talks/"{% if nav_on == "talks" %} class="on"{% endif %}>Talks</a><a href="{{ root }}seminars/"{% if nav_on == "seminars" %} class="on"{% endif %}>Seminars</a><a href="{{ profile.posts_url }}">Posts</a><a href="{{ root }}{{ profile.cv_pdf }}" title="Curriculum vitae (PDF)">CV ↗</a>
   </nav>
-  <a class="ext" href="{{ profile.posts_url }}">Posts ↗</a>
   <button class="themeToggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">☾</button>
 </div></div>
 <div class="wrap">

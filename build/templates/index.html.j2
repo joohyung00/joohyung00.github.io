@@ -61,7 +61,7 @@
 
 {# ============================================================ 04 publications #}
 <section class="sec" id="pubs">
-  <div class="lab"><h2>Publications</h2><div class="sub">{{ publications | length }} papers · <a href="{{ profile.scholar }}">scholar ↗</a> · <a href="{{ root }}talks/">talks ↗</a></div></div>
+  <div class="lab"><h2>Publications</h2><div class="sub">{{ publications | length }} papers · <a href="{{ profile.scholar }}">scholar ↗</a></div></div>
   <div>
     {% for p in publications %}
     <article class="pub" id="pub-{{ p.key }}">
@@ -82,7 +82,45 @@
   </div>
 </section>
 
-{# ============================================================ 05–08 cv block #}
+{# ============================================================ 05 talks · 06 seminars · 07 posts
+   The three latest items of each; full lists at /talks/, /seminars/ and /mypages/. #}
+{% macro deckrows(items, slug) %}
+<div class="decklist">
+  {% for t in items[:3] %}
+  <a class="deck" href="{{ slug }}/{{ t.key }}/">
+    <span class="thumb">{% if t.slides %}<img src="assets/{{ slug }}/{{ t.key }}/slides/thumb/01.webp" alt="" width="320" height="180" loading="lazy">{% else %}<img src="assets/{{ slug }}/{{ t.key }}/poster_thumb.webp" alt="" loading="lazy">{% endif %}</span>
+    <span>
+      <span class="meta"><span class="badge">{{ t.badge }}</span><span class="mono">{{ t.where if not t.kind else t.venue }} · {{ t.date }}</span></span>
+      <span class="t">{{ t.title }}</span>
+      <span class="x">{% if t.paper %}{{ t.paper.authors }}, {{ t.paper.venue }} · {% endif %}{% if t.slides %}{{ t.slides }} slides{% endif %}{% if t.slides and t.poster %} + {% endif %}{% if t.poster %}poster{% endif %}</span>
+    </span>
+  </a>
+  {% endfor %}
+</div>
+{% endmacro %}
+
+<section class="sec" id="talks">
+  <div class="lab"><h2>Talks</h2><div class="sub">{{ talks | length }} decks · <a href="talks/">all talks ↗</a></div></div>
+  {{ deckrows(talks, "talks") }}
+</section>
+
+<section class="sec" id="seminars">
+  <div class="lab"><h2>Seminars</h2><div class="sub">{{ seminars | length }} decks · <a href="seminars/">all seminars ↗</a></div></div>
+  {{ deckrows(seminars, "seminars") }}
+</section>
+
+{# posts: baked at build time from mypages/index.json (the my-page manifest), then refreshed at runtime
+   from the live manifest so new posts appear without a rebuild. Full list lives at /mypages/. #}
+<section class="sec" id="posts" data-posts="{{ profile.posts_url }}index.json" data-posts-exclude="{{ (profile.posts_exclude or []) | join(',') }}"{% if not recent_posts %} hidden{% endif %}>
+  <div class="lab"><h2>Posts</h2><div class="sub"><a href="{{ profile.posts_url }}">all posts ↗</a></div></div>
+  <div class="postlist">
+    {% for p in recent_posts %}
+    <div class="post"><span class="d">{{ p.date }}</span><div><a class="t" href="{{ p.url }}">{{ p.title }}</a><div class="x">{{ p.excerpt }}</div></div></div>
+    {% endfor %}
+  </div>
+</section>
+
+{# ============================================================ 08–11 cv block #}
 <div id="cv">
 <section class="sec tight" id="experience">
   <div class="lab"><h2>Experience</h2></div>
@@ -122,17 +160,5 @@
   </div>
 </section>
 </div>
-
-{# ============================================================ 09 recent posts
-   Baked at build time from mypages/index.json (the my-page manifest), then refreshed at runtime
-   from the live manifest so new posts appear without a rebuild. Full list lives at /mypages/. #}
-<section class="sec tight" id="posts" data-posts="{{ profile.posts_url }}index.json" data-posts-exclude="{{ (profile.posts_exclude or []) | join(',') }}"{% if not recent_posts %} hidden{% endif %}>
-  <div class="lab"><h2>Recent posts</h2><div class="sub"><a href="{{ profile.posts_url }}">all posts ↗</a></div></div>
-  <div class="postlist">
-    {% for p in recent_posts %}
-    <div class="post"><span class="d">{{ p.date }}</span><div><a class="t" href="{{ p.url }}">{{ p.title }}</a><div class="x">{{ p.excerpt }}</div></div></div>
-    {% endfor %}
-  </div>
-</section>
 
 {% endblock %}

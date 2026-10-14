@@ -1,0 +1,38 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ sec.title }} · {{ profile.name }}{% endblock %}
+{% block canonical %}{{ sec.slug }}/{% endblock %}
+{% block description %}{{ sec.intro }}{% endblock %}
+{% block body %}
+
+<header class="hero one">
+  <div>
+    <div class="mono">{{ items | length }} decks</div>
+    <h1 class="name sm">{{ sec.title }}</h1>
+    <p class="tag">{{ sec.intro }}</p>
+  </div>
+</header>
+
+<div class="talks">
+  {% for t in items %}
+  <article class="talk" id="{{ t.key }}">
+    <a class="thumb" href="{{ root }}{{ sec.slug }}/{{ t.key }}/" aria-label="Open {{ t.badge }} {{ 'slides' if t.slides else 'poster' }}">
+      {% if t.slides %}<img src="{{ root }}assets/{{ sec.slug }}/{{ t.key }}/slides/thumb/01.webp" alt="" width="320" height="180" loading="lazy">
+      {% else %}<img src="{{ root }}assets/{{ sec.slug }}/{{ t.key }}/poster_thumb.webp" alt="" loading="lazy">{% endif %}
+    </a>
+    <div>
+      <div class="meta"><span class="badge">{{ t.badge }}</span><span class="mono">{% if t.kind %}{{ t.venue }} · {% endif %}{{ t.where }} · {{ t.date }}</span></div>
+      <h3><a href="{{ root }}{{ sec.slug }}/{{ t.key }}/">{{ t.title }}</a></h3>
+      {% if t.paper %}<div class="au">{{ t.paper.authors }}, {{ t.paper.venue }}{% if t.extra %} · opens with {{ t.extra.title }} ({{ t.extra.authors }}, {{ t.extra.venue }}){% endif %}</div>
+      {% elif t.authors %}<div class="au">{{ t.authors | bold_self(profile.me) | safe }}</div>{% endif %}
+      {% if t.summary %}<p class="x">{{ t.summary }}</p>{% endif %}
+      <div class="links">
+        {% if t.slides %}<a href="{{ root }}{{ sec.slug }}/{{ t.key }}/">slides ({{ t.slides }})</a>{% endif %}
+        {% if t.poster %}<a href="{{ root }}{{ sec.slug }}/{{ t.key }}/#poster">poster</a>{% endif %}
+        {% for label, url in t.links.items() %}<a href="{{ url }}">{{ label }}</a>{% endfor %}
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+
+{% endblock %}

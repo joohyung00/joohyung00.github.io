@@ -1,0 +1,53 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ t.title }} · {{ t.venue }} · {{ profile.name }}{% endblock %}
+{% block canonical %}{{ sec.slug }}/{{ t.key }}/{% endblock %}
+{% block description %}{{ 'Slides' if t.slides else 'Poster' }} from {{ t.venue }} ({{ t.where }}, {{ t.date }}): {{ t.title }}.{% endblock %}
+{% block ogimage %}{{ profile.site_url }}/assets/{{ sec.slug }}/{{ t.key }}/{{ 'slides/01.webp' if t.slides else 'poster_thumb.webp' }}{% endblock %}
+{% block body %}
+{% set base = root ~ 'assets/' ~ sec.slug ~ '/' ~ t.key ~ '/' %}
+
+<header class="talkhead">
+  <div class="mono"><a href="{{ root }}{{ sec.slug }}/">{{ sec.title }}</a> › {{ t.badge }}</div>
+  <h1>{{ t.title }}</h1>
+  {% if t.paper %}<div class="au">{{ t.paper.authors }}, {{ t.paper.venue }} · presented by <b>{{ profile.name }}</b>{% if t.extra %} · opens with {{ t.extra.title }} ({{ t.extra.authors }}, {{ t.extra.venue }}){% endif %}</div>
+  {% elif t.authors %}<div class="au">{{ t.authors | bold_self(profile.me) | safe }}</div>{% endif %}
+  <div class="meta"><span class="badge">{{ t.badge }}</span><span class="mono">{% if t.venue_long %}{{ t.venue_long }} · {% elif t.kind %}{{ t.venue }} · {% endif %}{{ t.where }} · {{ t.date }}</span></div>
+  {% if t.summary or t.note %}<p class="x">{{ t.summary or t.note }}</p>{% endif %}
+  <div class="links">
+    {% if t.slides %}<a href="{{ base }}slides.pdf">slides.pdf</a>{% endif %}
+    {% if t.poster %}<a href="{{ base }}poster.pdf">poster.pdf</a>{% endif %}
+    {% for label, url in t.links.items() %}<a href="{{ url }}">{{ label }}</a>{% endfor %}
+  </div>
+</header>
+
+{% if t.slides %}
+<section class="viewer" id="slides" data-viewer>
+  <div class="stage">
+    <div class="track" tabindex="0" aria-label="Slides, use arrow keys">
+      {% for i in range(1, t.slides + 1) %}<figure><img src="{{ base }}slides/{{ '%02d' % i }}.webp" alt="Slide {{ i }}" width="1280" height="720"{% if i > 2 %} loading="lazy"{% endif %}></figure>{% endfor %}
+    </div>
+    <button type="button" class="arrow prev" aria-label="Previous slide">‹</button>
+    <button type="button" class="arrow next" aria-label="Next slide">›</button>
+  </div>
+  <div class="bar">
+    <span class="count mono"><b>1</b> / {{ t.slides }}</span>
+    <span class="hint mono">← → keys · swipe · click a thumbnail</span>
+    <button type="button" class="linkbtn fs">fullscreen ⤢</button>
+  </div>
+  <div class="rail" aria-label="Slide thumbnails">
+    {% for i in range(1, t.slides + 1) %}<button type="button" data-i="{{ i - 1 }}" aria-label="Go to slide {{ i }}"><img src="{{ base }}slides/thumb/{{ '%02d' % i }}.webp" alt="" width="320" height="180" loading="lazy"></button>{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if t.poster %}
+<section class="poster" id="poster">
+  <div class="h2m">Poster</div>
+  <a href="{{ base }}poster.webp" title="Open full size"><img src="{{ base }}poster.webp" alt="{{ t.title }} poster" width="{{ t.poster.w }}" height="{{ t.poster.h }}"{% if t.slides %} loading="lazy"{% endif %}></a>
+  <div class="mono">click to open full size · <a href="{{ base }}poster.pdf">poster.pdf</a></div>
+</section>
+{% endif %}
+
+<p class="backlink"><a href="{{ root }}{{ sec.slug }}/">← all {{ sec.title | lower }}</a></p>
+
+{% endblock %}

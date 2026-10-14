@@ -10,6 +10,7 @@
     Project: https://failureisfeedback.github.io/
     arXiv: https://arxiv.org/abs/2602.03432
     PDF: https://arxiv.org/pdf/2602.03432
+    Slides: talks/nyu-2026-05/
     Poster: talks/fif-icml2026/
   summary: >-
     Agentic retrieval over multimodal documents must commit to a path without exploring every alternative.

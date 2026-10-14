@@ -1,7 +1,7 @@
 /* joohyung00.github.io — no dependencies.
-   1) dark-mode toggle (localStorage)  2) nav scroll-spy  3) news "show all"
+   1) dark-mode toggle (localStorage)  2) nav scroll-spy (only if the nav has #links)  3) news "show all"
    4) photo carousel (scroll-snap + arrows + dots + autoplay)  5) recent posts from /mypages/index.json
-   6) slide viewer on talks/<key>/ (scroll-snap track + arrows + keys + thumbnail rail + fullscreen + #sN links) */
+   6) slide viewer on talks/<key>/ and seminars/<key>/ (scroll-snap track + arrows + keys + thumbnail rail + fullscreen + #sN links) */
 (function () {
   var html = document.documentElement;
 

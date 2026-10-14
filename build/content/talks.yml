@@ -21,3 +21,13 @@
   venue: VLDB 2024
   where: Guangzhou, China
   date: "2024.08"
+# Seminar talks on my own papers (no `pub`: title/authors given here, `pubs` lists the papers covered).
+- key: nyu-2026-05
+  title: "Open-Domain Multimodal Multihop Retrieval: Data Structure & Agentic Retrieval Algorithm"
+  authors: "Yun, J."
+  pubs: [lilac, fif]
+  venue: NYU seminar
+  venue_long: Seminar at Prof. Mengye Ren's group, New York University
+  where: New York, USA
+  date: "2026.05"
+  note: "One talk covering both papers: the layered component graph (LILaC) and failure-aware agentic traversal over it (FiF), with a seven-slide running example of FiF."

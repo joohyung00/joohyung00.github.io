@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1E1B3C; --ink-soft:#4C4880; --ink-mute:#8B86B5;
+  --purple-700:#6D28D9; --purple-600:#7C3AED; --purple-500:#8B5CF6; --purple-400:#A78BFA;
+  --purple-300:#C4B5FD; --purple-200:#DDD6FE; --purple-100:#EDE9FE; --purple-50:#F5F3FF;
+  --blue-500:#3B82F6; --border:#E5E0F2; --panel-border:#D8D0F0; --dim:#CDC7E0; --bg:#FCFBFF;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:'Inter',-apple-system,system-ui,sans-serif; color:var(--ink);
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(196,181,253,0.12), transparent 55%),
+    radial-gradient(ellipse 50% 50% at 100% 100%, rgba(147,197,253,0.10), transparent 55%),
+    var(--bg);
+  min-height:100vh; -webkit-font-smoothing:antialiased;}
+.mono{font-family:'JetBrains Mono',monospace;}
+.wrap{max-width:1520px; margin:0 auto; padding:30px 26px 70px;}
+
+/* hero */
+.hero{margin-bottom:18px;}
+.eyebrow{font-family:'JetBrains Mono',monospace; font-size:12.5px; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--purple-600);}
+.hero h1{font-size:34px; font-weight:800; letter-spacing:-.5px; margin:6px 0 8px; line-height:1.1;}
+.hero h1 .hl{color:var(--purple-600);}
+.hero p{font-size:16px; color:var(--ink-soft); line-height:1.5; max-width:880px;}
+.qbar{margin-top:14px; background:#fff; border:1.5px solid var(--purple-200); border-radius:14px;
+  padding:13px 18px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(30,27,60,.05);}
+.qbar .qm{width:36px;height:36px;border-radius:10px;background:var(--purple-100);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.qbar .qt{flex:1; font-size:15.5px; line-height:1.4;}
+.qbar .qt em{color:var(--purple-700); font-style:normal; font-weight:600; background:var(--purple-50); padding:1px 6px; border-radius:5px;}
+.qbar .qa{flex-shrink:0; text-align:center;}
+.qbar .qa .l{font-size:9.5px;font-weight:700;letter-spacing:.12em;color:var(--ink-mute);display:block;}
+.qbar .qa .v{background:#10B981;color:#fff;padding:4px 16px;border-radius:9px;font-weight:800;font-size:18px;}
+
+/* controls */
+.controls{position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:14px;
+  padding:12px 4px; margin-bottom:8px; background:linear-gradient(var(--bg),var(--bg) 68%,transparent);}
+.nav-btn{font-family:'Inter',sans-serif; font-size:14px; font-weight:700; color:#fff; background:var(--purple-500);
+  border:none; border-radius:11px; padding:10px 16px; cursor:pointer; box-shadow:0 4px 12px rgba(124,58,237,.25);
+  transition:transform .1s, background .15s, opacity .15s; white-space:nowrap; flex:none;}
+.nav-btn:hover{background:var(--purple-600);}
+.nav-btn:active{transform:translateY(1px);}
+.nav-btn:disabled{background:var(--dim); box-shadow:none; cursor:default; opacity:.6;}
+
+/* progress rail — dots on a task-bar track */
+.rail{flex:1; position:relative; display:flex; align-items:center; justify-content:space-between;
+  min-width:200px; height:34px; padding:0 7px;}
+.rail .track{position:absolute; left:7px; right:7px; top:50%; height:4px; transform:translateY(-50%);
+  background:var(--border); border-radius:3px;}
+.rail .fill{position:absolute; left:7px; top:50%; height:4px; width:0; transform:translateY(-50%);
+  background:linear-gradient(90deg,var(--purple-400),var(--purple-600)); border-radius:3px;
+  transition:width .35s cubic-bezier(.4,0,.2,1);}
+.dot{position:relative; z-index:1; width:13px; height:13px; padding:0; border-radius:50%;
+  border:2px solid var(--dim); background:#fff; cursor:pointer; flex:none;
+  transition:transform .2s, background .2s, border-color .2s, box-shadow .2s;}
+.dot:hover{border-color:var(--purple-400); transform:scale(1.25);}
+.dot.done{background:var(--purple-400); border-color:var(--purple-400);}
+.dot.current{background:var(--purple-600); border-color:var(--purple-600); transform:scale(1.55);
+  box-shadow:0 0 0 4px rgba(124,58,237,.18);}
+.dot.is-interm{border-radius:3px; transform:rotate(45deg);}
+.dot.is-interm:hover{transform:rotate(45deg) scale(1.25);}
+.dot.is-interm.current{transform:rotate(45deg) scale(1.45);}
+.counter{font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:var(--purple-700);
+  background:var(--purple-50); border:1.5px solid var(--purple-200); border-radius:9px; padding:7px 12px;
+  white-space:nowrap; flex:none;}
+
+/* frames */
+.deck .frame{margin:0 0 34px;}
+.cap{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin:0 2px 10px; font-weight:400;}
+.cap-step{font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; letter-spacing:.04em;
+  color:#fff; background:var(--purple-500); padding:5px 12px; border-radius:8px; flex-shrink:0;}
+.frame.is-interm .cap-step{background:var(--purple-50); color:var(--purple-700); border:1.5px dashed var(--purple-300);}
+.cap-text{font-size:15px; color:var(--ink-soft); line-height:1.4;}
+.screen{width:100%;}
+.box{position:relative; width:100%; padding-top:44.2708%; /* 850/1920 */ overflow:hidden;
+  border-radius:16px; border:1px solid var(--panel-border); background:#fff;
+  box-shadow:0 10px 34px rgba(76,29,149,.10), 0 2px 8px rgba(30,27,60,.05);}
+.box iframe{position:absolute; top:0; left:0; width:1920px; height:850px; border:0;
+  transform-origin:top left; transform:scale(var(--s,.5));}
+
+.hint{text-align:center; color:var(--ink-mute); font-size:13px; margin-top:10px;}
+.hint kbd{font-family:'JetBrains Mono',monospace; font-size:12px; background:#fff; border:1px solid var(--border);
+  border-bottom-width:2px; border-radius:6px; padding:2px 7px; color:var(--ink-soft);}
+
+/* JS mode: one frame at a time; no-JS shows all frames stacked.
+   Blink-free dissolve: the incoming frame is fully opaque underneath, and only the
+   OUTGOING frame fades out on top of it — so the new state is revealed without the
+   background ever showing through (no mid-transition flash). */
+.deck.js{position:relative;}
+.deck.js .frame{position:absolute; top:0; left:0; width:100%; margin:0; opacity:0; visibility:hidden; pointer-events:none;}
+.deck.js .frame.current{position:relative; opacity:1; visibility:visible; pointer-events:auto; z-index:1;}
+.deck.js .frame.leaving{position:absolute; opacity:1; visibility:visible; pointer-events:none; z-index:2;
+  transition:opacity .5s ease;}
+.deck.js .frame.leaving.fade-out{opacity:0;}
+.deck.js .box iframe{pointer-events:none;}  /* let swipes/drags fall through to the deck */
+@media (prefers-reduced-motion: reduce){ .deck.js .frame.leaving{transition:none;} .rail .fill{transition:none;} }
+
+/* responsive: stack controls, rail on its own row */
+@media (max-width:640px){
+  .wrap{padding:20px 14px 60px;}
+  .hero h1{font-size:25px;} .hero p{font-size:14.5px;}
+  .controls{flex-wrap:wrap; gap:10px;}
+  .rail{order:3; flex-basis:100%; min-width:0;}
+  .cap-text{font-size:13.5px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">{{EYEBROW}}</div>
+    <h1>{{H1}}</h1>
+    <p>{{INTRO}}</p>
+    <div class="qbar">
+      <div class="qm">{{QICON}}</div>
+      <div class="qt">{{QUESTION}}</div>
+      <div class="qa"><span class="l">{{ALABEL}}</span><span class="v">{{ANSWER}}</span></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="nav-btn" id="prev">◀ Prev</button>
+    <div class="rail" id="rail"><span class="track"></span><span class="fill" id="fill"></span>{{DOTS}}<button class="dot is-interm" data-go="10" aria-label="✦ Intermission" title="✦ Intermission — The Traverser: each hop is parameterized by τ = (hop scope, vector granularity, LLM reasoning)."></button></div>
+    <span class="counter" id="counter">1 / {{N}}</span>
+    <button class="nav-btn" id="next">Next ▶</button>
+  </div>
+
+  <div class="deck" id="deck">
+{{FRAMES}}
+
+</div>
+
+  <div class="hint">Navigate with <kbd>←</kbd> <kbd>→</kbd>, the buttons, the dots, or <b>swipe</b> on touch · 14 frames</div>
+</div>
+
+<script>
+(function(){
+  var deck=document.getElementById('deck');
+  var frames=[].slice.call(deck.querySelectorAll('.frame'));
+  var dots=[].slice.call(document.querySelectorAll('.dot'));
+  var prev=document.getElementById('prev'), next=document.getElementById('next'),
+      counter=document.getElementById('counter'), fill=document.getElementById('fill'),
+      rail=document.getElementById('rail');
+  var i=0, N=frames.length;
+  deck.classList.add('js');
+
+  function fit(f){ var box=f && f.querySelector('.box'); if(box) box.style.setProperty('--s', box.clientWidth/1920); }
+  function fillTo(n){
+    if(!dots[n]) return;
+    // measure in viewport coords so the fill reaches the CURRENT dot's centre exactly
+    var dr=dots[n].getBoundingClientRect(), rr=rail.getBoundingClientRect();
+    fill.style.width=Math.max(0,(dr.left+dr.width/2)-rr.left-7)+'px';
+  }
+  var leaveT;
+  function show(n){
+    var target=Math.max(0,Math.min(N-1,n));
+    var outgoing = (target!==i) ? frames[i] : null;
+    i=target;
+    // clean up any frame still mid-dissolve from a previous (rapid) navigation
+    frames.forEach(function(f){ if(f!==outgoing) f.classList.remove('leaving','fade-out'); });
+    frames.forEach(function(f,k){ f.classList.toggle('current',k===i); });
+    if(outgoing && outgoing!==frames[i]){
+      outgoing.classList.remove('current');
+      outgoing.classList.add('leaving');   // sits on top, fully opaque, over the new frame
+      void outgoing.offsetWidth;            // force reflow so the next class change animates
+      outgoing.classList.add('fade-out');   // → opacity 0; new frame is revealed beneath
+      clearTimeout(leaveT);
+      leaveT=setTimeout(function(){ outgoing.classList.remove('leaving','fade-out'); }, 560);
+    }
+    dots.forEach(function(d,k){ d.classList.toggle('current',k===i); d.classList.toggle('done',k<i); });
+    counter.textContent=(i+1)+' / '+N;
+    prev.disabled=(i===0); next.disabled=(i===N-1);
+    fit(frames[i]); fillTo(i);
+    if(dots[i] && dots[i].scrollIntoView) dots[i].scrollIntoView({block:'nearest',inline:'center'});
+  }
+  prev.onclick=function(){ show(i-1); };
+  next.onclick=function(){ show(i+1); };
+  dots.forEach(function(d){ d.onclick=function(){ show(+d.dataset.go); }; });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){ e.preventDefault(); show(i+1); }
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ e.preventDefault(); show(i-1); }
+    else if(e.key==='Home'){ show(0); } else if(e.key==='End'){ show(N-1); }
+  });
+
+  /* touch swipe (iframes have pointer-events:none in JS mode, so touches reach the deck) */
+  var sx=0, sy=0, st=0;
+  deck.addEventListener('touchstart',function(e){ var t=e.changedTouches[0]; sx=t.clientX; sy=t.clientY; st=Date.now(); },{passive:true});
+  deck.addEventListener('touchend',function(e){ var t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.4 && (Date.now()-st)<700){ show(dx<0 ? i+1 : i-1); } },{passive:true});
+
+  var rt; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){ fit(frames[i]); fillTo(i); },80); });
+  window.addEventListener('load',function(){ fit(frames[i]); fillTo(i); });
+  show(0);
+})();
+</script>
+</body>
+</html>
