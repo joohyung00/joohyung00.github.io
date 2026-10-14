@@ -16,12 +16,6 @@
   venue: ACL 2025
   where: Vienna, Austria
   date: "2025.07"
-- key: recg-kjmd2024
-  pub: recg
-  venue: KJMD 2024
-  venue_long: 6th Korea–Japan Workshop on Management of Data
-  where: Sapporo, Japan
-  date: "2024.11"
 - key: recg-vldb2024
   pub: recg
   venue: VLDB 2024
