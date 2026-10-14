@@ -1,0 +1,36 @@
+{% extends "base.html.j2" %}
+{% block title %}Talks & posters · {{ profile.name }}{% endblock %}
+{% block canonical %}talks/{% endblock %}
+{% block description %}Slides and posters from {{ profile.name }}'s conference presentations, viewable in the browser.{% endblock %}
+{% block body %}
+
+<header class="hero one">
+  <div>
+    <div class="mono">{{ talks | length }} presentations</div>
+    <h1 class="name sm">Talks &amp; posters</h1>
+    <p class="tag">Slides and posters from my conference presentations. Decks open in the browser; PDFs are attached.</p>
+  </div>
+</header>
+
+<div class="talks">
+  {% for t in talks %}
+  <article class="talk" id="{{ t.key }}">
+    <a class="thumb" href="{{ root }}talks/{{ t.key }}/" aria-label="Open {{ t.venue }} {{ 'slides' if t.slides else 'poster' }}">
+      {% if t.slides %}<img src="{{ root }}assets/talks/{{ t.key }}/slides/thumb/01.webp" alt="" width="320" height="180" loading="lazy">
+      {% else %}<img src="{{ root }}assets/talks/{{ t.key }}/poster_thumb.webp" alt="" loading="lazy">{% endif %}
+    </a>
+    <div>
+      <div class="meta"><span class="badge">{{ t.venue }}</span><span class="mono">{{ t.where }} · {{ t.date }}</span></div>
+      <h3><a href="{{ root }}talks/{{ t.key }}/">{{ t.pub.title }}</a></h3>
+      <div class="au">{{ t.pub.authors | bold_self(profile.me) | safe }}</div>
+      <div class="links">
+        {% if t.slides %}<a href="{{ root }}talks/{{ t.key }}/">slides ({{ t.slides }})</a>{% endif %}
+        {% if t.poster %}<a href="{{ root }}talks/{{ t.key }}/#poster">poster</a>{% endif %}
+        {% for label, url in t.pub.links.items() if label not in ('Slides', 'Poster') %}<a href="{{ url }}">{{ label | lower }}</a>{% endfor %}
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+
+{% endblock %}

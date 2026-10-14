@@ -61,7 +61,7 @@
 
 {# ============================================================ 04 publications #}
 <section class="sec" id="pubs">
-  <div class="lab"><h2>Publications</h2><div class="sub">{{ publications | length }} papers · <a href="{{ profile.scholar }}">scholar ↗</a></div></div>
+  <div class="lab"><h2>Publications</h2><div class="sub">{{ publications | length }} papers · <a href="{{ profile.scholar }}">scholar ↗</a> · <a href="{{ root }}talks/">talks ↗</a></div></div>
   <div>
     {% for p in publications %}
     <article class="pub" id="pub-{{ p.key }}">

@@ -1,0 +1,29 @@
+# Talks & posters, newest first. `pub` = key in publications.yml (title, authors and paper links come from there).
+# Files live in assets/talks/<key>/ — made with:  python build/talks_import.py <key> --slides deck.pptx --poster poster.pptx
+# The slide count and poster size are read from assets/talks/<key>/meta.json at build time.
+- key: fif-icml2026
+  pub: fif
+  venue: ICML 2026
+  where: Seoul, Korea
+  date: "2026.07"
+- key: lilac-emnlp2025
+  pub: lilac
+  venue: EMNLP 2025
+  where: Suzhou, China
+  date: "2025.11"
+- key: helios-acl2025
+  pub: helios
+  venue: ACL 2025
+  where: Vienna, Austria
+  date: "2025.07"
+- key: recg-kjmd2024
+  pub: recg
+  venue: KJMD 2024
+  venue_long: 6th Korea–Japan Workshop on Management of Data
+  where: Sapporo, Japan
+  date: "2024.11"
+- key: recg-vldb2024
+  pub: recg
+  venue: VLDB 2024
+  where: Guangzhou, China
+  date: "2024.08"

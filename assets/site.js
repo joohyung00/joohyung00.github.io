@@ -1,6 +1,7 @@
 /* joohyung00.github.io — no dependencies.
    1) dark-mode toggle (localStorage)  2) nav scroll-spy  3) news "show all"
-   4) photo carousel (scroll-snap + arrows + dots + autoplay)  5) recent posts from /mypages/index.json */
+   4) photo carousel (scroll-snap + arrows + dots + autoplay)  5) recent posts from /mypages/index.json
+   6) slide viewer on talks/<key>/ (scroll-snap track + arrows + keys + thumbnail rail + fullscreen + #sN links) */
 (function () {
   var html = document.documentElement;
 
@@ -63,6 +64,55 @@
     c.addEventListener('mouseenter', function () { clearInterval(timer); });
     c.addEventListener('mouseleave', restart);
     paint(); restart();
+  });
+
+  // 6) slide viewer (talks/<key>/)
+  [].forEach.call(document.querySelectorAll('[data-viewer]'), function (v) {
+    var track = v.querySelector('.track'), figs = [].slice.call(track.children), n = figs.length;
+    var count = v.querySelector('.count b'), rail = v.querySelector('.rail');
+    var thumbs = rail ? [].slice.call(rail.children) : [], idx = 0, lock = false;
+    function warm(i) { var f = figs[i]; if (f) { var im = f.querySelector('img'); if (im && im.loading === 'lazy') im.loading = 'eager'; } }
+    function paint() {
+      if (count) count.textContent = idx + 1;
+      thumbs.forEach(function (b, i) { b.classList.toggle('on', i === idx); });
+      var b = thumbs[idx];
+      if (b && rail) rail.scrollLeft = b.offsetLeft - rail.offsetLeft - rail.clientWidth / 2 + b.clientWidth / 2;
+      warm(idx + 1); warm(idx + 2); warm(idx - 1);
+      if (history.replaceState && (!location.hash || /^#s\d+$/.test(location.hash))) history.replaceState(null, '', '#s' + (idx + 1));
+    }
+    function go(i, instant) {
+      var prev = idx;
+      idx = Math.max(0, Math.min(n - 1, i)); lock = true;
+      track.scrollTo({ left: figs[idx].offsetLeft, behavior: (instant || Math.abs(idx - prev) > 3) ? 'auto' : 'smooth' });  // long jumps: no animation
+      paint(); setTimeout(function () { lock = false; }, 450);
+    }
+    v.querySelector('.prev').addEventListener('click', function () { go(idx - 1); });
+    v.querySelector('.next').addEventListener('click', function () { go(idx + 1); });
+    thumbs.forEach(function (b) { b.addEventListener('click', function () { go(+b.getAttribute('data-i')); }); });
+    var lastW = track.clientWidth;
+    track.addEventListener('scroll', function () {
+      if (lock) return;
+      if (track.clientWidth !== lastW) { lastW = track.clientWidth; track.scrollLeft = figs[idx].offsetLeft; return; }  // re-layout, not the user
+      var x = track.scrollLeft, best = 0, bd = 1e9;
+      figs.forEach(function (f, i) { var d = Math.abs(f.offsetLeft - x); if (d < bd) { bd = d; best = i; } });
+      if (best !== idx) { idx = best; paint(); }
+    }, { passive: true });
+    document.addEventListener('keydown', function (e) {
+      if (e.altKey || e.ctrlKey || e.metaKey || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(idx + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(idx - 1); }
+      else if (e.key === 'Home') { e.preventDefault(); go(0); }
+      else if (e.key === 'End') { e.preventDefault(); go(n - 1); }
+    });
+    var fs = v.querySelector('.fs');
+    if (fs) {
+      if (!track.requestFullscreen) fs.hidden = true;
+      fs.addEventListener('click', function () { if (document.fullscreenElement) document.exitFullscreen(); else track.requestFullscreen(); });
+      document.addEventListener('fullscreenchange', function () { setTimeout(function () { go(idx, true); }, 80); });
+    }
+    window.addEventListener('resize', function () { lastW = track.clientWidth; lock = true; track.scrollLeft = figs[idx].offsetLeft; setTimeout(function () { lock = false; }, 150); });
+    var m = /^#s(\d+)$/.exec(location.hash);
+    if (m) go(+m[1] - 1, true); else paint();
   });
 
   // 5) recent posts: the list is baked in at build time from the my-page manifest; here it is

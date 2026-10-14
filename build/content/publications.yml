@@ -10,6 +10,7 @@
     Project: https://failureisfeedback.github.io/
     arXiv: https://arxiv.org/abs/2602.03432
     PDF: https://arxiv.org/pdf/2602.03432
+    Poster: talks/fif-icml2026/
   summary: >-
     Agentic retrieval over multimodal documents must commit to a path without exploring every alternative.
     FiF treats a failed step as feedback: it backtracks to the last decision point and uses the failure to choose
@@ -22,7 +23,8 @@
   figure: assets/img/pubs/lilac_fig.png
   links:
     Paper: https://aclanthology.org/2025.emnlp-main.1037/
-    Slides: assets/slides/lilac.pptx
+    Slides: talks/lilac-emnlp2025/
+    Poster: talks/lilac-emnlp2025/#poster
     Code: https://github.com/joohyung00/lilac
   summary: >-
     LILaC indexes a document collection as a two-layer component graph: a coarse layer for fast candidate generation
@@ -36,7 +38,7 @@
   figure: assets/img/pubs/helios_fig.png
   links:
     Paper: https://aclanthology.org/2025.acl-long.1559.pdf
-    Slides: assets/slides/helios.pdf
+    Poster: talks/helios-acl2025/
     Code: https://github.com/pshlego/HELIOS
   summary: >-
     Early fusion pre-aligns tables with passages and over-retrieves; late fusion aligns on the fly and under-retrieves.
@@ -50,7 +52,8 @@
   figure: assets/img/pubs/recg_fig.png
   links:
     Paper: https://dl.acm.org/doi/pdf/10.14778/3681954.3682019
-    Slides: assets/slides/recg.pptx
+    Slides: talks/recg-vldb2024/
+    Poster: talks/recg-vldb2024/#poster
     Code: https://github.com/joohyung00/recg_vldb_2024
   summary: >-
     Top-down schema discovery decides a node's type before seeing its children and gets heterogeneous data wrong.

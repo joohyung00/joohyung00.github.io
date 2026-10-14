@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Build joohyung00.github.io from build/content/*.yml + build/templates/*.j2.
 
-    python build/build.py                 # writes index.html and 404.html at the repo root
-    python build/build.py --inline out.html
+    python build/build.py                 # writes index.html, 404.html, talks/index.html, talks/<key>/index.html
+    python build/build.py --inline out.html [--page talks/index.html]
                                           # single-file bundle (CSS/JS inlined, images as data URIs)
                                           # for previewing on the my-page Preview Hub
 
 Dependencies: jinja2, pyyaml (pip install jinja2 pyyaml). No Jekyll, no Ruby.
 """
-import argparse, base64, datetime, mimetypes, os, re, sys
+import argparse, base64, datetime, json, mimetypes, os, re, sys
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -38,7 +38,6 @@ def recent_posts(n=3, exclude=()):
     path = os.path.join(ROOT, "mypages", "index.json")
     if not os.path.exists(path):
         return []
-    import json
     try:
         pages = json.load(open(path, encoding="utf-8")).get("pages", [])
     except Exception:
@@ -67,12 +66,40 @@ def render(inline=False):
     if inline:
         ctx["inline_css"] = open(os.path.join(ROOT, "assets", "site.css"), encoding="utf-8").read()
         ctx["inline_js"] = open(os.path.join(ROOT, "assets", "site.js"), encoding="utf-8").read()
-    pages = {"index.html": env.get_template("index.html.j2").render(**ctx),
-             "404.html": env.get_template("404.html.j2").render(**ctx)}
+    ctx["talks"] = load_talks(data)
+
+    def page(tpl, root, **extra):
+        # `root` = relative path back to the site root ("" / "../" / "../../"); the inline bundle
+        # is assembled from the repo root, so it always uses "".
+        return env.get_template(tpl).render(**dict(ctx, root="" if inline else root, **extra))
+
+    pages = {"index.html": page("index.html.j2", ""),
+             "404.html": page("404.html.j2", ""),
+             "talks/index.html": page("talks.html.j2", "../", nav_on="talks")}
+    for t in ctx["talks"]:
+        pages[f"talks/{t['key']}/index.html"] = page("talk.html.j2", "../../", t=t, nav_on="talks")
     if inline:
         site = data["profile"]["site_url"].rstrip("/")
         pages = {k: absolutize_links(inline_images(v), site) for k, v in pages.items()}
     return pages
+
+
+def load_talks(data):
+    """talks.yml entries joined with their publication and with assets/talks/<key>/meta.json
+    (slide count, poster size) written by talks_import.py."""
+    pubs = {p["key"]: p for p in data.get("publications", []) or []}
+    out = []
+    for t in data.get("talks", []) or []:
+        t = dict(t)
+        t["pub"] = pubs[t["pub"]]
+        meta_path = os.path.join(ROOT, "assets", "talks", t["key"], "meta.json")
+        meta = json.load(open(meta_path, encoding="utf-8")) if os.path.exists(meta_path) else {}
+        t["slides"] = meta.get("slides", 0)
+        t["poster"] = meta.get("poster")
+        if not (t["slides"] or t["poster"]):
+            print(f"warning: talks/{t['key']} has no slides or poster (run build/talks_import.py)", file=sys.stderr)
+        out.append(t)
+    return out
 
 
 def absolutize_links(html, site):
@@ -96,21 +123,23 @@ def inline_images(html):
         with open(path, "rb") as f:
             b64 = base64.b64encode(f.read()).decode()
         return f'{m.group(1)}="data:{mime};base64,{b64}"'
-    return re.sub(r'(src|content)="(assets/img/[^"]+)"', repl, html)
+    return re.sub(r'(src|content)="(assets/(?:img|talks)/[^"]+)"', repl, html)
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--inline", metavar="OUT", help="write a single-file preview bundle to OUT instead of the site files")
+    ap.add_argument("--page", default="index.html", help="with --inline: which page to bundle (default index.html)")
     args = ap.parse_args()
     pages = render(inline=bool(args.inline))
     if args.inline:
         with open(args.inline, "w", encoding="utf-8") as f:
-            f.write(pages["index.html"])
+            f.write(pages[args.page])
         print(f"inline bundle -> {args.inline} ({os.path.getsize(args.inline) // 1024} KB)")
         return
     for name, html in pages.items():
         out = os.path.join(ROOT, name)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
         with open(out, "w", encoding="utf-8") as f:
             f.write(html)
         print(f"wrote {name} ({len(html) // 1024} KB)")
