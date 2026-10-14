@@ -1,9 +1,20 @@
 {
-  "generated": "2026-06-03T10:20:34+00:00",
+  "generated": "2026-10-14T11:56:48+00:00",
   "site_url": "https://joohyung00.github.io",
   "folder": "mypages",
-  "count": 3,
+  "count": 4,
   "pages": [
+    {
+      "slug": "lilac-worked-example",
+      "file": "lilac-worked-example.html",
+      "title": "LILaC — Worked Example",
+      "url": "/mypages/lilac-worked-example.html",
+      "created": "2026-10-14T11:56:48+00:00",
+      "updated": "2026-10-14T11:56:48+00:00",
+      "excerpt": "LILaC — Worked Example LILaC · EMNLP 2025 · Worked Example How a question about a photo two hops away gets answered LILaC retrieves from documents that mix paragraphs, tables and images. It builds a t",
+      "text": "LILaC — Worked Example LILaC · EMNLP 2025 · Worked Example How a question about a photo two hops away gets answered LILaC retrieves from documents that mix paragraphs, tables and images. It builds a two-layer component graph offline, decomposes the query into modality-specific subqueries online, and walks the graph edge by edge, scoring each edge with late interaction over fine-grained subcomponents. Step through one query below. ❓ In the mausoleum built by the Mughal emperor who married Mumtaz Mahal , how many slender minarets surround the central dome? ANSWER Four ◀ Prev 1 / 10 Next ▶ Setup Three Wikipedia-style documents, each a sequence of paragraph / image / table components; one paragraph hyperlinks to the other two pages. Offline · 1 Every component becomes a two-level component tree : sentences under a paragraph, header+row segments under a table, detected objects under an image. Offline · 2 Coarse nodes are linked by a clique inside each document and by hyperlink edges across documents; then every node is embedded once. Online · 1 The query is decomposed by an LLM into three subqueries, each classified into a modality that becomes the embedding instruction. Online · 2 Seed: the top-b (b = 2) coarse nodes by similarity to the whole query — one nearest-neighbour search over V₀, nothing else. Online · 3 From the seeds, every incident edge is a candidate; each edge gets a relevance score computed now , from fine-grained nodes — no edge embeddings exist. Online · 4 Edge-level late interaction : an edge is scored by matching each subquery against the subcomponents hanging off both endpoints, then summing the per-subquery maxima. (Similarities here are illustrative.) Online · 5 Beam search over edges: keep the b best edges, make their endpoints the new candidates, repeat for n i iterations. The search never scores more than a few dozen edges. Result The final subgraph's nodes are returned as a ranked list; the multimodal LLM answers from the Taj Mahal photo. ✦ Why it works Granularity, structure and modality are handled by three separate mechanisms — and the expensive one (the LLM) runs once per query, not per hop. Navigate with ← → , the buttons, the dots, or swipe on touch · 10 frames",
+      "hash": "7af51bed416fa97b8d1e0d397e858ca7ceb2c025"
+    },
     {
       "slug": "failure-is-feedback-worked-example",
       "file": "failure-is-feedback-worked-example.html",
