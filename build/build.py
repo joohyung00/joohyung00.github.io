@@ -59,6 +59,7 @@ def render(inline=False):
     ctx = dict(data)
     ctx["recent_posts"] = recent_posts()
     ctx["build_date"] = datetime.date.today().strftime("%Y-%m")
+    ctx["build_month"] = datetime.date.today().strftime("%B %Y")
     ctx["year"] = datetime.date.today().year
     ctx["inline"] = inline
     if inline:

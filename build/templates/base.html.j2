@@ -15,7 +15,7 @@
 <link rel="icon" href="assets/img/kirby.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 {% if inline %}
 <style>{{ inline_css | safe }}</style>
 {% else %}
@@ -31,7 +31,7 @@
 </head>
 <body id="top">
 <div class="nav"><div class="in">
-  <a class="brand" href="#top">JY<span>.</span></a>
+  <a class="brand" href="#top">{{ profile.name }}</a>
   <nav aria-label="Sections">
     <a href="#about">About</a><a href="#research">Research</a><a href="#news">News</a><a href="#pubs">Publications</a><a href="#cv">CV</a>
   </nav>
@@ -41,7 +41,7 @@
 <div class="wrap">
 {% block body %}{% endblock %}
 <footer>
-  <span><a href="mailto:{{ profile.email }}">{{ profile.email }}</a> · last updated {{ build_date }}</span>
+  <span><a href="mailto:{{ profile.email }}">{{ profile.email }}</a> · updated {{ build_month }}</span>
   <span><a href="{{ profile.posts_url }}">Posts ↗</a> · <a href="{{ profile.legacy_url }}" title="Previous versions of this site">legacy ↗</a> · <a href="#top">top ↑</a></span>
 </footer>
 </div>
