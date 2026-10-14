@@ -26,14 +26,14 @@
   <div class="stage">
     <div class="track" tabindex="0" aria-label="Slides, use arrow keys">
       {% if t.html %}{% for n in t.html %}<figure><iframe src="{{ base }}html/{{ n }}" title="Slide {{ loop.index }}"{% if loop.index > 2 %} loading="lazy"{% endif %}></iframe></figure>{% endfor %}
-      {% else %}{% for i in range(1, t.slides + 1) %}<figure><img src="{{ base }}slides/{{ '%02d' % i }}.webp" alt="Slide {{ i }}" width="1280" height="720"{% if i > 2 %} loading="lazy"{% endif %}></figure>{% endfor %}{% endif %}
+      {% else %}{% for i in range(1, t.slides + 1) %}{% set nn = '%02d' % i %}{% set k = t.steps.get(nn, 0) %}<figure><img src="{{ base }}slides/{% if k %}steps/{{ nn }}-0{% else %}{{ nn }}{% endif %}.webp" alt="Slide {{ i }}" width="1280" height="720"{% if i > 2 %} loading="lazy"{% endif %}{% if k %} data-steps="{% for j in range(k) %}{{ base }}slides/steps/{{ nn }}-{{ j }}.webp|{% endfor %}{{ base }}slides/{{ nn }}.webp"{% endif %}></figure>{% endfor %}{% endif %}
     </div>
     <button type="button" class="arrow prev" aria-label="Previous slide">‹</button>
     <button type="button" class="arrow next" aria-label="Next slide">›</button>
   </div>
   <div class="bar">
     <span class="count mono"><b>1</b> / {{ t.slides }}</span>
-    <span class="hint mono">← → keys · swipe · click a thumbnail{% if t.html %} · live HTML slides, → also plays each slide's build steps{% endif %}</span>
+    <span class="hint mono">← → keys · swipe · click a thumbnail{% if t.html or t.steps %} · → also plays each slide's build steps{% endif %}</span>
     <button type="button" class="linkbtn fs">fullscreen ⤢</button>
   </div>
   <div class="rail" aria-label="Slide thumbnails">

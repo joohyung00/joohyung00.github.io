@@ -4,6 +4,7 @@ or a seminar deck into assets/seminars/<key>/ with --into assets/seminars.
 
     python build/talks_import.py <key> [--slides deck.pptx|deck.pdf] [--poster poster.pptx|poster.pdf] [--into assets/seminars]
     python build/talks_import.py <key> --html ~/.claude/data/slides/items/<deck> --into assets/seminars
+    python build/talks_import.py <key> --slides deck.pptx --steps [--keep 1-18] [--drop 8,11]   # keep click animations as steps
 
 Writes, under assets/talks/<key>/:
     slides/NN.webp         1280px-wide slide images        (from --slides)
@@ -18,6 +19,11 @@ the original HTML files instead of images:
     html/NN_*.html, html/deck.html   copied verbatim (self-contained pages; deck.html = all slides on one page)
     slides/thumb/NN.webp, slides.pdf  from a Playwright print of the deck (build/html_deck_pdf.py)
     meta.json              {"slides": N, "html": ["00_cover.html", ...]}
+With --steps (pptx only) the deck is first expanded by build/pptx_steps.py into one page per click
+step; intermediate states land in slides/steps/NN-k.webp (k = 0 … K-1, before the final look), the
+final look stays slides/NN.webp, slides.pdf keeps only the final pages, and meta.json records
+{"steps": {"NN": K}} so the viewer plays the states before moving to the next slide.
+--keep / --drop select original slides (1-based) and need --steps.
 
 Then add/adjust the entry in build/content/talks.yml and run `python build/build.py`.
 
@@ -58,6 +64,9 @@ def main():
     ap.add_argument("--slides")
     ap.add_argument("--poster")
     ap.add_argument("--html", metavar="DECKDIR", help="Slides-Hub HTML deck folder: serve the slide pages themselves (see docstring)")
+    ap.add_argument("--steps", action="store_true", help="pptx: expand click animations into step images (build/pptx_steps.py)")
+    ap.add_argument("--keep", help="with --steps: keep only these original slides, e.g. 1-18")
+    ap.add_argument("--drop", help="with --steps: drop these original slides, e.g. 8,11")
     ap.add_argument("--into", default="assets/talks", help="destination folder under the repo root (default assets/talks; use assets/seminars for seminars.yml entries)")
     a = ap.parse_args()
     if not (a.slides or a.poster or a.html):
@@ -86,7 +95,41 @@ def main():
             shutil.copy(pdf, os.path.join(dest, "slides.pdf"))
             meta["slides"] = len(names); meta["html"] = names
             print(f"{a.key}: {len(names)} html slides")
-        if a.slides:
+        if a.slides and a.steps:
+            if not a.slides.lower().endswith(".pptx"):
+                sys.exit("--steps needs a .pptx (animations live in the pptx, not in a PDF)")
+            expanded = os.path.join(tmp, "expanded.pptx"); smap = os.path.join(tmp, "steps.json")
+            cmd = [sys.executable, os.path.join(HERE, "pptx_steps.py"), os.path.abspath(a.slides), expanded, "--json", smap]
+            if a.keep: cmd += ["--keep", a.keep]
+            if a.drop: cmd += ["--drop", a.drop]
+            subprocess.run(cmd, check=True)
+            info = json.load(open(smap))
+            pdf = to_pdf(expanded, tmp)
+            sd = os.path.join(dest, "slides"); shutil.rmtree(sd, ignore_errors=True)
+            os.makedirs(os.path.join(sd, "thumb")); os.makedirs(os.path.join(sd, "steps"))
+            subprocess.run(["pdftoppm", "-png", "-scale-to-x", "1600", "-scale-to-y", "-1", pdf, os.path.join(tmp, "s")], check=True)
+            pngs = sorted(glob.glob(os.path.join(tmp, "s-*.png")))
+            if len(pngs) != info["pages"]:
+                sys.exit(f"expanded deck has {len(pngs)} pages, expected {info['pages']}")
+            page, steps, finals = 0, {}, []
+            for sl in info["slides"]:
+                n = sl["n"]
+                for k in range(sl["steps"]):
+                    webp(pngs[page], os.path.join(sd, "steps", f"{n:02d}-{k}.webp"), 1280); page += 1
+                webp(pngs[page], os.path.join(sd, f"{n:02d}.webp"), 1280)
+                webp(pngs[page], os.path.join(sd, "thumb", f"{n:02d}.webp"), 320, 75)
+                finals.append(page); page += 1
+                if sl["steps"]:
+                    steps[f"{n:02d}"] = sl["steps"]
+            from pypdf import PdfReader, PdfWriter          # slides.pdf = final looks only
+            r = PdfReader(pdf); w = PdfWriter()
+            for i in finals:
+                w.add_page(r.pages[i])
+            w.compress_identical_objects(remove_duplicates=True, remove_unreferenced=True)
+            w.write(os.path.join(dest, "slides.pdf"))
+            meta["slides"] = len(info["slides"]); meta["steps"] = steps; meta.pop("html", None)
+            print(f"{a.key}: {len(info['slides'])} slides, {sum(steps.values())} animation steps on {len(steps)} slide(s)")
+        elif a.slides:
             pdf = to_pdf(os.path.abspath(a.slides), tmp)
             sd = os.path.join(dest, "slides"); shutil.rmtree(sd, ignore_errors=True)
             os.makedirs(os.path.join(sd, "thumb"))
@@ -96,7 +139,7 @@ def main():
                 webp(p, os.path.join(sd, f"{i:02d}.webp"), 1280)
                 webp(p, os.path.join(sd, "thumb", f"{i:02d}.webp"), 320, 75)
             shutil.copy(pdf, os.path.join(dest, "slides.pdf"))
-            meta["slides"] = len(pngs); meta.pop("html", None)
+            meta["slides"] = len(pngs); meta.pop("html", None); meta.pop("steps", None)
             print(f"{a.key}: {len(pngs)} slides")
         if a.poster:
             pdf = to_pdf(os.path.abspath(a.poster), tmp)

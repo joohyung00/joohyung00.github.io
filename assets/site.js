@@ -83,7 +83,13 @@
     // html decks: a slide page may have build steps (.st[data-s], shown one by one by its own ArrowRight/ArrowLeft
     // handler). Forward the keys into the current slide's iframe until its steps are used up, like PowerPoint.
     function stepState(i) {
-      var f = figs[i], fr = f && f.querySelector('iframe'); if (!fr) return null;
+      var f = figs[i]; if (!f) return null;
+      var im = f.querySelector('img[data-steps]');        // pptx deck: pre-rendered animation states
+      if (im) {
+        var st = im.getAttribute('data-steps').split('|'), si = +(im.dataset.si || 0);
+        return { img: im, states: st, si: si, left: st.length - 1 - si, done: si };
+      }
+      var fr = f.querySelector('iframe'); if (!fr) return null;
       try {
         var d = fr.contentDocument, st = d && d.querySelectorAll('.st'); if (!st || !st.length) return null;
         var left = 0, done = 0;
@@ -92,11 +98,16 @@
       } catch (e) { return null; }
     }
     function key(d, k) { d.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true })); }
-    function next() { var s = stepState(idx); if (s && s.left) { key(s.doc, 'ArrowRight'); return; } go(idx + 1); }
+    function setState(s, si) {                          // image states: swap the src in place (no scroll)
+      s.img.dataset.si = si; s.img.src = s.states[si];
+      if (si + 1 < s.states.length) { var pre = new Image(); pre.src = s.states[si + 1]; }   // preload the next state
+    }
+    function advance(s, d) { if (s.img) setState(s, s.si + d); else key(s.doc, d > 0 ? 'ArrowRight' : 'ArrowLeft'); }
+    function next() { var s = stepState(idx); if (s && s.left) { advance(s, 1); return; } go(idx + 1); }
     function prev() {
-      var s = stepState(idx); if (s && s.done) { key(s.doc, 'ArrowLeft'); return; }
+      var s = stepState(idx); if (s && s.done) { advance(s, -1); return; }
       go(idx - 1);
-      var p = stepState(idx); if (p) for (var k = 0; k < p.left; k++) key(p.doc, 'ArrowRight');   // show the previous slide fully built
+      var p = stepState(idx); if (p) { if (p.img) setState(p, p.states.length - 1); else for (var k = 0; k < p.left; k++) key(p.doc, 'ArrowRight'); }   // previous slide fully built
     }
     function go(i, instant) {
       var prev = idx;

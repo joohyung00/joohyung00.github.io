@@ -19,7 +19,10 @@ Add a talk or poster: `python build/talks_import.py <key> --slides deck.pptx --p
 writes `assets/talks/<key>/` with WebP slides, thumbnails, PDFs and `meta.json`), then add the entry to
 `build/content/talks.yml` (venue, place, date, `pub` = publications key, or `title` + `pubs` for a seminar talk that
 covers several papers) and point the paper's `Slides`/`Poster` links at `talks/<key>/`. The viewer is plain
-scroll-snap HTML; PDFs are kept for download.
+scroll-snap HTML; PDFs are kept for download. Add `--steps` for a pptx with click animations: `build/pptx_steps.py`
+expands entrance/exit effects (whole shapes and paragraph builds) into one page per click, the viewer then plays those
+states on → before moving on (emphasis, motion-path and morph effects fall back to the final look). `--keep 1-18` / `--drop 8`
+select original slides.
 
 Add a seminar deck (lab seminar on my work, or a paper I presented in the reading group): same import with
 `--into assets/seminars`, then an entry in `build/content/seminars.yml` (`kind`, `venue`, `date`, `summary`, and either
