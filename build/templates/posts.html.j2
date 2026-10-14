@@ -1,0 +1,23 @@
+{% extends "base.html.j2" %}
+{% block title %}Posts · {{ profile.name }}{% endblock %}
+{% block canonical %}mypages/{% endblock %}
+{% block description %}{{ profile.posts_intro }}{% endblock %}
+{% block body %}
+
+<header class="hero one">
+  <div>
+    <div class="mono">{{ posts | length }} posts</div>
+    <h1 class="name sm">Posts</h1>
+    <p class="tag">{{ profile.posts_intro }}</p>
+  </div>
+</header>
+
+{# Baked from mypages/index.json at build time and refreshed from the live manifest at runtime
+   (data-posts-all = every post, newest first; the home page shows only the three latest). #}
+<div class="postlist posts-page" data-posts="{{ root }}mypages/index.json" data-posts-all data-posts-exclude="{{ (profile.posts_exclude or []) | join(',') }}">
+  {% for p in posts %}
+  <div class="post"><span class="d">{{ p.date }}</span><div><a class="t" href="{{ p.url }}">{{ p.title }}</a><div class="x">{{ p.excerpt }}</div></div></div>
+  {% endfor %}
+</div>
+
+{% endblock %}

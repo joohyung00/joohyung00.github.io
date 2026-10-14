@@ -33,7 +33,7 @@
 <div class="nav"><div class="in">
   <a class="brand" href="{{ root }}#top">{{ profile.name }}</a>
   <nav aria-label="Pages">
-    <a href="{{ root }}talks/"{% if nav_on == "talks" %} class="on"{% endif %}>Talks</a><a href="{{ root }}seminars/"{% if nav_on == "seminars" %} class="on"{% endif %}>Seminars</a><a href="{{ profile.posts_url }}">Posts</a><a href="{{ root }}{{ profile.cv_pdf }}" title="Curriculum vitae (PDF)">CV ↗</a>
+    <a href="{{ root }}talks/"{% if nav_on == "talks" %} class="on"{% endif %}>Talks</a><a href="{{ root }}seminars/"{% if nav_on == "seminars" %} class="on"{% endif %}>Seminars</a><a href="{{ root }}mypages/"{% if nav_on == "posts" %} class="on"{% endif %}>Posts</a><a href="{{ root }}{{ profile.cv_pdf }}" title="Curriculum vitae (PDF)">CV ↗</a>
   </nav>
   <button class="themeToggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">☾</button>
 </div></div>
@@ -41,7 +41,7 @@
 {% block body %}{% endblock %}
 <footer>
   <span><a href="mailto:{{ profile.email }}">{{ profile.email }}</a> · updated {{ build_month }}</span>
-  <span><a href="{{ profile.posts_url }}">Posts ↗</a> · <a href="{{ root }}{{ profile.legacy_url }}" title="Previous versions of this site">legacy ↗</a> · <a href="#top">top ↑</a></span>
+  <span><a href="{{ root }}mypages/">posts</a> · <a href="{{ root }}{{ profile.legacy_url }}" title="Previous versions of this site">legacy ↗</a> · <a href="#top">top ↑</a></span>
 </footer>
 </div>
 {% if inline %}

@@ -112,6 +112,7 @@ details p{margin:8px 0 0;max-width:64ch;color:var(--ink)}
 .postlist .post{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
 .postlist .post .d{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-top:3px}
 .postlist .post .x{color:var(--muted);font-size:13px;margin-top:2px}
+.posts-page .post{padding:16px 0;font-size:16px} .posts-page .post .t{font-weight:600} .posts-page .post .x{font-size:14px;margin-top:4px;max-width:72ch}
 
 /* ---------- footer */
 footer{color:var(--muted);font-size:13px;padding:28px 0 40px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line)}

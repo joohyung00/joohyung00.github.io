@@ -1,35 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="light"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Posts · Joohyung Yun</title>
-<link rel="icon" href="/assets/img/kirby.ico">
+<meta name="description" content="Worked examples of my papers, stepped through on one small input at a time.">
+<link rel="canonical" href="https://joohyung00.github.io/mypages/">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Posts · Joohyung Yun">
+<meta property="og:description" content="Worked examples of my papers, stepped through on one small input at a time.">
+<meta property="og:image" content="https://joohyung00.github.io/assets/img/portrait.jpg">
+<meta property="og:url" content="https://joohyung00.github.io/mypages/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/kirby.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css">
-<script>(function(){try{var m=localStorage.getItem('mode');if(!m&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)m='dark';if(m)document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
-<style>#mypage-list{font-family:inherit} #mypage-list a{color:var(--accent)!important} #mypage-list .mp-items li{border-bottom:1px dashed var(--line)} #mypage-list input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px}</style>
-</head><body id="top">
-<div class="nav"><div class="in"><a class="brand" href="/">Joohyung Yun</a><nav><a href="/">← home</a></nav><button class="themeToggle" type="button" aria-label="Toggle dark mode">☾</button></div></div>
+<link rel="stylesheet" href="../assets/site.css">
+<script>
+/* apply the saved theme before first paint */
+(function(){try{var m=localStorage.getItem('mode');if(!m&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)m='dark';if(m)document.documentElement.setAttribute('data-mode',m);}catch(e){}})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Joohyung Yun","url":"https://joohyung00.github.io/","email":"jhyun@dblab.postech.ac.kr","affiliation":{"@type":"Organization","name":"POSTECH"},"sameAs":["https://scholar.google.com/citations?user=y_7wqtIAAAAJ","https://github.com/joohyung00"]}
+</script>
+</head>
+<body id="top">
+<div class="nav"><div class="in">
+  <a class="brand" href="../#top">Joohyung Yun</a>
+  <nav aria-label="Pages">
+    <a href="../talks/">Talks</a><a href="../seminars/">Seminars</a><a href="../mypages/" class="on">Posts</a><a href="../assets/cv/cv.pdf" title="Curriculum vitae (PDF)">CV ↗</a>
+  </nav>
+  <button class="themeToggle" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">☾</button>
+</div></div>
 <div class="wrap">
-<header class="hero" style="grid-template-columns:1fr;padding:56px 0 28px"><div><div class="mono pre">posts</div><h1 class="name" style="font-size:44px">Posts</h1><p class="tag">Notes and worked examples, published as standalone pages.</p></div></header>
-<!-- my-page listing widget. Substituted at write time, scoped under #mypage-list,
-     fetches the manifest at runtime so new pages appear without re-editing this markup.
-     NOTE: keep this file free of Liquid tokens (percent-brace forms) — when injected
-     into a Jekyll page it is wrapped in a raw block, and a stray closing tag here would
-     terminate that block early and break the build. -->
-<div id="mypage-list">
-  <div class="mp-bar">
-    <input id="mp-q" type="search" placeholder="Search posts…" autocomplete="off">
-    <span id="mp-count" class="mp-count"></span>
+
+<header class="hero one">
+  <div>
+    <div class="mono">3 posts</div>
+    <h1 class="name sm">Posts</h1>
+    <p class="tag">Worked examples of my papers, stepped through on one small input at a time.</p>
   </div>
-  <ul id="mp-items" class="mp-items"></ul>
-  <div id="mp-empty" class="mp-empty" hidden>No posts yet.</div>
-  <div id="mp-pager" class="mp-pager"></div>
+</header>
+
+<div class="postlist posts-page" data-posts="../mypages/index.json" data-posts-all data-posts-exclude="">
+  <div class="post"><span class="d">2026-10-14</span><div><a class="t" href="/mypages/recg-worked-example.html">ReCG — Worked Example</a><div class="x">ReCG — Worked Example ReCG · PVLDB 2024 · Worked Example Discovering a JSON schema from the leaves up ReCG infers a set of JSON schemas from…</div></div></div>
+  <div class="post"><span class="d">2026-10-14</span><div><a class="t" href="/mypages/lilac-worked-example.html">LILaC — Worked Example</a><div class="x">LILaC — Worked Example LILaC · EMNLP 2025 · Worked Example How a question about a photo two hops away gets answered LILaC retrieves from doc…</div></div></div>
+  <div class="post"><span class="d">2026-06-03</span><div><a class="t" href="/mypages/failure-is-feedback-worked-example.html">Failure is Feedback — Worked Example</a><div class="x">Failure is Feedback — Worked Example Failure is Feedback · Worked Example How a failed hop becomes re-planning feedback A multi-hop retrieva…</div></div></div>
 </div>
-<link rel="stylesheet" href="/mypages/listing.css?v=703030da">
-<script src="/mypages/listing.js?v=703030da"></script>
-<footer><span><a href="/">home</a></span><span><a href="#top">top ↑</a></span></footer>
+
+<footer>
+  <span><a href="mailto:jhyun@dblab.postech.ac.kr">jhyun@dblab.postech.ac.kr</a> · updated October 2026</span>
+  <span><a href="../mypages/">posts</a> · <a href="../legacy/" title="Previous versions of this site">legacy ↗</a> · <a href="#top">top ↑</a></span>
+</footer>
 </div>
-<script src="/assets/site.js" defer></script>
-</body></html>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

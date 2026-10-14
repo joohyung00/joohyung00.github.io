@@ -148,13 +148,15 @@
   //    refreshed from the live manifest so a newly published post shows up without a rebuild.
   var ps = document.querySelector('[data-posts]');
   if (ps && window.fetch) {
+    var sec = ps.closest('section') || ps;
     fetch(ps.getAttribute('data-posts'), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
       if (!m || !m.pages) return;
       var skip = (ps.getAttribute('data-posts-exclude') || '').split(',').filter(Boolean);   // profile.yml posts_exclude
       var pages = m.pages.filter(function (p) { return skip.indexOf(p.slug) < 0; });
       if (!pages.length) return;
-      pages = pages.sort(function (a, b) { return (b.created || '').localeCompare(a.created || ''); }).slice(0, 3);
-      var box = ps.querySelector('.postlist');
+      pages = pages.sort(function (a, b) { return (b.created || '').localeCompare(a.created || ''); });
+      if (!ps.hasAttribute('data-posts-all')) pages = pages.slice(0, 3);          // home: three latest; /mypages/: all
+      var box = ps.classList.contains('postlist') ? ps : ps.querySelector('.postlist');
       box.innerHTML = '';
       pages.forEach(function (p) {
         var d = (p.created || '').slice(0, 10);
@@ -166,7 +168,7 @@
         el.querySelector('.x').textContent = ex;
         box.appendChild(el);
       });
-      ps.hidden = false;
+      sec.hidden = false;
     }).catch(function () {});
   }
 })();

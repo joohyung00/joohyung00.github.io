@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build joohyung00.github.io from build/content/*.yml + build/templates/*.j2.
 
-    python build/build.py                 # writes index.html, 404.html, talks/…, seminars/… (index + one viewer page per deck)
+    python build/build.py                 # writes index.html, 404.html, mypages/index.html, talks/…, seminars/… (index + one viewer page per deck)
     python build/build.py --inline out.html [--page seminars/index.html]
                                           # single-file bundle (CSS/JS inlined, images as data URIs)
                                           # for previewing on the my-page Preview Hub
@@ -32,7 +32,7 @@ def bold_self(authors, me):
     return authors.replace(me, f"<b>{me}</b>")
 
 
-def recent_posts(n=3, exclude=()):
+def recent_posts(n=3, exclude=()):   # n=None → every post
     """Latest n posts from the my-page manifest (mypages/index.json), or [] if it is missing.
     Slugs in `exclude` (profile.yml posts_exclude, e.g. theme demos) are skipped here and at runtime."""
     path = os.path.join(ROOT, "mypages", "index.json")
@@ -43,7 +43,8 @@ def recent_posts(n=3, exclude=()):
     except Exception:
         return []
     pages = [p for p in pages if p.get("slug") not in set(exclude)]
-    pages = sorted(pages, key=lambda p: p.get("created", ""), reverse=True)[:n]
+    pages = sorted(pages, key=lambda p: p.get("created", ""), reverse=True)
+    pages = pages if n is None else pages[:n]
     out = []
     for p in pages:
         ex = re.sub(r"\s+", " ", p.get("excerpt", "")).strip()
@@ -59,6 +60,7 @@ def render(inline=False):
     data = load_content()
     ctx = dict(data)
     ctx["recent_posts"] = recent_posts(exclude=data["profile"].get("posts_exclude") or [])
+    ctx["all_posts"] = recent_posts(n=None, exclude=data["profile"].get("posts_exclude") or [])
     ctx["build_date"] = datetime.date.today().strftime("%Y-%m")
     ctx["build_month"] = datetime.date.today().strftime("%B %Y")
     ctx["year"] = datetime.date.today().year
@@ -75,7 +77,8 @@ def render(inline=False):
         return env.get_template(tpl).render(**dict(ctx, root="" if inline else root, **extra))
 
     pages = {"index.html": page("index.html.j2", ""),
-             "404.html": page("404.html.j2", "")}
+             "404.html": page("404.html.j2", ""),
+             "mypages/index.html": page("posts.html.j2", "../", nav_on="posts", posts=ctx["all_posts"])}   # the Posts listing (my_page.py sync calls this build)
     for sec in SECTIONS:
         items = ctx[sec["slug"]]
         pages[f"{sec['slug']}/index.html"] = page("decks.html.j2", "../", sec=sec, items=items, nav_on=sec["slug"])
