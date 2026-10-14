@@ -67,8 +67,21 @@ def render(inline=False):
     pages = {"index.html": env.get_template("index.html.j2").render(**ctx),
              "404.html": env.get_template("404.html.j2").render(**ctx)}
     if inline:
-        pages = {k: inline_images(v) for k, v in pages.items()}
+        site = data["profile"]["site_url"].rstrip("/")
+        pages = {k: absolutize_links(inline_images(v), site) for k, v in pages.items()}
     return pages
+
+
+def absolutize_links(html, site):
+    """Preview bundle only: point root-relative and repo-relative links (posts, CV, legacy, the
+    posts manifest) at the live site, so clicking them in the Preview Hub does not hit localhost.
+    In-page anchors (#...), mailto:, http(s) and data: URLs are left alone."""
+    def repl(m):
+        attr, url = m.group(1), m.group(2)
+        if url.startswith(("#", "http://", "https://", "mailto:", "data:", "//")):
+            return m.group(0)
+        return f'{attr}="{site}/{url.lstrip("/")}"'
+    return re.sub(r'\b(href|data-posts)="([^"]+)"', repl, html)
 
 
 def inline_images(html):
