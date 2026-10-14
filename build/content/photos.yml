@@ -1,4 +1,4 @@
 # Hero photo carousel (square, 480px). Order = display order. Originals of cropped photos: ~/.claude/data/my-page/photos_original/
-- {src: assets/img/hero/nyc-subway.jpg, alt: "Joohyung Yun on a vintage subway car, New York"}
 - {src: assets/img/hero/01.jpg, alt: "Joohyung Yun"}
 - {src: assets/img/hero/nyc-dumbo.jpg, alt: "Joohyung Yun under the Manhattan Bridge, DUMBO"}
+- {src: assets/img/hero/nyc-subway.jpg, alt: "Joohyung Yun on a vintage subway car, New York"}
