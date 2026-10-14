@@ -2,6 +2,30 @@
 #   python build/talks_import.py <key> --slides deck.pptx|deck.pdf --into assets/seminars
 # `pubs` = my papers the deck is about (keys in publications.yml); `paper` = the paper read (for paper readings);
 # `extra` = a second paper summarised at the start of the same session. The slide count comes from meta.json.
+- key: memoryos-2026-10
+  title: "Memory OS of AI Agent"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2026.10"
+  paper: {authors: "Kang et al.", venue: "EMNLP 2025", url: "https://aclanthology.org/2025.emnlp-main.1318/"}
+  summary: "Long-term memory for multi-session dialogue agents organised like an operating system: short-, mid- and long-term tiers, topic segments with a heat score that drives eviction and promotion, and retrieval across the tiers at every turn; results on LoCoMo and GVD. HTML deck."
+- key: qwen38-next-2026-10
+  title: "On the Design of Qwen3.8-Next Architecture: Evaluation, Efficiency, and Training Stability"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2026.10.13"
+  paper: {authors: "Qwen Team", venue: "arXiv 2026", url: "https://arxiv.org/abs/2608.30320"}
+  summary: "Four replacements for the standard Transformer's cost bottlenecks (Gated DeltaNet and sparse attention for token mixing, a gated widened residual stream, host-memory n-gram embeddings) plus the training recipe, each scored on quality, cost and stability. The cases where the three axes disagree are the point. HTML deck."
+- key: hikey-tree-search-2026-09
+  title: "Recent Work in Hierarchical Document Retrieval & HiKEY"
+  kind: Paper reading
+  venue: DSLab NLP seminar
+  where: POSTECH
+  date: "2026.09.22"
+  paper: {authors: "", venue: "HiKEY, ACL 2026", url: "https://arxiv.org/abs/2605.29606"}
+  summary: "A mini-survey of tree-based search for document QA on one Build / Traverse / Pack frame (RAPTOR, TreeRAG, MemWalker, PageIndex, RDR2), then HiKEY in depth: document trees with index cards, two-stage traversal, evidence packing under a reader budget, and its results. HTML deck."
 - key: lab-2026-02-realworld
   title: "From LILaC and FiF to Real-World Multimodal Retrieval"
   kind: Lab seminar

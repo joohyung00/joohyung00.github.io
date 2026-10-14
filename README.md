@@ -23,7 +23,8 @@ scroll-snap HTML; PDFs are kept for download.
 
 Add a seminar deck (lab seminar on my work, or a paper I presented in the reading group): same import with
 `--into assets/seminars`, then an entry in `build/content/seminars.yml` (`kind`, `venue`, `date`, `summary`, and either
-`pubs` or `paper: {authors, venue, url}`; `extra` for a warm-up paper in the same session). Unpublished work and
+`pubs` or `paper: {authors, venue, url}`; `extra` for a warm-up paper in the same session). Decks authored as HTML in
+the Slides Hub go through `python build/html_deck_pdf.py <deck dir> out.pdf` first. Unpublished work and
 manuscripts under review never go here.
 
 The home page shows the three latest talks, seminars and posts; the nav is Talks / Seminars / Posts / CV (the PDF).

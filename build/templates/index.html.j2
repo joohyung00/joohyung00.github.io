@@ -92,7 +92,7 @@
     <span>
       <span class="meta"><span class="badge">{{ t.badge }}</span><span class="mono">{{ t.where if not t.kind else t.venue }} · {{ t.date }}</span></span>
       <span class="t">{{ t.title }}</span>
-      <span class="x">{% if t.paper %}{{ t.paper.authors }}, {{ t.paper.venue }} · {% endif %}{% if t.slides %}{{ t.slides }} slides{% endif %}{% if t.slides and t.poster %} + {% endif %}{% if t.poster %}poster{% endif %}</span>
+      <span class="x">{% if t.paper %}{% if t.paper.authors %}{{ t.paper.authors }}, {% endif %}{{ t.paper.venue }} · {% endif %}{% if t.slides %}{{ t.slides }} slides{% endif %}{% if t.slides and t.poster %} + {% endif %}{% if t.poster %}poster{% endif %}</span>
     </span>
   </a>
   {% endfor %}

@@ -9,7 +9,7 @@
 <header class="talkhead">
   <div class="mono"><a href="{{ root }}{{ sec.slug }}/">{{ sec.title }}</a> › {{ t.badge }}</div>
   <h1>{{ t.title }}</h1>
-  {% if t.paper %}<div class="au">{{ t.paper.authors }}, {{ t.paper.venue }} · presented by <b>{{ profile.name }}</b>{% if t.extra %} · opens with {{ t.extra.title }} ({{ t.extra.authors }}, {{ t.extra.venue }}){% endif %}</div>
+  {% if t.paper %}<div class="au">{% if t.paper.authors %}{{ t.paper.authors }}, {% endif %}{{ t.paper.venue }} · presented by <b>{{ profile.name }}</b>{% if t.extra %} · opens with {{ t.extra.title }} ({{ t.extra.authors }}, {{ t.extra.venue }}){% endif %}</div>
   {% elif t.authors %}<div class="au">{{ t.authors | bold_self(profile.me) | safe }}</div>{% endif %}
   <div class="meta"><span class="badge">{{ t.badge }}</span><span class="mono">{% if t.venue_long %}{{ t.venue_long }} · {% elif t.kind %}{{ t.venue }} · {% endif %}{{ t.where }} · {{ t.date }}</span></div>
   {% if t.summary or t.note %}<p class="x">{{ t.summary or t.note }}</p>{% endif %}
