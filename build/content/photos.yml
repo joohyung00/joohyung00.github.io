@@ -1,5 +1,5 @@
-# Small photo carousel above the footer (4:3, 1200px). Add/remove rows freely.
-- {src: assets/img/photos/01.jpg, alt: ""}
-- {src: assets/img/photos/02.jpg, alt: ""}
-- {src: assets/img/photos/03.jpg, alt: ""}
-- {src: assets/img/photos/04.jpg, alt: ""}
+# Hero photo carousel (square, 480px). Slide 1 is the portrait; add/remove rows freely.
+- {src: assets/img/hero/01.jpg, alt: "Joohyung Yun"}
+- {src: assets/img/hero/02.jpg, alt: ""}
+- {src: assets/img/hero/03.jpg, alt: ""}
+- {src: assets/img/hero/04.jpg, alt: ""}

@@ -32,12 +32,32 @@ def bold_self(authors, me):
     return authors.replace(me, f"<b>{me}</b>")
 
 
+def recent_posts(n=3):
+    """Latest n posts from the my-page manifest (mypages/index.json), or [] if it is missing."""
+    path = os.path.join(ROOT, "mypages", "index.json")
+    if not os.path.exists(path):
+        return []
+    import json
+    try:
+        pages = json.load(open(path, encoding="utf-8")).get("pages", [])
+    except Exception:
+        return []
+    pages = sorted(pages, key=lambda p: p.get("created", ""), reverse=True)[:n]
+    out = []
+    for p in pages:
+        ex = re.sub(r"\s+", " ", p.get("excerpt", "")).strip()
+        out.append({"date": (p.get("created") or "")[:10], "url": p.get("url", "#"),
+                    "title": p.get("title") or p.get("slug", ""), "excerpt": (ex[:140] + "…") if len(ex) > 140 else ex})
+    return out
+
+
 def render(inline=False):
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["html", "j2"]),
                       trim_blocks=True, lstrip_blocks=True)
     env.filters["bold_self"] = bold_self
     data = load_content()
     ctx = dict(data)
+    ctx["recent_posts"] = recent_posts()
     ctx["build_date"] = datetime.date.today().strftime("%Y-%m")
     ctx["year"] = datetime.date.today().year
     ctx["inline"] = inline

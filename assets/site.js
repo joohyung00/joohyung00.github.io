@@ -65,13 +65,15 @@
     paint(); restart();
   });
 
-  // 5) recent posts (my-page manifest). Section stays hidden unless the manifest loads with pages.
+  // 5) recent posts: the list is baked in at build time from the my-page manifest; here it is
+  //    refreshed from the live manifest so a newly published post shows up without a rebuild.
   var ps = document.querySelector('[data-posts]');
   if (ps && window.fetch) {
     fetch(ps.getAttribute('data-posts'), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
       if (!m || !m.pages || !m.pages.length) return;
       var pages = m.pages.slice().sort(function (a, b) { return (b.created || '').localeCompare(a.created || ''); }).slice(0, 3);
       var box = ps.querySelector('.postlist');
+      box.innerHTML = '';
       pages.forEach(function (p) {
         var d = (p.created || '').slice(0, 10);
         var ex = (p.excerpt || '').replace(/\s+/g, ' ').trim(); if (ex.length > 140) ex = ex.slice(0, 140) + '…';
