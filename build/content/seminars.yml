@@ -35,14 +35,6 @@
   paper: {authors: "Chen et al.", venue: "EMNLP 2022", url: "https://arxiv.org/abs/2210.02928"}
   extra: {title: "ACORN", authors: "Patel et al.", venue: "SIGMOD 2024", url: "https://arxiv.org/abs/2403.04871"}
   summary: "Multimodal RAG with one universal encoder and decoder: the two challenges (handling mixed modalities, training them), in-batch pretraining, two-stage fine-tuning, and the error analysis. Opens with a six-slide recap of ACORN, predicate-agnostic hybrid vector search."
-- key: kaping-2024-11
-  title: "Knowledge-Augmented Language Model Prompting for Zero-Shot Knowledge Graph Question Answering"
-  kind: Paper reading
-  venue: DSLab NLP seminar
-  where: POSTECH
-  date: "2024.11.13"
-  paper: {authors: "Baek, Aji, Saffari", venue: "ACL 2023 NLRSE workshop", url: "https://aclanthology.org/2023.nlrse-1.7/"}
-  summary: "KAPING: retrieve question-relevant triples (entity matching, then triple retrieval), prepend them to the prompt, no training. Three limitations of the method and two of its experiments, as I read them."
 - key: grag-2024-11
   title: "GRAG: Graph Retrieval-Augmented Generation"
   kind: Paper reading
