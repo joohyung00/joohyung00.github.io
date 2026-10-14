@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — Update From Short-Term to Mid-Term Memory</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+STM 은 길이 7 의 큐. 새 page 가 끝에 붙고, 꽉 차면 맨 앞(가장 오래된) page 가 FIFO 로 빠져 MTM 으로 간다.
+MTM 에서는 폴더마다 match score F = 임베딩 코사인 + 키워드 자카드. θ = 0.6 을 넘는 폴더에 합류(요약·키워드는 LLM 이 갱신), 없으면 새 폴더.
+예시(4주차, p9 도착 순간): 큐 p2–p8 이 꽉 차 p2(다람쥐)가 빠진다. folder A 에는 한 턴 전 p8 도착 때 밀려난 p1 만 있다. p2 vs A = 1.07 > θ 합류, vs B(옛 토픽 work deadlines) = 0.08. p1 은 그때 맞는 폴더가 없어 새 폴더 A 를 열었다.
+MTM 에는 큐에서 밀려난 page 만 있다. 큐에 있는 page 가 폴더에도 있는 일은 없다.
+-->
+<div class="slide anim">
+  <h1>Update From Short-Term to Mid-Term Memory</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+<div class="mapstrip"><svg viewBox="0 0 1200 44"><defs><marker id="mp_on" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#ffc06b"/></marker><marker id="mp_off" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#3f4d6b"/></marker></defs><line x1="836" y1="6" x2="836" y2="38" stroke="#2a3a58"/><rect x="0" y="3" width="190" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="95.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">STM · recent turns</text><text x="95.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">queue of pages · FIFO</text><line x1="194" y1="22" x2="302" y2="22" stroke="#ffc06b" stroke-width="2" marker-end="url(#mp_on)"/><text x="250.0" y="12" font-size="10.5" fill="#ffc06b" text-anchor="middle">oldest page spills · match score</text><rect x="310" y="3" width="190" height="38" rx="7" fill="rgba(255,192,107,.14)" stroke="#ffc06b" stroke-width="1.8"/><text x="405.0" y="19" font-size="12.5" font-weight="700" fill="#ffc06b" text-anchor="middle">MTM · topic folders</text><text x="405.0" y="33" font-size="10.5" fill="#eef3fb" text-anchor="middle">pages by topic · heat · evict</text><line x1="504" y1="22" x2="612" y2="22" stroke="#3f4d6b" stroke-width="1.2" marker-end="url(#mp_off)"/><text x="560.0" y="12" font-size="10.5" fill="#3f4d6b" text-anchor="middle">heat > τ · promote</text><rect x="620" y="3" width="190" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="715.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">LPM · persona</text><text x="715.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">user · agent</text><rect x="860" y="3" width="160" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="940.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">retrieve</text><text x="940.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">all three tiers → prompt</text><line x1="1024" y1="22" x2="1042" y2="22" stroke="#3f4d6b" stroke-width="1.2" marker-end="url(#mp_off)"/><rect x="1050" y="3" width="150" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="1125.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">generate</text><text x="1125.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">LLM → answer → new page</text></svg></div>
+<svg viewBox="0 0 1200 430">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+  <marker id="arg" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#7ee787"/></marker></defs>
+  <g class="st" data-s="0">
+    <rect x="30" y="20" width="560" height="170" rx="12" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/>
+    <text x="46" y="44" fill="#7cc4ff" font-size="14" font-weight="800">STM · fixed-length queue of 7 pages</text>
+    <text x="574" y="44" fill="#9aa7c5" font-size="12" text-anchor="end">oldest ← · · · → newest</text>
+    <g font-size="12" text-anchor="middle">
+      <rect x="50" y="64" width="66" height="86" rx="8" fill="#161f35" stroke="#7cc4ff"/><text x="83" y="86" fill="#7cc4ff" font-weight="800" font-size="14">p2</text><text x="83" y="106" fill="#eef3fb">squirrels</text><text x="83" y="122" fill="#5a6a8a" font-size="11.5">week 1</text>
+      <rect x="124" y="64" width="66" height="86" rx="8" fill="#161f35" stroke="#7cc4ff"/><text x="157" y="86" fill="#7cc4ff" font-weight="800" font-size="14">p3</text><text x="157" y="106" fill="#eef3fb">ran laps</text><text x="157" y="122" fill="#5a6a8a" font-size="11.5">week 1</text>
+      <rect x="198" y="64" width="66" height="86" rx="8" fill="#161f35" stroke="#7cc4ff"/><text x="231" y="86" fill="#7cc4ff" font-weight="800" font-size="14">p4</text><text x="231" y="106" fill="#eef3fb">movie</text><text x="231" y="122" fill="#5a6a8a" font-size="11.5">week 2</text>
+      <rect x="272" y="64" width="66" height="86" rx="8" fill="#161f35" stroke="#7cc4ff"/><text x="305" y="86" fill="#7cc4ff" font-weight="800" font-size="14">p5</text><text x="305" y="106" fill="#eef3fb">cinema</text><text x="305" y="122" fill="#5a6a8a" font-size="11.5">week 2</text>
+      <rect x="346" y="64" width="66" height="86" rx="8" fill="#161f35" stroke="#7cc4ff"/><text x="379" y="86" fill="#7cc4ff" font-weight="800" font-size="14">p6</text><text x="379" y="106" fill="#eef3fb">pasta</text><text x="379" y="122" fill="#5a6a8a" font-size="11.5">week 3</text>
+      <rect x="420" y="64" width="66" height="86" rx="8" fill="#161f35" stroke="#7cc4ff"/><text x="453" y="86" fill="#7cc4ff" font-weight="800" font-size="14">p7</text><text x="453" y="106" fill="#eef3fb">gym</text><text x="453" y="122" fill="#5a6a8a" font-size="11.5">week 3</text>
+      <rect x="494" y="64" width="66" height="86" rx="8" fill="#161f35" stroke="#7cc4ff"/><text x="527" y="86" fill="#7cc4ff" font-weight="800" font-size="14">p8</text><text x="527" y="106" fill="#eef3fb">flight</text><text x="527" y="122" fill="#5a6a8a" font-size="11.5">week 3</text>
+    </g>
+    <text x="46" y="176" fill="#5a6a8a" font-size="12">queue is full (7 / 7)</text>
+    <rect x="690" y="20" width="480" height="390" rx="12" fill="#1d1630" stroke="#c084fc" stroke-width="2"/>
+    <text x="706" y="44" fill="#c084fc" font-size="14" font-weight="800">MTM · topic folders (segments)</text>
+    <rect x="706" y="60" width="448" height="118" rx="10" fill="#161f35" stroke="#c084fc"/>
+    <text x="720" y="82" fill="#c084fc" font-size="13" font-weight="800">folder A · wetland park outing</text>
+    <text x="720" y="102" fill="#eef3fb" font-size="12">summary: a visit to the wetland park, beautiful scenery</text>
+    <text x="720" y="120" fill="#9aa7c5" font-size="12">keywords K = { park, wetland, scenery, visit }</text>
+    <g font-size="11.5" text-anchor="middle"><rect x="720" y="130" width="40" height="22" rx="5" fill="#10233a" stroke="#7cc4ff"/><text x="740" y="145" fill="#7cc4ff">p1</text></g><text x="770" y="145" fill="#5a6a8a" font-size="11">only the page that left the queue so far</text>
+    <rect x="706" y="190" width="448" height="100" rx="10" fill="#161f35" stroke="#c084fc"/>
+    <text x="720" y="212" fill="#c084fc" font-size="13" font-weight="800">folder B · work deadlines (before week 1)</text>
+    <text x="720" y="232" fill="#eef3fb" font-size="12">summary: a report due at the end of the month</text>
+    <text x="720" y="250" fill="#9aa7c5" font-size="12">keywords K = { report, deadline, work, month }</text>
+    <g font-size="11.5" text-anchor="middle"><rect x="720" y="260" width="40" height="22" rx="5" fill="#10233a" stroke="#7cc4ff"/><text x="740" y="275" fill="#7cc4ff">p−4</text><rect x="766" y="260" width="40" height="22" rx="5" fill="#10233a" stroke="#7cc4ff"/><text x="786" y="275" fill="#7cc4ff">p−3</text></g>
+  </g>
+  <g class="st" data-s="1">
+    <rect x="600" y="64" width="66" height="86" rx="8" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/>
+    <text x="633" y="86" fill="#ffc06b" font-weight="800" font-size="14" text-anchor="middle">p9</text><text x="633" y="106" fill="#eef3fb" font-size="11" text-anchor="middle">the park?</text><text x="633" y="122" fill="#5a6a8a" font-size="11.5" text-anchor="middle">week 4</text>
+    <line x1="598" y1="107" x2="566" y2="107" stroke="#ffc06b" stroke-width="2.5" marker-end="url(#ar)"/>
+    <text x="633" y="172" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">push</text>
+    <path d="M83,152 L83,230 L140,230" fill="none" stroke="#7cc4ff" stroke-width="2.5" marker-end="url(#ar)"/>
+    <rect x="146" y="200" width="66" height="60" rx="8" fill="#161f35" stroke="#7cc4ff" stroke-width="2"/>
+    <text x="179" y="224" fill="#7cc4ff" font-weight="800" font-size="14" text-anchor="middle">p2</text><text x="179" y="244" fill="#eef3fb" font-size="12" text-anchor="middle">squirrels</text>
+    <text x="226" y="218" fill="#7cc4ff" font-size="12.5" font-weight="700">FIFO · the oldest page leaves the queue</text>
+    <text x="226" y="238" fill="#9aa7c5" font-size="12">and moves to mid-term memory</text>
+    <path d="M212,250 L470,250 L470,300" fill="none" stroke="#7cc4ff" stroke-width="2.5" marker-end="url(#ar)"/>
+  </g>
+  <g class="st" data-s="2">
+    <rect x="30" y="306" width="560" height="100" rx="12" fill="#161f35" stroke="#2a3a58"/>
+    <text x="46" y="330" fill="#eef3fb" font-size="14" font-weight="700">match score  F = cos( e<tspan font-size="10" dy="4">folder</tspan><tspan dy="-4">, e</tspan><tspan font-size="10" dy="4">page</tspan><tspan dy="-4"> )  +  Jaccard( K</tspan><tspan font-size="10" dy="4">folder</tspan><tspan dy="-4">, K</tspan><tspan font-size="10" dy="4">page</tspan><tspan dy="-4"> )</tspan></text>
+    <text x="46" y="354" fill="#9aa7c5" font-size="12.5">embedding similarity  +  keyword overlap |K∩K| / |K∪K|  ·  join when F &gt; θ = 0.6</text>
+    <text x="46" y="380" fill="#9aa7c5" font-size="12.5">p2 vs folder A:  <tspan fill="#7ee787" font-weight="700">0.74 + 0.33 = 1.07</tspan></text>
+    <text x="320" y="380" fill="#9aa7c5" font-size="12.5">p2 vs folder B:  <tspan fill="#ff7b72" font-weight="700">0.08 + 0.00 = 0.08</tspan></text>
+    <line x1="590" y1="356" x2="686" y2="120" stroke="#7ee787" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <line x1="590" y1="372" x2="686" y2="240" stroke="#ff7b72" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="1140" y="82" fill="#7ee787" font-size="12.5" font-weight="700" text-anchor="end">F = 1.07</text>
+    <text x="1140" y="212" fill="#ff7b72" font-size="12.5" font-weight="700" text-anchor="end">F = 0.08</text>
+  </g>
+  <g class="st" data-s="3">
+    <rect x="812" y="130" width="40" height="22" rx="5" fill="#2b2413" stroke="#ffc06b" stroke-width="1.5"/><text x="832" y="145" fill="#ffc06b" font-size="11.5" text-anchor="middle">p2</text>
+    <text x="1140" y="120" fill="#7ee787" font-size="12.5" font-weight="700" text-anchor="end">&gt; θ → join A</text>
+    <rect x="860" y="158" width="294" height="16" rx="8" fill="rgba(255,126,182,.12)" stroke="#ff7eb6"/><text x="1007" y="170" fill="#ff7eb6" font-size="11.5" text-anchor="middle">LLM refreshes folder summary + keywords</text>
+    <g opacity=".45">
+      <rect x="706" y="304" width="448" height="92" rx="10" fill="none" stroke="#c084fc" stroke-dasharray="6 4"/>
+      <text x="720" y="328" fill="#c084fc" font-size="13" font-weight="800">otherwise · new folder</text>
+      <text x="720" y="350" fill="#eef3fb" font-size="12">no folder with F &gt; θ → the page opens a folder of its own,</text>
+      <text x="720" y="368" fill="#eef3fb" font-size="12">with its own LLM summary and keyword set</text>
+      <text x="720" y="388" fill="#9aa7c5" font-size="11.5">(p1 opened folder A this way one turn earlier, when p8 arrived)</text>
+    </g>
+  </g>
+</svg>
+<ul>
+  <li><b>FIFO</b> out of the 7-page queue · <b>match score</b> F &gt; θ joins a topic folder, otherwise a new folder</li>
+</ul>
+
+  </div>
+<div class="ctrl"><button id="prev">◂</button><span id="ind"></span><button id="next">▸</button></div>
+  <div class="foot">15 / 25</div>
+</div>
+<script>
+(function(){
+  const els=[...document.querySelectorAll('.st')]; const N=Math.max(...els.map(e=>+e.dataset.s))+1;
+  let cur = location.search.includes('all') ? N-1 : 0;
+  const ind=document.getElementById('ind');
+  function render(){ els.forEach(e=>e.classList.toggle('shown', +e.dataset.s<=cur)); if(ind) ind.textContent='step '+cur+' / '+(N-1); }
+  function go(d){ cur=Math.max(0,Math.min(N-1,cur+d)); render(); }
+  const nx=document.getElementById('next'), pv=document.getElementById('prev');
+  if(nx) nx.onclick=e=>{e.stopPropagation();go(1);}; if(pv) pv.onclick=e=>{e.stopPropagation();go(-1);};
+  document.querySelector('.slide').addEventListener('click',()=>go(1));
+  document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1);} else if(e.key==='ArrowLeft'){e.preventDefault();go(-1);} });
+  render();
+})();
+</script>
+</body></html>

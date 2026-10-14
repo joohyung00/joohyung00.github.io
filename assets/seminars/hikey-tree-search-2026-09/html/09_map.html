@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tree-search — Design Space of Tree-Based Search</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style></head>
+<body>
+<div class="slide">
+  <h1>Design Space of Tree-Based Search</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 512">
+  <defs><marker id="ax" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#5a6a8a"/></marker></defs>
+  <!-- axes -->
+  <line x1="600" y1="66" x2="600" y2="356" stroke="#2a3a58" stroke-width="1.6"/>
+  <line x1="150" y1="210" x2="1050" y2="210" stroke="#2a3a58" stroke-width="1.6"/>
+  <line x1="600" y1="80" x2="600" y2="68" stroke="#5a6a8a" marker-end="url(#ax)"/>
+  <line x1="600" y1="342" x2="600" y2="354" stroke="#5a6a8a" marker-end="url(#ax)"/>
+  <line x1="170" y1="210" x2="156" y2="210" stroke="#5a6a8a" marker-end="url(#ax)"/>
+  <line x1="1030" y1="210" x2="1044" y2="210" stroke="#5a6a8a" marker-end="url(#ax)"/>
+  <text x="600" y="46" fill="#9aa7c5" font-size="18" font-weight="700" text-anchor="middle">uses the document's own hierarchy</text>
+  <text x="600" y="388" fill="#9aa7c5" font-size="18" font-weight="700" text-anchor="middle">machine builds the hierarchy (summaries · learning)</text>
+  <text x="150" y="188" fill="#9aa7c5" font-size="18" font-weight="700">score-based traversal</text>
+  <text x="150" y="236" fill="#5a6a8a" font-size="14">word overlap · semantic sim · 0 LLM calls per query</text>
+  <text x="1050" y="188" fill="#9aa7c5" font-size="18" font-weight="700" text-anchor="end">LLM-guided traversal</text>
+  <text x="1050" y="236" fill="#5a6a8a" font-size="14" text-anchor="end">reads and reasons its way, per query</text>
+  <!-- points -->
+  <circle cx="360" cy="112" r="11" fill="#ffc06b"/>
+  <circle cx="360" cy="112" r="19" fill="none" stroke="#ffc06b" stroke-opacity=".35" stroke-width="2.5"/>
+  <text x="360" y="88" fill="#ffc06b" font-size="19" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">HiKEY</text>
+  <text x="360" y="146" fill="#ffc06b" font-size="12.5" text-anchor="middle">the only multimodal one</text>
+  <text x="360" y="163" fill="#ffc06b" font-size="12.5" text-anchor="middle">today's paper</text>
+  <circle cx="472" cy="166" r="8" fill="#7cc4ff"/>
+  <text x="472" y="144" fill="#7cc4ff" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">TreeRAG</text>
+  <g transform="translate(790,116)"><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" fill="#c084fc"/></g>
+  <text x="790" y="92" fill="#c084fc" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">PageIndex</text>
+  <g transform="translate(900,130)"><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" fill="#c084fc"/></g>
+  <text x="900" y="106" fill="#c084fc" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">RDR2</text>
+  <text x="900" y="155" fill="#5a6a8a" font-size="13" text-anchor="middle">trains the traversal</text>
+  <circle cx="345" cy="290" r="8" fill="#7cc4ff"/>
+  <text x="345" y="268" fill="#7cc4ff" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">RAPTOR</text>
+  <g transform="translate(800,300)"><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" fill="#c084fc"/></g>
+  <text x="800" y="276" fill="#c084fc" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">MemWalker</text>
+  <!-- legend -->
+  <g transform="translate(70,332)">
+    <circle cx="10" cy="8" r="7" fill="#7cc4ff"/><text x="26" y="13" fill="#9aa7c5" font-size="14">score-based traversal</text>
+    <g transform="translate(10,36)"><rect x="-7" y="-7" width="14" height="14" transform="rotate(45)" fill="#c084fc"/></g>
+    <text x="26" y="41" fill="#9aa7c5" font-size="14">LLM-guided traversal</text>
+  </g>
+  <!-- timeline (separated from the grid) -->
+  <line x1="60" y1="424" x2="1140" y2="424" stroke="#1b2640"/>
+  <text x="60" y="458" fill="#5a6a8a" font-size="12" font-family="ui-monospace,monospace" letter-spacing="3">TIMELINE</text>
+  <line x1="210" y1="468" x2="1130" y2="468" stroke="#2a3a58"/>
+  <g text-anchor="middle" font-family="ui-monospace,monospace">
+    <circle cx="255" cy="468" r="4.5" fill="#c084fc"/>
+    <text x="255" y="452" fill="#c084fc" font-size="13">MemWalker</text>
+    <text x="255" y="492" fill="#5a6a8a" font-size="11">arXiv 2023</text>
+    <circle cx="395" cy="468" r="4.5" fill="#7cc4ff"/>
+    <text x="395" y="452" fill="#7cc4ff" font-size="13">RAPTOR</text>
+    <text x="395" y="492" fill="#5a6a8a" font-size="11">ICLR 2024</text>
+    <circle cx="675" cy="468" r="4.5" fill="#c084fc"/>
+    <text x="675" y="452" fill="#c084fc" font-size="13">PageIndex</text>
+    <text x="675" y="492" fill="#5a6a8a" font-size="11">open-source 2025</text>
+    <circle cx="815" cy="468" r="4.5" fill="#7cc4ff"/>
+    <text x="815" y="452" fill="#7cc4ff" font-size="13">TreeRAG</text>
+    <text x="815" y="492" fill="#5a6a8a" font-size="11">ACL Findings 2025</text>
+    <circle cx="950" cy="468" r="4.5" fill="#c084fc"/>
+    <text x="950" y="452" fill="#c084fc" font-size="13">RDR2</text>
+    <text x="950" y="492" fill="#5a6a8a" font-size="11">EMNLP 2025</text>
+    <circle cx="1070" cy="468" r="6" fill="#ffc06b"/>
+    <text x="1070" y="452" fill="#ffc06b" font-size="13" font-weight="700">HiKEY</text>
+    <text x="1070" y="492" fill="#5a6a8a" font-size="11">ACL 2026</text>
+  </g>
+</svg>
+
+  </div>
+  <div class="foot">09 / 32</div>
+</div>
+</body></html>

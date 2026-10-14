@@ -142,13 +142,14 @@ footer{color:var(--muted);font-size:13px;padding:28px 0 40px;display:flex;justif
 .viewer .track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;outline:none;border-radius:12px;border:1px solid var(--line);background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.10)}
 .viewer .track::-webkit-scrollbar{display:none}
 .viewer figure{margin:0;flex:0 0 100%;scroll-snap-align:start;aspect-ratio:16/9} .viewer figure img{width:100%;height:100%;object-fit:contain;display:block}
+.viewer figure iframe{width:100%;height:100%;border:0;display:block;background:#0a0e1a;pointer-events:none}   /* html decks: the slide page itself; pointer-events off so keys/swipes stay with the viewer */
 .viewer .arrow{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;opacity:.85;box-shadow:0 2px 10px rgba(0,0,0,.15)}
 .viewer .arrow:hover{opacity:1} .viewer .prev{left:10px} .viewer .next{right:10px}
 .viewer .bar{display:flex;gap:16px;align-items:center;margin:10px 0 6px;font-size:12px;color:var(--muted)} .viewer .count b{color:var(--ink)} .viewer .hint{margin-left:auto}
 .viewer .rail{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 10px;scrollbar-width:thin;scroll-behavior:smooth}
 .viewer .rail button{flex:0 0 112px;padding:0;border:2px solid transparent;border-radius:7px;background:none;cursor:pointer;opacity:.65}
 .viewer .rail button img{width:100%;height:auto;display:block;border-radius:4px;border:1px solid var(--line);background:#fff} .viewer .rail button.on{border-color:var(--accent);opacity:1} .viewer .rail button:hover{opacity:1}
-.viewer .track:fullscreen{border:0;border-radius:0;background:#000} .viewer .track:fullscreen figure{aspect-ratio:auto;height:100vh;display:flex;align-items:center;justify-content:center} .viewer .track:fullscreen figure img{max-height:100vh}
+.viewer .track:fullscreen{border:0;border-radius:0;background:#000} .viewer .track:fullscreen figure{aspect-ratio:auto;height:100vh;display:flex;align-items:center;justify-content:center} .viewer .track:fullscreen figure img{max-height:100vh} .viewer .track:fullscreen figure iframe{width:min(100vw,177.78vh);height:min(100vh,56.25vw)}
 .poster{padding:28px 0 4px} .poster img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:10px;background:#fff} .poster .mono{margin-top:8px;text-transform:none;letter-spacing:0}
 .backlink{padding:24px 0 8px}
 @media(max-width:720px){.decklist .deck{grid-template-columns:96px 1fr;gap:12px} .talks .talk{grid-template-columns:1fr;gap:10px} .talk .thumb{max-width:320px} .viewer .hint{display:none} .viewer .rail button{flex-basis:88px} .talkhead h1{font-size:23px} .name.sm{font-size:36px}}

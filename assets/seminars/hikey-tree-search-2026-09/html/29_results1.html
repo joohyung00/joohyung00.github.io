@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tree-search — Document-Level Retrieval Accuracy</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .bar{ display:grid; grid-template-columns:15cqw 1fr 5.5cqw; align-items:center; gap:1cqw; font-size:1.5cqw; }
+  .bar .nm{ color:#fff; text-align:right; }
+  .bar .track{ background:var(--code-bg); border:1px solid var(--edge); border-radius:.5cqw; height:2.3cqw; overflow:hidden; }
+  .bar .fill{ height:100%; border-radius:.5cqw 0 0 .5cqw; }
+  .bar .v{ font-family:ui-monospace,monospace; color:var(--muted); }
+  .fill.hi{ background:linear-gradient(90deg,#8a6d2e,var(--amber)); }
+  .fill.mid{ background:linear-gradient(90deg,#3a6ea5,var(--accent)); }
+  .grp{ font-size:1.7cqw; color:var(--muted); margin:.4cqw 0 .5cqw; }
+  .grp b{ color:var(--ink); }
+  .fam{ display:block; font-size:1.02cqw; color:var(--dim); line-height:1.15; }
+</style></head>
+<body>
+<div class="slide">
+  <h1>Document-Level Retrieval Accuracy</h1>
+  <div class="body">
+
+<div class="two" style="align-items:start;">
+  <div>
+    <p class="grp"><b>Did it find the right documents</b> · avg recall (mean of two benchmarks)</p>
+    <div class="bar"><div class="nm">HiKEY</div><div class="track"><div class="fill hi" style="width:79.1%"></div></div><div class="v">79.1</div></div>
+    <div class="bar"><div class="nm">MultiDocFusion<span class="fam">best of text chunks</span></div><div class="track"><div class="fill mid" style="width:74.6%"></div></div><div class="v">74.6</div></div>
+    <div class="bar"><div class="nm">HopRAG<span class="fam">best of text graph</span></div><div class="track"><div class="fill mid" style="width:74.1%"></div></div><div class="v">74.1</div></div>
+    <div class="bar"><div class="nm">RAPTOR<span class="fam">text graph · Part 2</span></div><div class="track"><div class="fill mid" style="width:73.4%"></div></div><div class="v">73.4</div></div>
+    <div class="bar"><div class="nm">SimpleDoc<span class="fam">best of MM graph</span></div><div class="track"><div class="fill mid" style="width:69%"></div></div><div class="v">69.0</div></div>
+    <div class="bar"><div class="nm">VDocRAG<span class="fam">best of page-level MM</span></div><div class="track"><div class="fill mid" style="width:67.8%"></div></div><div class="v">67.8</div></div>
+  </div>
+  <div>
+    <p class="grp"><b>Did it find all of them</b> · All (miss one = fail)</p>
+    <div class="bar"><div class="nm">HiKEY</div><div class="track"><div class="fill hi" style="width:59.9%"></div></div><div class="v">59.9</div></div>
+    <div class="bar"><div class="nm">MultiDocFusion<span class="fam">best of text chunks</span></div><div class="track"><div class="fill mid" style="width:52.6%"></div></div><div class="v">52.6</div></div>
+    <div class="bar"><div class="nm">HopRAG<span class="fam">best of text graph</span></div><div class="track"><div class="fill mid" style="width:51.8%"></div></div><div class="v">51.8</div></div>
+    <div class="bar"><div class="nm">RAPTOR<span class="fam">text graph · Part 2</span></div><div class="track"><div class="fill mid" style="width:50.9%"></div></div><div class="v">50.9</div></div>
+    <div class="bar"><div class="nm">SimpleDoc<span class="fam">best of MM graph</span></div><div class="track"><div class="fill mid" style="width:46%"></div></div><div class="v">46.0</div></div>
+    <div class="bar"><div class="nm">VDocRAG<span class="fam">best of page-level MM</span></div><div class="track"><div class="fill mid" style="width:44.9%"></div></div><div class="v">44.9</div></div>
+  </div>
+</div>
+<p class="small" style="margin:0;">one bar per family: the strongest of the 14 baselines (+ RAPTOR from Part 2) · full 14-row tables are in the paper</p>
+<div class="note">On the multi-document benchmark (FRAMES), All improves by <b>+11.4pt</b> · hierarchy-path routing misses fewer of the scattered documents</div>
+
+
+  </div>
+  <div class="foot">29 / 32</div>
+</div>
+</body></html>

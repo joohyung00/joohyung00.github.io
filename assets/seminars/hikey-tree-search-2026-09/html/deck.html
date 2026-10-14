@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recent Work in Hierarchical Document Retrieval &amp; HiKEY</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; justify-content:center; padding:8cqw 9cqw;
+  }
+  h1{ margin:0; font-weight:800; letter-spacing:-.06cqw; font-size:5.4cqw; line-height:1.1; max-width:92%; }
+  .rule{ width:9cqw; height:.5cqw; border-radius:.5cqw; margin:3.4cqw 0 3cqw;
+         background:linear-gradient(90deg,var(--accent),var(--purple),var(--pink)); }
+  .meta{ display:flex; flex-direction:column; gap:.9cqw; font-size:2.0cqw; color:var(--muted);
+         font-family:ui-monospace,monospace; }
+  .meta .who{ color:var(--ink); }
+  .meta .who b{ color:#fff; }
+
+
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+
+
+  .slide.div{ justify-content:center; }
+  .part{ font-family:ui-monospace,monospace; font-size:1.9cqw; color:var(--purple); letter-spacing:.35cqw; }
+  .dtitle{ font-size:5.2cqw; font-weight:800; letter-spacing:-.08cqw; line-height:1.12; margin:1.4cqw 0 0; }
+  .drule{ width:9cqw; height:.5cqw; border-radius:.5cqw; margin:3cqw 0 3.2cqw;
+          background:linear-gradient(90deg,var(--accent),var(--purple),var(--pink)); }
+  .nav{ display:flex; flex-direction:column; gap:1.1cqw; font-size:1.8cqw; }
+  .nav .it{ display:flex; align-items:center; gap:1.2cqw; color:var(--dim); }
+  .nav .it .n{ font-family:ui-monospace,monospace; font-size:1.5cqw; width:6.5cqw; }
+  .nav .it.cur{ color:var(--ink); font-weight:700; }
+  .nav .it.cur .n{ color:var(--amber); }
+
+
+  .arcline{ display:flex; gap:.55cqw; align-items:center; font-size:1.18cqw; color:var(--dim);
+            font-family:ui-monospace,monospace; flex-wrap:nowrap; }
+  .arcline .st{ padding:.18cqw .75cqw; border:1px solid var(--edge); border-radius:5cqw; white-space:nowrap; }
+  .arcline .st.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.10); font-weight:700; }
+  .arcline .sep{ color:var(--edge); }
+
+
+  .srow{ display:grid; grid-template-columns:11.5cqw 1fr; gap:1cqw; align-items:start; margin:.7cqw 0; }
+  .stag{ font-family:ui-monospace,monospace; font-size:1.22cqw; font-weight:700; padding:.28cqw .6cqw;
+         border-radius:.55cqw; border:1px solid var(--edge); text-align:center; white-space:nowrap; }
+  .stag.b{ border-color:rgba(124,196,255,.55); color:var(--accent); background:rgba(124,196,255,.08); }
+  .stag.p{ border-color:rgba(192,132,252,.55); color:var(--purple); background:rgba(192,132,252,.08); }
+  .stag.a{ border-color:rgba(255,192,107,.55); color:var(--amber); background:rgba(255,192,107,.08); }
+  .stag.g{ border-color:rgba(126,231,135,.55); color:var(--ok); background:rgba(126,231,135,.08); }
+  .sdesc{ font-size:1.42cqw; color:var(--muted); line-height:1.4; padding-top:.15cqw; }
+  .sdesc b{ color:var(--ink); }
+  .shead{ font-size:1.85cqw; margin:0 0 .7cqw; color:#fff; font-weight:700; }
+  .shead .dim{ font-weight:400; }
+
+
+  .bar{ display:grid; grid-template-columns:15cqw 1fr 5.5cqw; align-items:center; gap:1cqw; font-size:1.5cqw; }
+  .bar .nm{ color:#fff; text-align:right; }
+  .bar .track{ background:var(--code-bg); border:1px solid var(--edge); border-radius:.5cqw; height:2.3cqw; overflow:hidden; }
+  .bar .fill{ height:100%; border-radius:.5cqw 0 0 .5cqw; }
+  .bar .v{ font-family:ui-monospace,monospace; color:var(--muted); }
+  .fill.hi{ background:linear-gradient(90deg,#8a6d2e,var(--amber)); }
+  .fill.mid{ background:linear-gradient(90deg,#3a6ea5,var(--accent)); }
+  .grp{ font-size:1.7cqw; color:var(--muted); margin:.4cqw 0 .5cqw; }
+  .grp b{ color:var(--ink); }
+  .fam{ display:block; font-size:1.02cqw; color:var(--dim); line-height:1.15; }
+
+
+  .abar{ display:grid; grid-template-columns:14cqw 1fr 4.5cqw; align-items:center; gap:.8cqw; font-size:1.35cqw; }
+  .abar .nm{ color:var(--muted); text-align:right; }
+  .abar .nm b{ color:#fff; }
+  .abar .track{ background:var(--code-bg); border:1px solid var(--edge); border-radius:.45cqw; height:1.9cqw; overflow:hidden; }
+  .abar .fill{ height:100%; border-radius:.45cqw 0 0 .45cqw; background:linear-gradient(90deg,#3a6ea5,var(--accent)); }
+  .abar .fill.ours{ background:linear-gradient(90deg,#8a6d2e,var(--amber)); }
+  .abar .v{ font-family:ui-monospace,monospace; color:var(--muted); }
+  .ah{ font-size:1.7cqw; margin:0 0 .6cqw; }
+  .ah b{ color:var(--accent); }
+  .at{ font-size:1.35cqw; color:var(--dim); margin:.5cqw 0 0; }
+</style>
+<style>
+  body{ margin:0; }
+  .pg{ display:none; }
+  .pg.on{ display:grid; place-items:center; min-height:100vh; }
+  #nav{ position:fixed; right:14px; bottom:12px; z-index:9; display:flex; gap:8px; align-items:center;
+        font:12px ui-monospace,monospace; color:#9aa7c5; background:rgba(10,14,26,.85);
+        border:1px solid #2a3a58; border-radius:8px; padding:5px 10px; }
+  #nav button{ font:inherit; color:#7cc4ff; background:rgba(124,196,255,.1); border:1px solid #7cc4ff;
+               border-radius:5px; padding:2px 9px; cursor:pointer; }
+  @media print{ #nav{display:none;} .pg{display:grid !important; page-break-after:always; min-height:auto;} }
+</style></head>
+<body>
+<section class="pg" data-name="00_cover"><div class="slide">
+  <h1 style="font-size:4.1cqw;">Recent Work in Hierarchical Document Retrieval<br>
+  <span style="color:#ffc06b;">&amp;</span> HiKEY: Hierarchical Multimodal Retrieval for Open-Domain Document Question Answering</h1>
+  <div class="rule"></div>
+  <div class="meta">
+    <span class="date">2026. 09.</span>
+    <span class="who">presenter: <b>Joohyung Yun</b></span>
+  </div>
+</div></section>
+<section class="pg" data-name="01_divider_motivation"><div class="slide div">
+  <div class="part">PART 1</div>
+  <div class="dtitle">Motivation</div>
+  <div class="drule"></div>
+  <div class="nav">
+    <div class="it cur"><span class="n">Part 1</span> Motivation · why trees</div>
+    <div class="it "><span class="n">Part 2</span> A Tour of Tree-Based Search · the lineage</div>
+    <div class="it "><span class="n">Part 3</span> HiKEY · deep dive (ACL 2026)</div>
+  </div>
+  <div class="foot">01 / 32</div>
+</div></section>
+<section class="pg" data-name="02_problem"><div class="slide">
+  <h1>Question Answering over a Document Collection</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 400">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#ffc06b" flood-opacity="0.85"/></filter>
+  </defs>
+  <!-- question -->
+  <rect x="20" y="140" width="300" height="110" rx="14" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/>
+  <text x="40" y="176" fill="#ffc06b" font-size="19" font-weight="700">Q.</text>
+  <text x="40" y="204" fill="#eef3fb" font-size="19">How often should the battery</text>
+  <text x="40" y="230" fill="#eef3fb" font-size="19">of model X100 be inspected?</text>
+  <line x1="326" y1="195" x2="392" y2="195" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="358" y="180" fill="#9aa7c5" font-size="15" text-anchor="middle">what to read?</text>
+  <!-- corpus -->
+  <g>
+    <text x="540" y="52" fill="#9aa7c5" font-size="17" text-anchor="middle">hundreds of product manuals</text>
+    <g font-size="12.5" fill="#5a6a8a" text-anchor="middle">
+      <rect x="400" y="70" width="88" height="58" rx="7" fill="#131b30" stroke="#2a3a58"/><text x="444" y="103">Install Guide</text>
+      <rect x="498" y="70" width="88" height="58" rx="7" fill="#131b30" stroke="#2a3a58"/><text x="542" y="103">X200 Manual</text>
+      <rect x="596" y="70" width="88" height="58" rx="7" fill="#131b30" stroke="#2a3a58"/><text x="640" y="103">Warranty</text>
+      <rect x="400" y="140" width="88" height="58" rx="7" fill="#131b30" stroke="#2a3a58"/><text x="444" y="173">X300 Manual</text>
+      <rect x="596" y="140" width="88" height="58" rx="7" fill="#131b30" stroke="#2a3a58"/><text x="640" y="173">Service Guide</text>
+      <rect x="400" y="210" width="88" height="58" rx="7" fill="#131b30" stroke="#2a3a58"/><text x="444" y="243">Parts List</text>
+      <rect x="498" y="210" width="88" height="58" rx="7" fill="#131b30" stroke="#2a3a58"/><text x="542" y="243">Safety Rules</text>
+      <rect x="596" y="210" width="88" height="58" rx="7" fill="#131b30" stroke="#2a3a58"/><text x="640" y="243">FAQ</text>
+    </g>
+    <rect x="498" y="140" width="88" height="58" rx="7" fill="#1d2438" stroke="#ffc06b" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="542" y="173" fill="#ffc06b" font-size="12.5" font-weight="700" text-anchor="middle">X100 Manual</text>
+    <text x="542" y="296" fill="#5a6a8a" font-size="14" text-anchor="middle">… × hundreds</text>
+  </g>
+  <line x1="592" y1="170" x2="742" y2="170" stroke="#ffc06b" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- zoom: inside the manual -->
+  <rect x="750" y="42" width="430" height="316" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="770" y="74" fill="#9aa7c5" font-size="16">Inside the X100 manual: the path to the answer</text>
+  <g font-size="16">
+    <text x="770" y="112" fill="#eef3fb">📕 X100 User Manual</text>
+    <text x="800" y="146" fill="#9aa7c5">└ 5. Maintenance</text>
+    <text x="830" y="180" fill="#9aa7c5">└ 5.3 Battery</text>
+    <text x="860" y="214" fill="#7cc4ff">└ Table: inspection intervals</text>
+  </g>
+  <rect x="860" y="232" width="290" height="76" rx="8" fill="#0f1525" stroke="#2a3a58"/>
+  <line x1="860" y1="258" x2="1150" y2="258" stroke="#2a3a58"/>
+  <line x1="1010" y1="232" x2="1010" y2="308" stroke="#2a3a58"/>
+  <text x="875" y="250" fill="#5a6a8a" font-size="13.5">part</text>
+  <text x="1025" y="250" fill="#5a6a8a" font-size="13.5">interval</text>
+  <text x="875" y="280" fill="#9aa7c5" font-size="14">cooling fan</text><text x="1025" y="280" fill="#9aa7c5" font-size="14">12 months</text>
+  <rect x="1012" y="286" width="136" height="20" rx="4" fill="rgba(255,192,107,.2)" stroke="#ffc06b"/>
+  <text x="875" y="301" fill="#eef3fb" font-size="14" font-weight="700">battery</text><text x="1025" y="301" fill="#ffc06b" font-size="14" font-weight="700">6 months</text>
+  <text x="965" y="344" fill="#5a6a8a" font-size="14" text-anchor="middle">answer = one document → one section → one table cell</text>
+</svg>
+<ul>
+  <li><b>Goal</b> · find the evidence in a document pile and answer · this example recurs through the deck</li>
+</ul>
+
+  </div>
+  <div class="foot">02 / 32</div>
+</div></section>
+<section class="pg" data-name="03_flat"><div class="slide">
+  <h1>Flat Retrieval by Chunking and Similarity Matching</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 380">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker></defs>
+  <!-- docs -->
+  <g>
+    <rect x="30" y="120" width="120" height="150" rx="10" fill="#131b30" stroke="#2a3a58"/>
+    <rect x="46" y="104" width="120" height="150" rx="10" fill="#131b30" stroke="#2a3a58"/>
+    <rect x="62" y="88" width="120" height="150" rx="10" fill="#161f35" stroke="#2a3a58"/>
+    <text x="122" y="168" fill="#9aa7c5" font-size="16" text-anchor="middle">documents</text>
+    <text x="122" y="300" fill="#5a6a8a" font-size="15" text-anchor="middle">with structure + hierarchy</text>
+  </g>
+  <line x1="192" y1="180" x2="252" y2="180" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="222" y="162" fill="#9aa7c5" font-size="15" text-anchor="middle">① chunk</text>
+  <!-- chunks -->
+  <g>
+    <g fill="#1b2640" stroke="#7cc4ff">
+      <rect x="262" y="92" width="92" height="34" rx="6"/><rect x="262" y="136" width="92" height="34" rx="6"/>
+      <rect x="262" y="180" width="92" height="34" rx="6"/><rect x="262" y="224" width="92" height="34" rx="6"/>
+    </g>
+    <text x="308" y="290" fill="#5a6a8a" font-size="15" text-anchor="middle">uniform chunks</text>
+    <text x="308" y="312" fill="#ff7b72" font-size="14" text-anchor="middle">hierarchy thrown away ✂</text>
+  </g>
+  <line x1="366" y1="180" x2="426" y2="180" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="396" y="162" fill="#9aa7c5" font-size="15" text-anchor="middle">② embed</text>
+  <!-- embedding space -->
+  <g>
+    <rect x="436" y="52" width="400" height="270" rx="14" fill="#0f1525" stroke="#2a3a58"/>
+    <text x="646" y="80" fill="#9aa7c5" font-size="16" text-anchor="middle">semantic space · similar meaning = nearby points</text>
+    <g fill="#3a4a6a">
+      <circle cx="490" cy="140" r="7"/><circle cx="540" cy="250" r="7"/><circle cx="590" cy="120" r="7"/>
+      <circle cx="640" cy="280" r="7"/><circle cx="700" cy="150" r="7"/><circle cx="770" cy="250" r="7"/>
+      <circle cx="820" cy="120" r="7"/><circle cx="500" cy="300" r="7"/><circle cx="790" cy="300" r="7"/>
+    </g>
+    <g fill="#7cc4ff"><circle cx="690" cy="212" r="8"/><circle cx="730" cy="190" r="8"/><circle cx="672" cy="176" r="8"/></g>
+    <text x="702" y="196" fill="#ffc06b" font-size="26" text-anchor="middle" font-weight="800">★</text>
+    <circle cx="700" cy="195" r="52" fill="none" stroke="#ffc06b" stroke-dasharray="7 6" stroke-width="2"/>
+    <text x="700" y="286" fill="#ffc06b" font-size="15" text-anchor="middle">★ query and its top-k nearest chunks</text>
+  </g>
+  <line x1="846" y1="180" x2="930" y2="180" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="888" y="162" fill="#9aa7c5" font-size="15" text-anchor="middle">③ hand over</text>
+  <!-- reader -->
+  <rect x="938" y="120" width="230" height="120" rx="14" fill="#2b1a2b" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="1053" y="172" fill="#ff8fd8" font-size="20" text-anchor="middle" font-weight="700">Reader (LLM)</text>
+  <text x="1053" y="202" fill="#9aa7c5" font-size="15" text-anchor="middle">reads k chunks, writes the answer</text>
+</svg>
+<ul>
+  <li><b>A single criterion</b> · is the chunk semantically close to the question</li>
+  <li>Simple and fast · still the most widely used baseline</li>
+</ul>
+
+  </div>
+  <div class="foot">03 / 32</div>
+</div></section>
+<section class="pg" data-name="04_failures"><div class="slide">
+  <h1>Failure Modes of Flat Retrieval</h1>
+  <div class="body">
+
+<div class="three">
+  <div class="card">
+    <p style="font-size:1.9cqw; margin:0 0 .8cqw;"><b class="warn">① A chunk carries no context</b></p>
+    <svg viewBox="0 0 340 150">
+      <text x="18" y="26" fill="#5a6a8a" font-size="14" text-decoration="line-through">X100 › Maintenance › Battery</text>
+      <text x="255" y="26" fill="#ff7b72" font-size="16">✂</text>
+      <rect x="14" y="40" width="312" height="52" rx="8" fill="#1b2640" stroke="#7cc4ff"/>
+      <text x="30" y="72" fill="#eef3fb" font-size="15">"… inspection interval: 6 months …"</text>
+      <text x="18" y="126" fill="#ff7b72" font-size="14.5">which model? which part?</text>
+    </svg>
+    <p class="small" style="margin:.6cqw 0 0;">the severed heading path was its identity</p>
+  </div>
+  <div class="card">
+    <p style="font-size:1.9cqw; margin:0 0 .8cqw;"><b class="warn">② Evidence is scattered</b></p>
+    <svg viewBox="0 0 340 150">
+      <rect x="14" y="22" width="140" height="46" rx="8" fill="#2b2413" stroke="#ffc06b"/>
+      <text x="84" y="50" fill="#ffc06b" font-size="14" text-anchor="middle">table: 6 months</text>
+      <rect x="186" y="84" width="140" height="46" rx="8" fill="#1b2640" stroke="#7cc4ff"/>
+      <text x="256" y="106" fill="#9aa7c5" font-size="13" text-anchor="middle">§2 caution: halve it</text>
+      <text x="256" y="123" fill="#9aa7c5" font-size="13" text-anchor="middle">in high heat</text>
+      <line x1="154" y1="58" x2="186" y2="94" stroke="#ff7b72" stroke-width="2.5" stroke-dasharray="6 6"/>
+      <text x="150" y="142" fill="#ff7b72" font-size="14.5">they answer only together, yet travel apart</text>
+    </svg>
+    <p class="small" style="margin:.6cqw 0 0;">worse when the answer spans table, figure, and text</p>
+  </div>
+  <div class="card">
+    <p style="font-size:1.9cqw; margin:0 0 .8cqw;"><b class="warn">③ Ambiguity at corpus scale</b></p>
+    <svg viewBox="0 0 340 150">
+      <g font-size="14">
+        <rect x="14" y="16" width="312" height="34" rx="7" fill="#1b2640" stroke="#7cc4ff"/>
+        <text x="28" y="38" fill="#eef3fb">X100 · battery inspection 6 months</text>
+        <rect x="14" y="58" width="312" height="34" rx="7" fill="#1b2640" stroke="#7cc4ff"/>
+        <text x="28" y="80" fill="#9aa7c5">X200 · battery inspection 12 months</text>
+        <rect x="14" y="100" width="312" height="34" rx="7" fill="#1b2640" stroke="#7cc4ff"/>
+        <text x="28" y="122" fill="#9aa7c5">X300 · battery inspection 3 months</text>
+      </g>
+      <text x="300" y="80" fill="#ff7b72" font-size="22" font-weight="800">?</text>
+    </svg>
+    <p class="small" style="margin:.6cqw 0 0;">hundreds of docs × hundreds of chunks · near-identical sentences compete</p>
+  </div>
+</div>
+<ul>
+  <li>Common cause · structure is discarded and <b>chunks are judged in isolation</b></li>
+</ul>
+
+  </div>
+  <div class="foot">04 / 32</div>
+</div></section>
+<section class="pg" data-name="05_toc"><div class="slide">
+  <h1>Searching by the Document Hierarchy</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 400">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#ffc06b"/></marker></defs>
+  <!-- left: human -->
+  <rect x="20" y="30" width="520" height="340" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="280" y="62" fill="#9aa7c5" font-size="17" text-anchor="middle">how a person searches</text>
+  <g font-size="17">
+    <text x="52" y="104" fill="#eef3fb">Table of Contents</text>
+    <text x="80" y="140" fill="#5a6a8a">1. Introduction</text>
+    <text x="80" y="174" fill="#5a6a8a">2. Safety Precautions</text>
+    <text x="80" y="208" fill="#5a6a8a">3. Installation</text>
+    <text x="80" y="242" fill="#5a6a8a">4. Usage</text>
+    <text x="80" y="276" fill="#eef3fb" font-weight="700">5. Maintenance  ←</text>
+    <text x="110" y="310" fill="#eef3fb" font-weight="700">5.3 Battery  ←</text>
+    <text x="140" y="344" fill="#ffc06b" font-weight="700">Table: intervals  ← arrival</text>
+  </g>
+  <path d="M330 270 Q360 290 350 302" stroke="#ffc06b" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <path d="M360 304 Q390 324 380 336" stroke="#ffc06b" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <text x="420" y="130" fill="#9aa7c5" font-size="15">reads only headings,</text>
+  <text x="420" y="152" fill="#9aa7c5" font-size="15">rules out whole branches</text>
+  <!-- middle equal -->
+  <text x="588" y="210" fill="#5a6a8a" font-size="40" text-anchor="middle">=</text>
+  <!-- right: tree -->
+  <rect x="640" y="30" width="540" height="340" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="910" y="62" fill="#9aa7c5" font-size="17" text-anchor="middle">the same strategy, mechanized: tree traversal</text>
+  <g stroke="#2a3a58" stroke-width="1.5">
+    <line x1="910" y1="106" x2="790" y2="170"/><line x1="910" y1="106" x2="910" y2="170"/><line x1="910" y1="106" x2="1030" y2="170"/>
+    <line x1="1030" y1="196" x2="970" y2="260"/><line x1="1030" y1="196" x2="1090" y2="260"/>
+    <line x1="1090" y1="286" x2="1090" y2="316"/>
+  </g>
+  <rect x="866" y="84" width="88" height="30" rx="9" fill="#1b2640" stroke="#c084fc"/><text x="910" y="104" fill="#c084fc" font-size="14" text-anchor="middle">X100</text>
+  <g font-size="13" text-anchor="middle">
+    <rect x="748" y="170" width="84" height="28" rx="8" fill="#101828" stroke="#3a4a6a"/><text x="790" y="189" fill="#5a6a8a">2. Safety</text>
+    <rect x="868" y="170" width="84" height="28" rx="8" fill="#101828" stroke="#3a4a6a"/><text x="910" y="189" fill="#5a6a8a">4. Usage</text>
+    <rect x="988" y="170" width="84" height="28" rx="8" fill="#1b2640" stroke="#c084fc" stroke-width="2"/><text x="1030" y="189" fill="#eef3fb" font-weight="700">5. Maint.</text>
+    <rect x="928" y="260" width="84" height="28" rx="8" fill="#101828" stroke="#3a4a6a"/><text x="970" y="279" fill="#5a6a8a">5.1 Clean</text>
+    <rect x="1048" y="260" width="84" height="28" rx="8" fill="#1b2640" stroke="#c084fc" stroke-width="2"/><text x="1090" y="279" fill="#eef3fb" font-weight="700">5.3 Battery</text>
+    <rect x="1048" y="316" width="84" height="28" rx="5" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/><text x="1090" y="335" fill="#ffc06b" font-weight="700">Table ✓</text>
+  </g>
+  <text x="790" y="228" fill="#5a6a8a" font-size="13" text-anchor="middle">not opened = never read</text>
+  <path d="M930 116 Q990 140 1016 166" stroke="#ffc06b" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <path d="M1044 200 Q1070 226 1082 254" stroke="#ffc06b" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <path d="M1090 290 Q1090 300 1090 310" stroke="#ffc06b" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+</svg>
+<ul>
+  <li><b>Choose branches from headings and summaries alone</b> · reading shrinks sharply</li>
+  <li>A ToC is just the document's <b>hierarchy</b> · tree-based search = this strategy, mechanized</li>
+</ul>
+
+  </div>
+  <div class="foot">05 / 32</div>
+</div></section>
+<section class="pg" data-name="06_frame"><div class="slide">
+  <h1>A Common Frame: Build, Traverse, Pack</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 360">
+  <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#9aa7c5"/></marker></defs>
+  <!-- build -->
+  <rect x="20" y="60" width="330" height="220" rx="16" fill="#131b30" stroke="#c084fc" stroke-width="2"/>
+  <text x="185" y="98" fill="#c084fc" font-size="23" font-weight="800" text-anchor="middle">① BUILD</text>
+  <text x="185" y="130" fill="#9aa7c5" font-size="16" text-anchor="middle">give each document a hierarchy (tree)</text>
+  <text x="185" y="153" fill="#9aa7c5" font-size="16" text-anchor="middle">with headings and summaries</text>
+  <g stroke="#3a4a6a" stroke-width="1.5">
+    <line x1="185" y1="190" x2="135" y2="230"/><line x1="185" y1="190" x2="235" y2="230"/>
+  </g>
+  <circle cx="185" cy="188" r="11" fill="#1b2640" stroke="#c084fc"/>
+  <circle cx="135" cy="234" r="11" fill="#1b2640" stroke="#c084fc"/>
+  <circle cx="235" cy="234" r="11" fill="#1b2640" stroke="#c084fc"/>
+  <text x="185" y="268" fill="#5a6a8a" font-size="14" text-anchor="middle">offline · once per corpus</text>
+  <line x1="356" y1="170" x2="416" y2="170" stroke="#9aa7c5" stroke-width="3" marker-end="url(#ar)"/>
+  <!-- walk -->
+  <rect x="424" y="60" width="330" height="220" rx="16" fill="#131b30" stroke="#7cc4ff" stroke-width="2"/>
+  <text x="589" y="98" fill="#7cc4ff" font-size="23" font-weight="800" text-anchor="middle">② TRAVERSE</text>
+  <text x="589" y="130" fill="#9aa7c5" font-size="16" text-anchor="middle">per question, narrow the tree</text>
+  <text x="589" y="153" fill="#9aa7c5" font-size="16" text-anchor="middle">down to the places worth reading</text>
+  <g stroke="#3a4a6a" stroke-width="1.5">
+    <line x1="589" y1="190" x2="539" y2="230"/><line x1="589" y1="190" x2="639" y2="230"/>
+  </g>
+  <circle cx="589" cy="188" r="11" fill="#1b2640" stroke="#7cc4ff"/>
+  <circle cx="539" cy="234" r="11" fill="#101828" stroke="#3a4a6a"/>
+  <circle cx="639" cy="234" r="11" fill="#2b2413" stroke="#ffc06b" stroke-width="2.5"/>
+  <text x="589" y="268" fill="#5a6a8a" font-size="14" text-anchor="middle">online · per question</text>
+  <line x1="760" y1="170" x2="820" y2="170" stroke="#9aa7c5" stroke-width="3" marker-end="url(#ar)"/>
+  <!-- pack -->
+  <rect x="828" y="60" width="330" height="220" rx="16" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="993" y="98" fill="#7ee787" font-size="23" font-weight="800" text-anchor="middle">③ PACK</text>
+  <text x="993" y="130" fill="#9aa7c5" font-size="16" text-anchor="middle">bundle the chosen evidence</text>
+  <text x="993" y="153" fill="#9aa7c5" font-size="16" text-anchor="middle">to fit the reader budget</text>
+  <rect x="898" y="184" width="190" height="26" rx="7" fill="#0f1525" stroke="#2a3a58"/>
+  <rect x="898" y="184" width="132" height="26" rx="7" fill="rgba(126,231,135,.25)" stroke="#7ee787"/>
+  <text x="993" y="236" fill="#5a6a8a" font-size="14" text-anchor="middle">budget gauge</text>
+  <text x="993" y="268" fill="#5a6a8a" font-size="14" text-anchor="middle">→ reader writes the answer</text>
+  <!-- bottom -->
+  <text x="600" y="336" fill="#eef3fb" font-size="19" text-anchor="middle">every method that follows = <tspan fill="#ffc06b" font-weight="700">a different way to fill these three boxes</tspan></text>
+</svg>
+
+  </div>
+  <div class="foot">06 / 32</div>
+</div></section>
+<section class="pg" data-name="07_divider_survey"><div class="slide div">
+  <div class="part">PART 2</div>
+  <div class="dtitle">A Tour of Tree-Based Search</div>
+  <div class="drule"></div>
+  <div class="nav">
+    <div class="it "><span class="n">Part 1</span> Motivation · why trees</div>
+    <div class="it cur"><span class="n">Part 2</span> A Tour of Tree-Based Search · the lineage</div>
+    <div class="it "><span class="n">Part 3</span> HiKEY · deep dive (ACL 2026)</div>
+  </div>
+  <div class="foot">07 / 32</div>
+</div></section>
+<section class="pg" data-name="08_axes"><div class="slide">
+  <h1>Two Design Axes from Build and Traverse</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 560">
+  <defs><marker id="arS" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#5a6a8a"/></marker>
+    <marker id="arA8" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#ffc06b"/></marker>
+    <marker id="arP8" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#ff8fd8"/></marker></defs>
+
+  <!-- ===== row 1 : BUILD axis ===== -->
+  <g>
+    <rect x="24" y="46" width="76" height="32" rx="8" fill="rgba(192,132,252,.16)" stroke="#c084fc" stroke-width="2"/>
+    <text x="62" y="67" fill="#c084fc" font-size="14" font-weight="700" text-anchor="middle">BUILD</text>
+    <line x1="102" y1="62" x2="116" y2="62" stroke="#3a4a6a" stroke-width="2" marker-end="url(#arS)"/>
+    <rect x="120" y="46" width="76" height="32" rx="8" fill="#101828" stroke="#3a4a6a"/>
+    <text x="158" y="67" fill="#5a6a8a" font-size="14" text-anchor="middle">TRAVERSE</text>
+    <line x1="198" y1="62" x2="212" y2="62" stroke="#3a4a6a" stroke-width="2" marker-end="url(#arS)"/>
+    <rect x="216" y="46" width="76" height="32" rx="8" fill="#101828" stroke="#3a4a6a"/>
+    <text x="254" y="67" fill="#5a6a8a" font-size="14" text-anchor="middle">PACK</text>
+    <text x="158" y="104" fill="#c084fc" font-size="13.5" text-anchor="middle">decided at BUILD</text>
+  </g>
+  <text x="340" y="52" fill="#eef3fb" font-size="19" font-weight="700">Q1 · Where does the hierarchy (tree) come from?</text>
+  <text x="340" y="76" fill="#5a6a8a" font-size="13.5">a hierarchy must exist before anyone can traverse it · BUILD has to get one from somewhere</text>
+  <line x1="352" y1="112" x2="1138" y2="112" stroke="#3a4a6a" stroke-width="2"/>
+  <polygon points="340,112 354,105 354,119" fill="#7cc4ff"/>
+  <polygon points="1150,112 1136,105 1136,119" fill="#c084fc"/>
+  <text x="340" y="146" fill="#7cc4ff" font-size="16.5" font-weight="700">the document's own hierarchy</text>
+  <!-- visual: page headings -> same tree -->
+  <g transform="translate(340,158)">
+    <rect x="0" y="0" width="46" height="66" rx="4" fill="#101828" stroke="#3a4a6a"/>
+    <rect x="7" y="8" width="26" height="5" rx="2" fill="#7cc4ff"/>
+    <rect x="12" y="20" width="27" height="3" rx="1.5" fill="#5a6a8a"/>
+    <rect x="12" y="28" width="27" height="3" rx="1.5" fill="#5a6a8a"/>
+    <rect x="7" y="40" width="20" height="5" rx="2" fill="#7cc4ff"/>
+    <rect x="12" y="52" width="27" height="3" rx="1.5" fill="#5a6a8a"/>
+    <line x1="56" y1="33" x2="78" y2="33" stroke="#5a6a8a" stroke-width="2" marker-end="url(#arS)"/>
+    <g stroke="#3a4a6a" stroke-width="1.4">
+      <line x1="106" y1="16" x2="90" y2="36"/><line x1="106" y1="16" x2="122" y2="36"/><line x1="122" y1="48" x2="122" y2="58"/>
+    </g>
+    <rect x="99" y="4" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <rect x="83" y="36" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <rect x="115" y="36" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <rect x="115" y="58" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <text x="70" y="86" fill="#5a6a8a" font-size="11.5" text-anchor="middle">headings become the tree, as-is</text>
+  </g>
+  <text x="500" y="182" fill="#7ee787" font-size="13">+ free · faithful to the author</text>
+  <text x="500" y="206" fill="#ff7b72" font-size="13">− only as good as its formatting</text>
+  <text x="1150" y="146" fill="#c084fc" font-size="16.5" font-weight="700" text-anchor="end">machine-built (summaries · learned)</text>
+  <!-- visual: chunks -> clustered -> generated summaries -->
+  <g transform="translate(1010,158)">
+    <g fill="#0f1525" stroke="#7cc4ff" stroke-width="1.4">
+      <rect x="8" y="58" width="11" height="11" rx="1.5"/><rect x="26" y="58" width="11" height="11" rx="1.5"/>
+      <rect x="86" y="58" width="11" height="11" rx="1.5"/><rect x="104" y="58" width="11" height="11" rx="1.5"/>
+    </g>
+    <rect x="2" y="52" width="42" height="23" rx="9" fill="none" stroke="#5a6a8a" stroke-dasharray="4 3"/>
+    <rect x="80" y="52" width="42" height="23" rx="9" fill="none" stroke="#5a6a8a" stroke-dasharray="4 3"/>
+    <g stroke="#3a4a6a" stroke-width="1.4">
+      <line x1="23" y1="50" x2="26" y2="42"/><line x1="101" y1="50" x2="98" y2="42"/>
+      <line x1="30" y1="26" x2="52" y2="14"/><line x1="94" y1="26" x2="72" y2="14"/>
+    </g>
+    <rect x="14" y="26" width="26" height="15" rx="7.5" fill="#0f1525" stroke="#c084fc" stroke-width="1.6"/>
+    <rect x="84" y="26" width="26" height="15" rx="7.5" fill="#0f1525" stroke="#c084fc" stroke-width="1.6"/>
+    <rect x="49" y="0" width="26" height="15" rx="7.5" fill="#0f1525" stroke="#c084fc" stroke-width="1.6"/>
+    <text x="62" y="86" fill="#5a6a8a" font-size="11.5" text-anchor="middle">cluster + summarize (generated)</text>
+  </g>
+  <text x="990" y="182" fill="#7ee787" font-size="13" text-anchor="end">+ works on unstructured text</text>
+  <text x="990" y="206" fill="#ff7b72" font-size="13" text-anchor="end">− generated: cost · can drift</text>
+
+  <line x1="60" y1="262" x2="1140" y2="262" stroke="#1b2640"/>
+
+  <!-- ===== row 2 : WALK axis ===== -->
+  <g>
+    <rect x="24" y="298" width="76" height="32" rx="8" fill="#101828" stroke="#3a4a6a"/>
+    <text x="62" y="319" fill="#5a6a8a" font-size="14" text-anchor="middle">BUILD</text>
+    <line x1="102" y1="314" x2="116" y2="314" stroke="#3a4a6a" stroke-width="2" marker-end="url(#arS)"/>
+    <rect x="120" y="298" width="76" height="32" rx="8" fill="rgba(124,196,255,.16)" stroke="#7cc4ff" stroke-width="2"/>
+    <text x="158" y="319" fill="#7cc4ff" font-size="14" font-weight="700" text-anchor="middle">TRAVERSE</text>
+    <line x1="198" y1="314" x2="212" y2="314" stroke="#3a4a6a" stroke-width="2" marker-end="url(#arS)"/>
+    <rect x="216" y="298" width="76" height="32" rx="8" fill="#101828" stroke="#3a4a6a"/>
+    <text x="254" y="319" fill="#5a6a8a" font-size="14" text-anchor="middle">PACK</text>
+    <text x="158" y="356" fill="#7cc4ff" font-size="13.5" text-anchor="middle">decided at TRAVERSE</text>
+  </g>
+  <text x="340" y="304" fill="#eef3fb" font-size="19" font-weight="700">Q2 · Who decides where to go next?</text>
+  <text x="340" y="328" fill="#5a6a8a" font-size="13.5">at every fork someone must compare the branches with the question and choose</text>
+  <line x1="352" y1="364" x2="1138" y2="364" stroke="#3a4a6a" stroke-width="2"/>
+  <polygon points="340,364 354,357 354,371" fill="#7cc4ff"/>
+  <polygon points="1150,364 1136,357 1136,371" fill="#c084fc"/>
+  <text x="340" y="398" fill="#7cc4ff" font-size="16.5" font-weight="700">score-based traversal (word overlap · embeddings)</text>
+  <!-- visual: a fork decided by numbers -->
+  <g transform="translate(340,410)">
+    <rect x="0" y="24" width="30" height="19" rx="9.5" fill="#2b2413" stroke="#ffc06b"/>
+    <text x="15" y="37" fill="#ffc06b" font-size="11" text-anchor="middle" font-family="ui-monospace,monospace">q</text>
+    <g stroke="#3a4a6a" stroke-width="1.4">
+      <line x1="76" y1="18" x2="56" y2="56"/><line x1="84" y1="18" x2="104" y2="56"/>
+    </g>
+    <rect x="73" y="4" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <rect x="49" y="56" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <rect x="97" y="56" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <text x="42" y="38" fill="#ffc06b" font-size="11.5" font-family="ui-monospace,monospace">0.92</text>
+    <text x="106" y="38" fill="#5a6a8a" font-size="11.5" font-family="ui-monospace,monospace">0.15</text>
+    <path d="M73 20 Q62 38 58 52" stroke="#ffc06b" stroke-width="2.2" fill="none" marker-end="url(#arA8)"/>
+    <text x="80" y="86" fill="#5a6a8a" font-size="11.5" text-anchor="middle">the bigger number wins · no thinking</text>
+  </g>
+  <text x="500" y="434" fill="#7ee787" font-size="13">+ cheap · 0 LLM calls · scales</text>
+  <text x="500" y="458" fill="#ff7b72" font-size="13">− matches only, cannot reason</text>
+  <text x="1150" y="398" fill="#c084fc" font-size="16.5" font-weight="700" text-anchor="end">LLM-guided traversal (reads and reasons)</text>
+  <!-- visual: a fork decided by an LLM -->
+  <g transform="translate(1006,410)">
+    <rect x="0" y="12" width="44" height="19" rx="9.5" fill="#2b1a2b" stroke="#ff8fd8"/>
+    <text x="22" y="25" fill="#ff8fd8" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">LLM</text>
+    <g stroke="#3a4a6a" stroke-width="1.4">
+      <line x1="88" y1="18" x2="68" y2="56"/><line x1="96" y1="18" x2="116" y2="56"/>
+    </g>
+    <rect x="85" y="4" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <rect x="61" y="56" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <rect x="109" y="56" width="14" height="13" rx="2" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+    <line x1="42" y1="18" x2="62" y2="60" stroke="#ff8fd8" stroke-width="1.3" stroke-dasharray="3 3"/>
+    <line x1="46" y1="16" x2="108" y2="60" stroke="#ff8fd8" stroke-width="1.3" stroke-dasharray="3 3"/>
+    <path d="M44 26 Q56 44 62 54" stroke="#ff8fd8" stroke-width="2.2" fill="none" marker-end="url(#arP8)"/>
+    <text x="66" y="86" fill="#5a6a8a" font-size="11.5" text-anchor="middle">reads both children, then chooses</text>
+  </g>
+  <text x="990" y="434" fill="#7ee787" font-size="13" text-anchor="end">+ reasons · follows references</text>
+  <text x="990" y="458" fill="#ff7b72" font-size="13" text-anchor="end">− calls per query: slow, costly</text>
+
+  <text x="600" y="540" fill="#eef3fb" font-size="17" text-anchor="middle">each method answers both questions → next slide places all seven on this <tspan fill="#ffc06b" font-weight="700">2×2 map</tspan></text>
+</svg>
+
+  </div>
+  <div class="foot">08 / 32</div>
+</div></section>
+<section class="pg" data-name="09_map"><div class="slide">
+  <h1>Design Space of Tree-Based Search</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 512">
+  <defs><marker id="ax" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#5a6a8a"/></marker></defs>
+  <!-- axes -->
+  <line x1="600" y1="66" x2="600" y2="356" stroke="#2a3a58" stroke-width="1.6"/>
+  <line x1="150" y1="210" x2="1050" y2="210" stroke="#2a3a58" stroke-width="1.6"/>
+  <line x1="600" y1="80" x2="600" y2="68" stroke="#5a6a8a" marker-end="url(#ax)"/>
+  <line x1="600" y1="342" x2="600" y2="354" stroke="#5a6a8a" marker-end="url(#ax)"/>
+  <line x1="170" y1="210" x2="156" y2="210" stroke="#5a6a8a" marker-end="url(#ax)"/>
+  <line x1="1030" y1="210" x2="1044" y2="210" stroke="#5a6a8a" marker-end="url(#ax)"/>
+  <text x="600" y="46" fill="#9aa7c5" font-size="18" font-weight="700" text-anchor="middle">uses the document's own hierarchy</text>
+  <text x="600" y="388" fill="#9aa7c5" font-size="18" font-weight="700" text-anchor="middle">machine builds the hierarchy (summaries · learning)</text>
+  <text x="150" y="188" fill="#9aa7c5" font-size="18" font-weight="700">score-based traversal</text>
+  <text x="150" y="236" fill="#5a6a8a" font-size="14">word overlap · semantic sim · 0 LLM calls per query</text>
+  <text x="1050" y="188" fill="#9aa7c5" font-size="18" font-weight="700" text-anchor="end">LLM-guided traversal</text>
+  <text x="1050" y="236" fill="#5a6a8a" font-size="14" text-anchor="end">reads and reasons its way, per query</text>
+  <!-- points -->
+  <circle cx="360" cy="112" r="11" fill="#ffc06b"/>
+  <circle cx="360" cy="112" r="19" fill="none" stroke="#ffc06b" stroke-opacity=".35" stroke-width="2.5"/>
+  <text x="360" y="88" fill="#ffc06b" font-size="19" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">HiKEY</text>
+  <text x="360" y="146" fill="#ffc06b" font-size="12.5" text-anchor="middle">the only multimodal one</text>
+  <text x="360" y="163" fill="#ffc06b" font-size="12.5" text-anchor="middle">today's paper</text>
+  <circle cx="472" cy="166" r="8" fill="#7cc4ff"/>
+  <text x="472" y="144" fill="#7cc4ff" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">TreeRAG</text>
+  <g transform="translate(790,116)"><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" fill="#c084fc"/></g>
+  <text x="790" y="92" fill="#c084fc" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">PageIndex</text>
+  <g transform="translate(900,130)"><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" fill="#c084fc"/></g>
+  <text x="900" y="106" fill="#c084fc" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">RDR2</text>
+  <text x="900" y="155" fill="#5a6a8a" font-size="13" text-anchor="middle">trains the traversal</text>
+  <circle cx="345" cy="290" r="8" fill="#7cc4ff"/>
+  <text x="345" y="268" fill="#7cc4ff" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">RAPTOR</text>
+  <g transform="translate(800,300)"><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)" fill="#c084fc"/></g>
+  <text x="800" y="276" fill="#c084fc" font-size="16" text-anchor="middle" font-family="ui-monospace,monospace">MemWalker</text>
+  <!-- legend -->
+  <g transform="translate(70,332)">
+    <circle cx="10" cy="8" r="7" fill="#7cc4ff"/><text x="26" y="13" fill="#9aa7c5" font-size="14">score-based traversal</text>
+    <g transform="translate(10,36)"><rect x="-7" y="-7" width="14" height="14" transform="rotate(45)" fill="#c084fc"/></g>
+    <text x="26" y="41" fill="#9aa7c5" font-size="14">LLM-guided traversal</text>
+  </g>
+  <!-- timeline (separated from the grid) -->
+  <line x1="60" y1="424" x2="1140" y2="424" stroke="#1b2640"/>
+  <text x="60" y="458" fill="#5a6a8a" font-size="12" font-family="ui-monospace,monospace" letter-spacing="3">TIMELINE</text>
+  <line x1="210" y1="468" x2="1130" y2="468" stroke="#2a3a58"/>
+  <g text-anchor="middle" font-family="ui-monospace,monospace">
+    <circle cx="255" cy="468" r="4.5" fill="#c084fc"/>
+    <text x="255" y="452" fill="#c084fc" font-size="13">MemWalker</text>
+    <text x="255" y="492" fill="#5a6a8a" font-size="11">arXiv 2023</text>
+    <circle cx="395" cy="468" r="4.5" fill="#7cc4ff"/>
+    <text x="395" y="452" fill="#7cc4ff" font-size="13">RAPTOR</text>
+    <text x="395" y="492" fill="#5a6a8a" font-size="11">ICLR 2024</text>
+    <circle cx="675" cy="468" r="4.5" fill="#c084fc"/>
+    <text x="675" y="452" fill="#c084fc" font-size="13">PageIndex</text>
+    <text x="675" y="492" fill="#5a6a8a" font-size="11">open-source 2025</text>
+    <circle cx="815" cy="468" r="4.5" fill="#7cc4ff"/>
+    <text x="815" y="452" fill="#7cc4ff" font-size="13">TreeRAG</text>
+    <text x="815" y="492" fill="#5a6a8a" font-size="11">ACL Findings 2025</text>
+    <circle cx="950" cy="468" r="4.5" fill="#c084fc"/>
+    <text x="950" y="452" fill="#c084fc" font-size="13">RDR2</text>
+    <text x="950" y="492" fill="#5a6a8a" font-size="11">EMNLP 2025</text>
+    <circle cx="1070" cy="468" r="6" fill="#ffc06b"/>
+    <text x="1070" y="452" fill="#ffc06b" font-size="13" font-weight="700">HiKEY</text>
+    <text x="1070" y="492" fill="#5a6a8a" font-size="11">ACL 2026</text>
+  </g>
+</svg>
+
+  </div>
+  <div class="foot">09 / 32</div>
+</div></section>
+<section class="pg" data-name="10_raptor"><div class="slide">
+  <h1>RAPTOR: Summary Trees by Recursive Clustering</h1>
+  <div class="body">
+<div class="arcline"><span class="st cur">① a tree, no traversal</span><span class="sep">→</span><span class="st">② score-based, both ways</span><span class="sep">→</span><span class="st">③ LLM-guided instead</span><span class="sep">→</span><span class="st">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+<svg viewBox="0 0 1200 350">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker></defs>
+  <!-- build -->
+  <text x="300" y="34" fill="#c084fc" font-size="18" font-weight="700" text-anchor="middle">BUILD · the machine writes the hierarchy</text>
+  <g fill="#1b2640" stroke="#7cc4ff">
+    <rect x="90" y="272" width="76" height="40" rx="7"/><rect x="176" y="272" width="76" height="40" rx="7"/>
+    <rect x="262" y="272" width="76" height="40" rx="7"/><rect x="348" y="272" width="76" height="40" rx="7"/>
+    <rect x="434" y="272" width="76" height="40" rx="7"/>
+  </g>
+  <text x="300" y="340" fill="#5a6a8a" font-size="14" text-anchor="middle">chunks (embedded)</text>
+  <rect x="120" y="170" width="130" height="42" rx="13" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="185" y="197" fill="#c084fc" font-size="15" text-anchor="middle">cluster summary A</text>
+  <rect x="330" y="170" width="130" height="42" rx="13" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="395" y="197" fill="#c084fc" font-size="15" text-anchor="middle">cluster summary B</text>
+  <rect x="225" y="72" width="130" height="42" rx="13" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="290" y="99" fill="#c084fc" font-size="15" text-anchor="middle">top summary</text>
+  <g stroke="#9aa7c5" stroke-width="1.8">
+    <line x1="128" y1="270" x2="162" y2="216" marker-end="url(#ar)"/>
+    <line x1="214" y1="270" x2="192" y2="216" marker-end="url(#ar)"/>
+    <line x1="300" y1="270" x2="372" y2="216" marker-end="url(#ar)"/>
+    <line x1="386" y1="270" x2="398" y2="216" marker-end="url(#ar)"/>
+    <line x1="472" y1="270" x2="420" y2="216" marker-end="url(#ar)"/>
+    <line x1="212" y1="168" x2="264" y2="118" marker-end="url(#ar)"/>
+    <line x1="372" y1="168" x2="318" y2="118" marker-end="url(#ar)"/>
+  </g>
+  <text x="510" y="196" fill="#9aa7c5" font-size="14.5">cluster similar ones,</text>
+  <text x="510" y="218" fill="#9aa7c5" font-size="14.5">LLM summarizes · repeat ↺</text>
+  <!-- walk -->
+  <text x="890" y="34" fill="#7cc4ff" font-size="18" font-weight="700" text-anchor="middle">TRAVERSE · it barely traverses</text>
+  <rect x="700" y="60" width="380" height="256" rx="14" fill="none" stroke="#ffc06b" stroke-dasharray="8 6" stroke-width="2"/>
+  <text x="890" y="90" fill="#ffc06b" font-size="15" text-anchor="middle">flatten all levels into one pool (collapsed)</text>
+  <g fill="#1b2640">
+    <rect x="730" y="110" width="90" height="34" rx="11" stroke="#c084fc"/>
+    <rect x="840" y="110" width="90" height="34" rx="11" stroke="#c084fc"/>
+    <rect x="950" y="110" width="90" height="34" rx="11" stroke="#c084fc"/>
+    <rect x="730" y="158" width="90" height="34" rx="6" stroke="#7cc4ff"/>
+    <rect x="840" y="158" width="90" height="34" rx="6" stroke="#7cc4ff"/>
+    <rect x="950" y="158" width="90" height="34" rx="6" stroke="#7cc4ff"/>
+    <rect x="785" y="206" width="90" height="34" rx="6" stroke="#7cc4ff"/>
+    <rect x="895" y="206" width="90" height="34" rx="6" stroke="#7cc4ff"/>
+  </g>
+  <text x="890" y="272" fill="#9aa7c5" font-size="15" text-anchor="middle">top-k by similarity · summaries (rounded) mixed with chunks (square)</text>
+  <rect x="1054" y="40" width="46" height="28" rx="14" fill="#2b2413" stroke="#ffc06b"/>
+  <text x="1077" y="59" fill="#ffc06b" font-size="15" text-anchor="middle" font-family="ui-monospace,monospace">q</text>
+  <line x1="1066" y1="70" x2="1040" y2="102" stroke="#ffc06b" stroke-width="2.2" marker-end="url(#ar)"/>
+</svg>
+<ul>
+  <li><b>The starting point</b> (ICLR 2024) · summaries at several resolutions become searchable</li>
+  <li>Irony · it builds a tree, yet <b>flat similarity over the pool worked better</b></li>
+</ul>
+
+  </div>
+  <div class="foot">10 / 32</div>
+</div></section>
+<section class="pg" data-name="11_treerag"><div class="slide">
+  <h1>TreeRAG: Bidirectional Tree Traversal</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st cur">② score-based, both ways</span><span class="sep">→</span><span class="st">③ LLM-guided instead</span><span class="sep">→</span><span class="st">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+
+<svg viewBox="0 0 1200 360">
+  <defs><marker id="arB" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#7cc4ff"/></marker>
+    <marker id="arP" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#ff8fd8"/></marker>
+    <marker id="arGt" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#7ee787"/></marker></defs>
+  <!-- tree -->
+  <g stroke="#2a3a58" stroke-width="1.6">
+    <line x1="600" y1="80" x2="440" y2="160"/><line x1="600" y1="80" x2="760" y2="160"/>
+    <line x1="440" y1="190" x2="360" y2="266"/><line x1="440" y1="190" x2="520" y2="266"/>
+    <line x1="760" y1="190" x2="680" y2="266"/><line x1="760" y1="190" x2="840" y2="266"/>
+  </g>
+  <rect x="540" y="52" width="120" height="34" rx="10" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="600" y="74" fill="#c084fc" font-size="15" text-anchor="middle">document</text>
+  <rect x="380" y="160" width="120" height="34" rx="10" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="440" y="182" fill="#c084fc" font-size="15" text-anchor="middle">section 1</text>
+  <rect x="700" y="160" width="120" height="34" rx="10" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="760" y="182" fill="#c084fc" font-size="15" text-anchor="middle">section 2</text>
+  <g font-size="14" text-anchor="middle">
+    <rect x="310" y="266" width="100" height="32" rx="6" fill="#1b2640" stroke="#7cc4ff"/><text x="360" y="287" fill="#7cc4ff">chunk</text>
+    <rect x="470" y="266" width="100" height="32" rx="6" fill="#1b2640" stroke="#7cc4ff"/><text x="520" y="287" fill="#7cc4ff">chunk</text>
+    <rect x="630" y="266" width="100" height="32" rx="6" fill="#2b2413" stroke="#ffc06b" stroke-width="2.5"/><text x="680" y="287" fill="#ffc06b" font-weight="700">chunk ★</text>
+    <rect x="790" y="266" width="100" height="32" rx="6" fill="#1b2640" stroke="#7cc4ff"/><text x="840" y="287" fill="#7cc4ff">chunk</text>
+  </g>
+  <!-- down arrow (left) -->
+  <line x1="150" y1="70" x2="150" y2="300" stroke="#7cc4ff" stroke-width="4" marker-end="url(#arB)"/>
+  <text x="120" y="185" fill="#7cc4ff" font-size="16" font-weight="700" transform="rotate(-90 120 185)" text-anchor="middle">top→down · follow the hierarchy</text>
+  <!-- up arrow (right) -->
+  <line x1="1050" y1="300" x2="1050" y2="70" stroke="#ff8fd8" stroke-width="4" marker-end="url(#arP)"/>
+  <text x="1082" y="185" fill="#ff8fd8" font-size="16" font-weight="700" transform="rotate(90 1082 185)" text-anchor="middle">bottom→up · chunk first</text>
+  <!-- up walk on tree -->
+  <path d="M694 262 Q730 226 750 198" stroke="#ff8fd8" stroke-width="2.6" stroke-dasharray="6 5" fill="none" marker-end="url(#arP)"/>
+  <path d="M745 200 Q712 234 692 260" stroke="#7ee787" stroke-width="2.2" fill="none" marker-end="url(#arGt)"/>
+  <path d="M778 200 Q812 234 832 260" stroke="#7ee787" stroke-width="2.2" fill="none" marker-end="url(#arGt)"/>
+  <text x="866" y="222" fill="#ff8fd8" font-size="13.5">up one hop,</text>
+  <text x="866" y="242" fill="#7ee787" font-size="13.5">then all leaves under it</text>
+  <rect x="596" y="322" width="46" height="26" rx="13" fill="#2b2413" stroke="#ffc06b"/>
+  <text x="619" y="340" fill="#ffc06b" font-size="14" text-anchor="middle" font-family="ui-monospace,monospace">q</text>
+  <line x1="642" y1="330" x2="672" y2="304" stroke="#ffc06b" stroke-width="2.2" marker-end="url(#arB)"/>
+  <text x="530" y="342" fill="#5a6a8a" font-size="13.5" text-anchor="end">similarity grabs a chunk first</text>
+</svg>
+<ul>
+  <li><b>Two directions</b> · up from the hit chunk, then down to the leaves under its parent</li>
+  <li>Lost context is repaired at <b>BUILD</b>: ancestor titles are prefixed into every chunk before embedding</li>
+</ul>
+
+
+  </div>
+  <div class="foot">11 / 32</div>
+</div></section>
+<section class="pg" data-name="12_treerag2"><div class="slide">
+  <h1>TreeRAG: Retrieval Procedure</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st cur">② score-based, both ways</span><span class="sep">→</span><span class="st">③ LLM-guided instead</span><span class="sep">→</span><span class="st">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+<svg viewBox="0 0 1200 450">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+    <marker id="arP" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#ff8fd8"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#7ee787"/></marker></defs>
+  <!-- 0 intent check -->
+  <rect x="20" y="64" width="200" height="126" rx="14" fill="#131b30" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="120" y="94" fill="#ff8fd8" font-size="15" font-weight="700" text-anchor="middle">0 · intent check</text>
+  <text x="120" y="116" fill="#5a6a8a" font-size="12" text-anchor="middle">LLM, once per query</text>
+  <text x="120" y="144" fill="#9aa7c5" font-size="12.5" text-anchor="middle">"does it ask to list</text>
+  <text x="120" y="162" fill="#9aa7c5" font-size="12.5" text-anchor="middle">or summarize?"</text>
+  <line x1="224" y1="127" x2="258" y2="127" stroke="#9aa7c5" stroke-width="2.2" marker-end="url(#ar)"/>
+  <text x="241" y="114" fill="#7ee787" font-size="12" text-anchor="middle">yes</text>
+  <path d="M120 192 L120 404 L1046 404 L1046 362" stroke="#5a6a8a" stroke-width="1.6" stroke-dasharray="6 5" fill="none" marker-end="url(#ar)"/>
+  <text x="580" y="396" fill="#5a6a8a" font-size="13" text-anchor="middle">no · skip the traversal entirely: the initial top-K chunks go straight to the reader</text>
+  <!-- 1 initial retrieval -->
+  <rect x="262" y="44" width="290" height="310" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="407" y="72" fill="#7cc4ff" font-size="15" font-weight="700" text-anchor="middle">1 · initial retrieval (top-K)</text>
+  <g stroke="#2a3a58" stroke-width="1.4">
+    <line x1="407" y1="116" x2="342" y2="158"/><line x1="407" y1="116" x2="472" y2="158"/>
+    <line x1="342" y1="184" x2="310" y2="228"/><line x1="342" y1="184" x2="374" y2="228"/>
+    <line x1="472" y1="184" x2="440" y2="228"/><line x1="472" y1="184" x2="504" y2="228"/>
+  </g>
+  <rect x="374" y="94" width="66" height="24" rx="8" fill="#101828" stroke="#3a4a6a"/><text x="407" y="110" fill="#5a6a8a" font-size="12" text-anchor="middle">root</text>
+  <rect x="302" y="158" width="80" height="26" rx="8" fill="#1b2640" stroke="#c084fc"/><text x="342" y="176" fill="#c084fc" font-size="12.5" text-anchor="middle">§ A</text>
+  <rect x="432" y="158" width="80" height="26" rx="8" fill="#1b2640" stroke="#c084fc"/><text x="472" y="176" fill="#c084fc" font-size="12.5" text-anchor="middle">§ B</text>
+  <g font-size="11" text-anchor="middle">
+    <rect x="280" y="228" width="60" height="24" rx="5" fill="#1b2640" stroke="#7cc4ff"/><text x="310" y="244" fill="#7cc4ff">chunk</text>
+    <rect x="344" y="228" width="60" height="24" rx="5" fill="#1b2640" stroke="#7cc4ff"/><text x="374" y="244" fill="#7cc4ff">chunk</text>
+    <rect x="410" y="228" width="60" height="24" rx="5" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/><text x="440" y="244" fill="#ffc06b" font-weight="700">hit ★</text>
+    <rect x="474" y="228" width="60" height="24" rx="5" fill="#1b2640" stroke="#7cc4ff"/><text x="504" y="244" fill="#7cc4ff">chunk</text>
+  </g>
+  <text x="407" y="298" fill="#9aa7c5" font-size="12" text-anchor="middle">embeddings hit leaf chunks</text>
+  <text x="407" y="322" fill="#5a6a8a" font-size="11.5" text-anchor="middle">each chunk was embedded with its</text>
+  <text x="407" y="338" fill="#5a6a8a" font-size="11.5" text-anchor="middle">ancestor-title prefix (from BUILD)</text>
+  <line x1="556" y1="200" x2="588" y2="200" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- 2+3 up one hop, down to leaves -->
+  <rect x="592" y="44" width="300" height="310" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="742" y="72" fill="#eef3fb" font-size="14.5" font-weight="700" text-anchor="middle"><tspan fill="#ff8fd8">2 · up one hop</tspan> <tspan fill="#5a6a8a">→</tspan> <tspan fill="#7ee787">3 · all its leaves</tspan></text>
+  <g stroke="#2a3a58" stroke-width="1.4">
+    <line x1="742" y1="116" x2="677" y2="158"/><line x1="742" y1="116" x2="807" y2="158"/>
+    <line x1="677" y1="184" x2="645" y2="228"/><line x1="677" y1="184" x2="709" y2="228"/>
+    <line x1="807" y1="184" x2="775" y2="228"/><line x1="807" y1="184" x2="839" y2="228"/>
+  </g>
+  <rect x="709" y="94" width="66" height="24" rx="8" fill="#101828" stroke="#3a4a6a"/><text x="742" y="110" fill="#5a6a8a" font-size="12" text-anchor="middle">root</text>
+  <text x="782" y="128" fill="#ff7b72" font-size="14" font-weight="800">✗</text>
+  <text x="800" y="128" fill="#5a6a8a" font-size="10.5">no higher</text>
+  <rect x="637" y="158" width="80" height="26" rx="8" fill="#1b2640" stroke="#c084fc"/><text x="677" y="176" fill="#c084fc" font-size="12.5" text-anchor="middle">§ A</text>
+  <rect x="767" y="158" width="80" height="26" rx="8" fill="rgba(126,231,135,.12)" stroke="#7ee787" stroke-width="2"/><text x="807" y="176" fill="#7ee787" font-size="12.5" font-weight="700" text-anchor="middle">§ B</text>
+  <g font-size="11" text-anchor="middle">
+    <rect x="615" y="228" width="60" height="24" rx="5" fill="#101828" stroke="#3a4a6a"/><text x="645" y="244" fill="#5a6a8a">chunk</text>
+    <rect x="679" y="228" width="60" height="24" rx="5" fill="#101828" stroke="#3a4a6a"/><text x="709" y="244" fill="#5a6a8a">chunk</text>
+    <rect x="745" y="228" width="60" height="24" rx="5" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/><text x="775" y="244" fill="#ffc06b" font-weight="700">hit ★</text>
+    <rect x="809" y="228" width="60" height="24" rx="5" fill="rgba(126,231,135,.12)" stroke="#7ee787" stroke-width="2"/><text x="839" y="244" fill="#7ee787" font-weight="700">sibling</text>
+  </g>
+  <path d="M785 226 Q798 206 803 188" stroke="#ff8fd8" stroke-width="2.4" stroke-dasharray="5 4" fill="none" marker-end="url(#arP)"/>
+  <path d="M796 188 Q782 208 778 224" stroke="#7ee787" stroke-width="2" fill="none" marker-end="url(#arG)"/>
+  <path d="M818 188 Q832 208 836 224" stroke="#7ee787" stroke-width="2" fill="none" marker-end="url(#arG)"/>
+  <text x="742" y="298" fill="#9aa7c5" font-size="12" text-anchor="middle">stops at the immediate parent</text>
+  <text x="742" y="322" fill="#9aa7c5" font-size="12" text-anchor="middle">collects every leaf beneath it</text>
+  <text x="742" y="342" fill="#5a6a8a" font-size="11.5" text-anchor="middle">repeated for each of the K hits · no iteration</text>
+  <line x1="896" y1="200" x2="928" y2="200" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- 4 output -->
+  <rect x="932" y="44" width="248" height="310" rx="14" fill="#131b30" stroke="#ffc06b" stroke-width="2"/>
+  <text x="1056" y="72" fill="#ffc06b" font-size="15" font-weight="700" text-anchor="middle">4 · re-rank → final chunk set</text>
+  <g font-size="12.5" text-anchor="middle">
+    <rect x="952" y="92" width="208" height="34" rx="7" fill="#2b2413" stroke="#ffc06b"/><text x="1056" y="114" fill="#eef3fb">hit chunk ★</text>
+    <rect x="952" y="136" width="208" height="34" rx="7" fill="rgba(126,231,135,.1)" stroke="#7ee787"/><text x="1056" y="158" fill="#7ee787">sibling chunk</text>
+    <rect x="952" y="180" width="208" height="34" rx="7" fill="rgba(126,231,135,.1)" stroke="#7ee787"/><text x="1056" y="202" fill="#7ee787">sibling chunk</text>
+  </g>
+  <text x="1056" y="252" fill="#9aa7c5" font-size="12.5" text-anchor="middle">leaf chunks only, re-ranked</text>
+  <text x="1056" y="276" fill="#5a6a8a" font-size="12" text-anchor="middle">parents · summaries never returned</text>
+  <text x="1056" y="308" fill="#ffc06b" font-size="12.5" text-anchor="middle">→ handed to the reader</text>
+  <!-- termination note -->
+  <text x="600" y="440" fill="#eef3fb" font-size="14.5" text-anchor="middle">a single pass, no iteration: each hit gets <tspan fill="#ff8fd8">one hop up</tspan> + <tspan fill="#7ee787">one leaf expansion</tspan>, then re-rank and stop · nothing is revisited</text>
+</svg>
+
+  </div>
+  <div class="foot">12 / 32</div>
+</div></section>
+<section class="pg" data-name="13_memwalker"><div class="slide">
+  <h1>MemWalker: LLM Navigation over Summary Trees</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st">② score-based, both ways</span><span class="sep">→</span><span class="st cur">③ LLM-guided instead</span><span class="sep">→</span><span class="st">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+
+<svg viewBox="0 0 1200 350">
+  <defs><marker id="arA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#ffc06b"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker></defs>
+  <!-- tree -->
+  <g stroke="#2a3a58" stroke-width="1.6">
+    <line x1="600" y1="76" x2="420" y2="160"/><line x1="600" y1="76" x2="780" y2="160"/>
+    <line x1="420" y1="192" x2="330" y2="270"/><line x1="420" y1="192" x2="510" y2="270"/>
+    <line x1="780" y1="192" x2="690" y2="270"/><line x1="780" y1="192" x2="870" y2="270"/>
+  </g>
+  <rect x="536" y="48" width="128" height="34" rx="11" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="600" y="70" fill="#c084fc" font-size="15" text-anchor="middle">root summary</text>
+  <rect x="356" y="160" width="128" height="34" rx="11" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="420" y="182" fill="#c084fc" font-size="15" text-anchor="middle">branch summary A</text>
+  <rect x="716" y="160" width="128" height="34" rx="11" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="780" y="182" fill="#c084fc" font-size="15" text-anchor="middle">branch summary B</text>
+  <g font-size="14" text-anchor="middle">
+    <rect x="278" y="270" width="104" height="32" rx="6" fill="#1b2640" stroke="#7cc4ff"/><text x="330" y="291" fill="#7cc4ff">segment 1</text>
+    <rect x="458" y="270" width="104" height="32" rx="6" fill="#1b2640" stroke="#7cc4ff"/><text x="510" y="291" fill="#7cc4ff">segment 2</text>
+    <rect x="638" y="270" width="104" height="32" rx="6" fill="#1b2640" stroke="#7cc4ff"/><text x="690" y="291" fill="#7cc4ff">segment 3</text>
+    <rect x="818" y="270" width="104" height="32" rx="6" fill="#1b2640" stroke="#7cc4ff"/><text x="870" y="291" fill="#7cc4ff">segment 4</text>
+  </g>
+  <!-- walk path -->
+  <path d="M566 86 Q480 118 442 154" stroke="#ffc06b" stroke-width="3" fill="none" marker-end="url(#arA)"/>
+  <path d="M400 198 Q360 232 338 264" stroke="#ffc06b" stroke-width="3" fill="none" marker-end="url(#arA)"/>
+  <path d="M362 268 Q400 232 410 202" stroke="#ff7b72" stroke-width="2.2" stroke-dasharray="6 5" fill="none" marker-end="url(#arG)"/>
+  <path d="M448 198 Q490 234 502 264" stroke="#ffc06b" stroke-width="3" fill="none" marker-end="url(#arA)"/>
+  <text x="300" y="238" fill="#ff7b72" font-size="14">wrong turn, back up</text>
+  <!-- llm -->
+  <rect x="80" y="60" width="150" height="80" rx="14" fill="#2b1a2b" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="155" y="95" fill="#ff8fd8" font-size="18" font-weight="700" text-anchor="middle">LLM</text>
+  <text x="155" y="122" fill="#9aa7c5" font-size="13.5" text-anchor="middle">reads child summaries, picks one</text>
+  <line x1="234" y1="100" x2="520" y2="70" stroke="#5a6a8a" stroke-width="1.6" stroke-dasharray="4 5" marker-end="url(#arG)"/>
+  <rect x="1010" y="60" width="46" height="28" rx="14" fill="#2b2413" stroke="#ffc06b"/>
+  <text x="1033" y="79" fill="#ffc06b" font-size="15" text-anchor="middle" font-family="ui-monospace,monospace">q</text>
+  <line x1="1008" y1="74" x2="672" y2="66" stroke="#5a6a8a" stroke-width="1.6" stroke-dasharray="4 5" marker-end="url(#arG)"/>
+  <text x="600" y="340" fill="#5a6a8a" font-size="15" text-anchor="middle">original goal: reading documents longer than the reader's context window</text>
+</svg>
+<ul>
+  <li><b>The traversal goes to an LLM</b> · read summaries, reason, descend · back up on a wrong turn</li>
+  <li>The cost · <b>several LLM calls per question</b> (one per step)</li>
+</ul>
+
+
+  </div>
+  <div class="foot">13 / 32</div>
+</div></section>
+<section class="pg" data-name="14_memwalker2"><div class="slide">
+  <h1>MemWalker: Navigation Procedure</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st">② score-based, both ways</span><span class="sep">→</span><span class="st cur">③ LLM-guided instead</span><span class="sep">→</span><span class="st">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+
+<svg viewBox="0 0 1200 475">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+    <marker id="arR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#ff7b72"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#7ee787"/></marker>
+    <marker id="arA9" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#ffc06b"/></marker></defs>
+  <!-- 0 build -->
+  <rect x="20" y="44" width="250" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="145" y="72" fill="#c084fc" font-size="14.5" font-weight="700" text-anchor="middle">0 · build the memory tree</text>
+  <g stroke="#3a4a6a" stroke-width="1.4">
+    <line x1="90" y1="252" x2="105" y2="212"/><line x1="145" y1="252" x2="125" y2="212"/>
+    <line x1="200" y1="252" x2="180" y2="212"/><line x1="252" y1="252" x2="198" y2="212"/>
+    <line x1="115" y1="184" x2="138" y2="140"/><line x1="188" y1="184" x2="156" y2="140"/>
+  </g>
+  <g font-size="10.5" text-anchor="middle">
+    <rect x="62" y="252" width="52" height="22" rx="4" fill="#1b2640" stroke="#7cc4ff"/><text x="88" y="267" fill="#7cc4ff">seg 1</text>
+    <rect x="120" y="252" width="52" height="22" rx="4" fill="#1b2640" stroke="#7cc4ff"/><text x="146" y="267" fill="#7cc4ff">seg 2</text>
+    <rect x="178" y="252" width="52" height="22" rx="4" fill="#1b2640" stroke="#7cc4ff"/><text x="204" y="267" fill="#7cc4ff">seg 3</text>
+    <rect x="236" y="252" width="26" height="22" rx="4" fill="#101828" stroke="#3a4a6a"/><text x="249" y="267" fill="#5a6a8a">…</text>
+    <rect x="84" y="186" width="62" height="24" rx="9" fill="#1b2640" stroke="#c084fc"/><text x="115" y="202" fill="#c084fc">summ A</text>
+    <rect x="158" y="186" width="62" height="24" rx="9" fill="#1b2640" stroke="#c084fc"/><text x="189" y="202" fill="#c084fc">summ B</text>
+    <rect x="114" y="116" width="66" height="24" rx="9" fill="#1b2640" stroke="#c084fc" stroke-width="2"/><text x="147" y="132" fill="#c084fc" font-weight="700">root</text>
+  </g>
+  <text x="145" y="308" fill="#9aa7c5" font-size="12" text-anchor="middle">summ = LLM(children) · recursed to a root</text>
+  <text x="145" y="332" fill="#5a6a8a" font-size="11.5" text-anchor="middle">offline · query-independent</text>
+  <line x1="274" y1="200" x2="306" y2="200" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- 1 triage: traversal shown on the tree -->
+  <rect x="310" y="44" width="296" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="458" y="72" fill="#7cc4ff" font-size="14.5" font-weight="700" text-anchor="middle">1 · branch selection at every node, from the root</text>
+  <g stroke="#2a3a58" stroke-width="1.4">
+    <line x1="458" y1="116" x2="382" y2="168"/><line x1="458" y1="116" x2="534" y2="168"/>
+    <line x1="382" y1="192" x2="356" y2="240"/><line x1="382" y1="192" x2="418" y2="240"/>
+    <line x1="534" y1="192" x2="508" y2="240"/><line x1="534" y1="192" x2="572" y2="240"/>
+  </g>
+  <rect x="425" y="92" width="66" height="24" rx="9" fill="#2b1a2b" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="458" y="108" fill="#ff8fd8" font-size="11" font-weight="700" text-anchor="middle">root · LLM</text>
+  <rect x="346" y="168" width="72" height="24" rx="9" fill="#1b2640" stroke="#c084fc"/>
+  <text x="382" y="184" fill="#c084fc" font-size="11" text-anchor="middle">summ A</text>
+  <rect x="498" y="168" width="72" height="24" rx="9" fill="#1b2640" stroke="#c084fc"/>
+  <text x="534" y="184" fill="#c084fc" font-size="11" text-anchor="middle">summ B</text>
+  <g font-size="10" text-anchor="middle">
+    <rect x="330" y="240" width="52" height="22" rx="4" fill="#101828" stroke="#3a4a6a"/><text x="356" y="255" fill="#5a6a8a">seg 1</text>
+    <rect x="392" y="240" width="52" height="22" rx="4" fill="#101828" stroke="#3a4a6a"/><text x="418" y="255" fill="#5a6a8a">seg 2</text>
+    <rect x="482" y="240" width="52" height="22" rx="4" fill="#101828" stroke="#3a4a6a"/><text x="508" y="255" fill="#5a6a8a">seg 3</text>
+    <rect x="546" y="240" width="52" height="22" rx="4" fill="#101828" stroke="#3a4a6a"/><text x="572" y="255" fill="#5a6a8a">seg 4</text>
+  </g>
+  <path d="M478 118 Q510 140 526 164" stroke="#ffc06b" stroke-width="2.6" fill="none" marker-end="url(#arA9)"/>
+  <text x="556" y="138" fill="#ffc06b" font-size="10.5">enter</text>
+  <text x="458" y="290" fill="#9aa7c5" font-size="11.5" text-anchor="middle">sees the children's summaries + the query</text>
+  <g font-family="ui-monospace,monospace" font-size="11.5" text-anchor="middle">
+    <text x="458" y="314" fill="#ff8fd8">Reasoning: B mentions the war…</text>
+    <text x="458" y="334" fill="#ffc06b">Action: 1 → enter summ B</text>
+  </g>
+  <text x="458" y="356" fill="#5a6a8a" font-size="10.5" text-anchor="middle">menu at a non-leaf: enter child 0…N <tspan fill="#ff7b72">or revert</tspan> · one LLM call per node</text>
+  <path d="M566 44 C566 6, 350 6, 350 40" stroke="#ffc06b" stroke-width="1.8" stroke-dasharray="6 4" fill="none" marker-end="url(#arA9)"/>
+  <text x="458" y="30" fill="#ffc06b" font-size="11" text-anchor="middle">↻ not a leaf → select again, one level down</text>
+  <line x1="610" y1="200" x2="642" y2="200" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="626" y="222" fill="#5a6a8a" font-size="10" text-anchor="middle">at a</text>
+  <text x="626" y="234" fill="#5a6a8a" font-size="10" text-anchor="middle">leaf</text>
+  <!-- 2 leaf: outcomes shown on the tree -->
+  <rect x="646" y="44" width="296" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="794" y="72" fill="#ffc06b" font-size="14.5" font-weight="700" text-anchor="middle">2 · at a leaf: read the real segment</text>
+  <g stroke="#2a3a58" stroke-width="1.4">
+    <line x1="794" y1="116" x2="718" y2="168"/><line x1="794" y1="116" x2="870" y2="168"/>
+    <line x1="718" y1="192" x2="692" y2="240"/><line x1="718" y1="192" x2="754" y2="240"/>
+    <line x1="870" y1="192" x2="844" y2="240"/><line x1="870" y1="192" x2="908" y2="240"/>
+  </g>
+  <rect x="761" y="92" width="66" height="24" rx="9" fill="#1b2640" stroke="#c084fc"/>
+  <text x="794" y="108" fill="#c084fc" font-size="11" text-anchor="middle">root</text>
+  <rect x="682" y="168" width="72" height="24" rx="9" fill="#1b2640" stroke="#c084fc"/>
+  <text x="718" y="184" fill="#c084fc" font-size="11" text-anchor="middle">summ A</text>
+  <rect x="834" y="168" width="72" height="24" rx="9" fill="#2b1a2b" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="870" y="184" fill="#ff8fd8" font-size="11" text-anchor="middle">summ B</text>
+  <g font-size="10" text-anchor="middle">
+    <rect x="666" y="240" width="52" height="22" rx="4" fill="#101828" stroke="#3a4a6a"/><text x="692" y="255" fill="#5a6a8a">seg 1</text>
+    <rect x="728" y="240" width="52" height="22" rx="4" fill="#101828" stroke="#3a4a6a"/><text x="754" y="255" fill="#5a6a8a">seg 2</text>
+    <rect x="818" y="240" width="52" height="22" rx="4" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/><text x="844" y="255" fill="#ffc06b" font-weight="700">seg 3 ★</text>
+    <rect x="882" y="240" width="52" height="22" rx="4" fill="#101828" stroke="#3a4a6a"/><text x="908" y="255" fill="#5a6a8a">seg 4</text>
+  </g>
+  <path d="M814 118 Q846 140 862 164" stroke="#ffc06b" stroke-width="2" stroke-opacity=".5" fill="none"/>
+  <path d="M862 194 Q854 216 848 236" stroke="#ffc06b" stroke-width="2.6" fill="none" marker-end="url(#arA9)"/>
+  <text x="940" y="146" fill="#c084fc" font-size="10.5" text-anchor="end">[working memory]</text>
+  <text x="940" y="160" fill="#c084fc" font-size="10.5" text-anchor="end">rides the path</text>
+  <path d="M844 264 L844 286" stroke="#7ee787" stroke-width="2.2" marker-end="url(#arG)"/>
+  <rect x="788" y="290" width="112" height="26" rx="8" fill="rgba(126,231,135,.09)" stroke="#7ee787"/>
+  <text x="844" y="307" fill="#7ee787" font-size="11.5" font-weight="700" text-anchor="middle">commit −2 → answer</text>
+  <text x="794" y="340" fill="#9aa7c5" font-size="11.5" text-anchor="middle">the leaf holds the full segment, not a summary</text>
+  <text x="794" y="360" fill="#5a6a8a" font-size="10.5" text-anchor="middle">commit ends the walk · revert climbs back and enters a sibling</text>
+  <path d="M760 374 L760 404 L380 404 L380 378" stroke="#ff7b72" stroke-width="1.8" stroke-dasharray="6 4" fill="none" marker-end="url(#arR)"/>
+  <path d="M520 374 L520 404" stroke="#ff7b72" stroke-width="1.8" stroke-dasharray="6 4" fill="none"/>
+  <text x="640" y="394" fill="#ff7b72" font-size="11" text-anchor="middle">revert −1 → select again at the parent</text>
+  <line x1="946" y1="200" x2="978" y2="200" stroke="#7ee787" stroke-width="2.5" marker-end="url(#arG)"/>
+  <!-- output -->
+  <rect x="982" y="44" width="198" height="330" rx="14" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="1081" y="72" fill="#7ee787" font-size="14.5" font-weight="700" text-anchor="middle">output · the answer</text>
+  <rect x="1000" y="92" width="162" height="66" rx="10" fill="rgba(126,231,135,.07)" stroke="#7ee787"/>
+  <text x="1081" y="119" fill="#eef3fb" font-size="13" text-anchor="middle">answer text</text>
+  <text x="1081" y="142" fill="#9aa7c5" font-size="11.5" text-anchor="middle">+ the path as explanation</text>
+  <text x="1081" y="196" fill="#9aa7c5" font-size="12.5" text-anchor="middle">a reader, not a retriever:</text>
+  <text x="1081" y="218" fill="#9aa7c5" font-size="12.5" text-anchor="middle">no chunk set is handed</text>
+  <text x="1081" y="240" fill="#9aa7c5" font-size="12.5" text-anchor="middle">to a separate model</text>
+  <!-- termination -->
+  <text x="600" y="440" fill="#eef3fb" font-size="14" text-anchor="middle">terminates when the LLM <tspan fill="#7ee787">commits at a leaf</tspan>, or after 3 unparsable replies (<tspan fill="#ff7b72">"no answer"</tspan>) · a single path, <tspan fill="#ffc06b">no beam</tspan></text>
+  <text x="600" y="464" fill="#9aa7c5" font-size="12.5" text-anchor="middle">not tool-calling: two zero-shot prompts (branch-selection · leaf) fix an output format · the LLM writes Reasoning / Action as plain text, parsed each step</text>
+</svg>
+
+
+  </div>
+  <div class="foot">14 / 32</div>
+</div></section>
+<section class="pg" data-name="15_pageindex"><div class="slide">
+  <h1>PageIndex: Retrieval by Reasoning over the Hierarchy</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st">② score-based, both ways</span><span class="sep">→</span><span class="st cur">③ LLM-guided instead</span><span class="sep">→</span><span class="st">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+<svg viewBox="0 0 1200 470">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+    <marker id="arA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#ffc06b"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#7ee787"/></marker>
+  </defs>
+
+  <!-- ================= A · the hierarchy index ================= -->
+  <text x="150" y="42" fill="#c084fc" font-size="13.5" font-weight="700" text-anchor="middle">the hierarchy index · fetched whole</text>
+  <rect x="20" y="52" width="260" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="34" y="74" fill="#5a6a8a" font-size="9" font-family="ui-monospace,monospace">title</text>
+  <text x="266" y="74" fill="#5a6a8a" font-size="9" font-family="ui-monospace,monospace" text-anchor="end">pages</text>
+  <line x1="32" y1="82" x2="268" y2="82" stroke="#2a3a58"/>
+  <rect x="30" y="164" width="240" height="20" rx="4" fill="rgba(255,192,107,.12)" stroke="#ffc06b" stroke-opacity=".6"/>
+  <rect x="30" y="260" width="240" height="20" rx="4" fill="rgba(255,192,107,.12)" stroke="#ffc06b" stroke-opacity=".6"/>
+  <g font-size="10" font-family="ui-monospace,monospace">
+    <text x="36" y="104" fill="#9aa7c5">X100 User Manual</text><text x="266" y="104" fill="#5a6a8a" text-anchor="end">1-52</text>
+    <text x="48" y="128" fill="#5a6a8a">1. Introduction</text><text x="266" y="128" fill="#5a6a8a" text-anchor="end">1-4</text>
+    <text x="48" y="152" fill="#9aa7c5">2. Safety</text><text x="266" y="152" fill="#5a6a8a" text-anchor="end">5-9</text>
+    <text x="60" y="178" fill="#ffc06b">2.1 Operating Env.</text><text x="266" y="178" fill="#ffc06b" text-anchor="end">7-8</text>
+    <text x="48" y="202" fill="#9aa7c5">5. Maintenance</text><text x="266" y="202" fill="#5a6a8a" text-anchor="end">30-44</text>
+    <text x="60" y="226" fill="#5a6a8a">5.1 Cleaning</text><text x="266" y="226" fill="#5a6a8a" text-anchor="end">30-33</text>
+    <text x="60" y="250" fill="#5a6a8a">5.2 Filter</text><text x="266" y="250" fill="#5a6a8a" text-anchor="end">34-37</text>
+    <text x="60" y="274" fill="#ffc06b">5.3 Battery</text><text x="266" y="274" fill="#ffc06b" text-anchor="end">38-41</text>
+    <text x="60" y="298" fill="#5a6a8a">5.4 Firmware</text><text x="266" y="298" fill="#5a6a8a" text-anchor="end">42-44</text>
+    <text x="48" y="322" fill="#5a6a8a">6. FAQ</text><text x="266" y="322" fill="#5a6a8a" text-anchor="end">45-48</text>
+  </g>
+  <text x="150" y="350" fill="#9aa7c5" font-size="10" text-anchor="middle">every node carries its own page range</text>
+  <text x="150" y="368" fill="#5a6a8a" font-size="10" text-anchor="middle">a parent range = union of its children</text>
+
+  <!-- ================= B · step 1 : reason -> which pages ================= -->
+  <text x="471" y="42" fill="#7cc4ff" font-size="13.5" font-weight="700" text-anchor="middle">1 · reason over it → which pages to read</text>
+  <rect x="306" y="52" width="330" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="322" y="68" width="52" height="22" rx="11" fill="#2b1a2b" stroke="#ff8fd8"/>
+  <text x="348" y="83" fill="#ff8fd8" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">LLM</text>
+  <text x="384" y="83" fill="#9aa7c5" font-size="10">sees titles + ranges · no page text yet</text>
+  <text x="322" y="108" fill="#ff8fd8" font-size="10" font-family="ui-monospace,monospace">Thinking: intervals live under Maintenance;</text>
+  <text x="322" y="124" fill="#ff8fd8" font-size="10" font-family="ui-monospace,monospace">heat may matter → check Operating Env. too</text>
+  <text x="352" y="152" fill="#5a6a8a" font-size="9.5" text-anchor="middle">picks titles</text>
+  <text x="556" y="152" fill="#5a6a8a" font-size="9.5" text-anchor="middle">copies their stored range</text>
+  <rect x="322" y="160" width="136" height="26" rx="6" fill="rgba(255,192,107,.1)" stroke="#ffc06b"/>
+  <text x="332" y="178" fill="#eef3fb" font-size="10" font-family="ui-monospace,monospace">2.1 Operating Env.</text>
+  <line x1="462" y1="173" x2="506" y2="173" stroke="#ffc06b" stroke-width="1.6" marker-end="url(#arA)"/>
+  <rect x="510" y="160" width="92" height="26" rx="6" fill="#0f1525" stroke="#ffc06b"/>
+  <text x="556" y="178" fill="#ffc06b" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">7-8</text>
+  <rect x="322" y="198" width="136" height="26" rx="6" fill="rgba(255,192,107,.1)" stroke="#ffc06b"/>
+  <text x="332" y="216" fill="#eef3fb" font-size="10" font-family="ui-monospace,monospace">5.3 Battery</text>
+  <line x1="462" y1="211" x2="506" y2="211" stroke="#ffc06b" stroke-width="1.6" marker-end="url(#arA)"/>
+  <rect x="510" y="198" width="92" height="26" rx="6" fill="#0f1525" stroke="#ffc06b"/>
+  <text x="556" y="216" fill="#ffc06b" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">38-41</text>
+  <path d="M506 173 Q474 212 472 256" stroke="#9aa7c5" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+  <path d="M556 226 L556 258" stroke="#9aa7c5" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+  <rect x="330" y="262" width="282" height="34" rx="8" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+  <text x="471" y="284" fill="#eef3fb" font-size="11.5" text-anchor="middle" font-family="ui-monospace,monospace">get_page_content(<tspan fill="#ffc06b">"7-8, 38-41"</tspan>)</text>
+  <text x="471" y="320" fill="#9aa7c5" font-size="10" text-anchor="middle">the numbers are <tspan fill="#eef3fb" font-weight="700">copied from the index</tspan>, never guessed</text>
+  <text x="471" y="338" fill="#5a6a8a" font-size="10" text-anchor="middle">one call carries several ranges = several sections</text>
+  <text x="471" y="364" fill="#5a6a8a" font-size="9.5" text-anchor="middle">choosing a parent instead (5. Maintenance → 30-44) pulls every subsection</text>
+  <path d="M276 172 Q292 168 318 170" stroke="#ffc06b" stroke-width="1.3" stroke-dasharray="3 3" fill="none" marker-end="url(#arA)"/>
+  <path d="M276 268 Q296 250 318 214" stroke="#ffc06b" stroke-width="1.3" stroke-dasharray="3 3" fill="none" marker-end="url(#arA)"/>
+
+  <!-- ================= C · step 2 : read, then judge ================= -->
+  <text x="789" y="42" fill="#ffc06b" font-size="13.5" font-weight="700" text-anchor="middle">2 · read those pages, then judge</text>
+  <rect x="662" y="52" width="254" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="706" y="72" width="188" height="138" rx="4" fill="#0f1525" stroke="#2a3a58"/>
+  <text x="800" y="86" fill="#5a6a8a" font-size="9" text-anchor="middle" font-family="ui-monospace,monospace">p.7-8</text>
+  <rect x="684" y="88" width="188" height="138" rx="4" fill="#101828" stroke="#3a4a6a"/>
+  <text x="694" y="106" fill="#5a6a8a" font-size="9" font-family="ui-monospace,monospace">p.38-41 · 5.3 Battery</text>
+  <rect x="694" y="114" width="96" height="4" rx="2" fill="#7cc4ff" fill-opacity=".5"/>
+  <rect x="694" y="126" width="150" height="3.5" rx="1.7" fill="#2a3a58"/>
+  <rect x="694" y="136" width="132" height="3.5" rx="1.7" fill="#2a3a58"/>
+  <rect x="694" y="150" width="160" height="60" rx="3" fill="#0f1525" stroke="#3a4a6a"/>
+  <line x1="694" y1="178" x2="854" y2="178" stroke="#3a4a6a"/>
+  <line x1="784" y1="150" x2="784" y2="210" stroke="#3a4a6a"/>
+  <text x="702" y="170" fill="#5a6a8a" font-size="9">fan</text>
+  <text x="792" y="170" fill="#5a6a8a" font-size="9">12 mo</text>
+  <rect x="785" y="179" width="68" height="30" fill="rgba(255,192,107,.18)"/>
+  <text x="702" y="199" fill="#eef3fb" font-size="9" font-weight="700">battery</text>
+  <text x="792" y="199" fill="#ffc06b" font-size="9.5" font-weight="700">6 mo</text>
+  <text x="789" y="248" fill="#eef3fb" font-size="10.5" text-anchor="middle">found: battery → 6 months</text>
+  <text x="789" y="266" fill="#9aa7c5" font-size="10.5" text-anchor="middle">and from p.7-8 · halve it in high heat</text>
+  <text x="789" y="300" fill="#eef3fb" font-size="12" font-weight="700" text-anchor="middle">enough to answer?</text>
+  <text x="789" y="322" fill="#5a6a8a" font-size="10" text-anchor="middle">the LLM itself decides · no scorer</text>
+  <text x="789" y="352" fill="#5a6a8a" font-size="9.5" text-anchor="middle">it may also follow a reference it just read</text>
+  <text x="789" y="368" fill="#5a6a8a" font-size="9.5" text-anchor="middle">("see Appendix G") back into step 1</text>
+
+  <!-- ================= D · output ================= -->
+  <text x="1061" y="42" fill="#7ee787" font-size="13.5" font-weight="700" text-anchor="middle">output</text>
+  <rect x="942" y="52" width="238" height="330" rx="14" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="1061" y="80" fill="#7ee787" font-size="11" text-anchor="middle">enough → answer</text>
+  <rect x="962" y="92" width="198" height="62" rx="10" fill="rgba(126,231,135,.07)" stroke="#7ee787"/>
+  <text x="1061" y="118" fill="#eef3fb" font-size="12" text-anchor="middle">"every 6 months,</text>
+  <text x="1061" y="138" fill="#7ee787" font-size="12" text-anchor="middle">3 in high heat"</text>
+  <text x="1061" y="186" fill="#9aa7c5" font-size="11" text-anchor="middle">+ the sections it opened</text>
+  <text x="1061" y="208" fill="#c084fc" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">5.3 Battery · 2.1 Operating Env.</text>
+  <text x="1061" y="230" fill="#5a6a8a" font-size="10" text-anchor="middle">as citations</text>
+  <text x="1061" y="286" fill="#5a6a8a" font-size="10" text-anchor="middle">sections, not chunks</text>
+  <text x="1061" y="306" fill="#5a6a8a" font-size="10" text-anchor="middle">a reader, not a retriever</text>
+
+  <!-- arrows between zones -->
+  <line x1="640" y1="200" x2="656" y2="200" stroke="#9aa7c5" stroke-width="2.2" marker-end="url(#ar)"/>
+  <line x1="920" y1="200" x2="936" y2="200" stroke="#7ee787" stroke-width="2.2" marker-end="url(#arG)"/>
+  <!-- the loop -->
+  <path d="M789 384 L789 410 L471 410 L471 386" stroke="#ffc06b" stroke-width="1.8" stroke-dasharray="6 4" fill="none" marker-end="url(#arA)"/>
+  <text x="630" y="404" fill="#ffc06b" font-size="10.5" text-anchor="middle">not enough ↻ pick other titles, call again</text>
+  <text x="600" y="446" fill="#9aa7c5" font-size="11" text-anchor="middle">state between rounds = the <tspan fill="#eef3fb" font-weight="700">tool history already in the prompt</tspan> · what it read stays there, there is no note store</text>
+</svg>
+<ul>
+  <li><b>Reasoning, not similarity</b> · an LLM matches titles, page numbers are looked up · zero embeddings</li>
+</ul>
+
+  </div>
+  <div class="foot">15 / 32</div>
+</div></section>
+<section class="pg" data-name="16_rdr2"><div class="slide">
+  <h1>RDR2: Routing over Document Structure</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st">② score-based, both ways</span><span class="sep">→</span><span class="st">③ LLM-guided instead</span><span class="sep">→</span><span class="st cur">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+<svg viewBox="0 0 1200 470">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+    <marker id="arA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#ffc06b"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#7ee787"/></marker>
+  </defs>
+
+  <!-- pipeline -->
+  <g font-size="11.5">
+    <rect x="286" y="14" width="132" height="28" rx="8" fill="#1b2640" stroke="#3a4a6a"/>
+    <text x="352" y="33" fill="#9aa7c5" text-anchor="middle">Retrieve top-k</text>
+    <line x1="422" y1="28" x2="438" y2="28" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#ar)"/>
+    <rect x="442" y="14" width="152" height="28" rx="8" fill="rgba(255,192,107,.12)" stroke="#ffc06b" stroke-width="2"/>
+    <text x="518" y="33" fill="#ffc06b" font-weight="700" text-anchor="middle">DocumentRoute</text>
+    <line x1="598" y1="28" x2="614" y2="28" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#ar)"/>
+    <rect x="618" y="14" width="112" height="28" rx="8" fill="#1b2640" stroke="#3a4a6a"/>
+    <text x="674" y="33" fill="#9aa7c5" text-anchor="middle">Read</text>
+    <text x="746" y="33" fill="#5a6a8a" font-size="10">one document at a time, in a loop</text>
+  </g>
+
+  <!-- ============ BEFORE ============ -->
+  <text x="215" y="66" fill="#9aa7c5" font-size="13" font-weight="700" text-anchor="middle">the document tree as it stands now</text>
+  <rect x="20" y="76" width="390" height="304" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <g font-family="ui-monospace,monospace" font-size="11">
+    <text x="40" y="112" fill="#c084fc">0: =Wonder Woman in other media=</text>
+    <text x="56" y="138" fill="#c084fc">2: ==Live action==</text>
+    <path d="M60 158 l0,9 l7,-4.5 z" fill="#5a6a8a" transform="rotate(90 63.5 162.5)"/>
+    <text x="74" y="166" fill="#ffc06b">3: ===Theatrical releases===</text>
+    <rect x="92" y="176" width="286" height="24" rx="5" fill="rgba(124,196,255,.1)" stroke="#7cc4ff"/>
+    <text x="100" y="192" fill="#7cc4ff">4: Gal Gadot portrays Diana…</text>
+    <path d="M60 210 l0,9 l7,-4.5 z" fill="#5a6a8a"/>
+    <text x="74" y="220" fill="#5a6a8a">5: ===Television===</text>
+    <path d="M44 240 l0,9 l7,-4.5 z" fill="#5a6a8a"/>
+    <text x="58" y="250" fill="#5a6a8a">8: ==Animation==</text>
+    <path d="M44 270 l0,9 l7,-4.5 z" fill="#5a6a8a"/>
+    <text x="58" y="280" fill="#5a6a8a">10: ==Video games==</text>
+  </g>
+  <text x="215" y="318" fill="#9aa7c5" font-size="10.5" text-anchor="middle">every heading is always there · only passages open and close</text>
+  <text x="215" y="338" fill="#5a6a8a" font-size="10.5" text-anchor="middle">open now: the passage retrieval landed on, plus its siblings</text>
+  <text x="215" y="362" fill="#5a6a8a" font-size="10" text-anchor="middle">▸ collapsed heading    ▾ opened heading</text>
+  <line x1="414" y1="220" x2="428" y2="220" stroke="#9aa7c5" stroke-width="2.4" marker-end="url(#ar)"/>
+
+  <!-- ============ ROUTER ============ -->
+  <text x="600" y="66" fill="#ff8fd8" font-size="13" font-weight="700" text-anchor="middle">one step of the router</text>
+  <rect x="432" y="76" width="336" height="304" rx="14" fill="#131b30" stroke="#ff8fd8" stroke-width="2"/>
+  <rect x="450" y="92" width="300" height="26" rx="8" fill="rgba(255,192,107,.1)" stroke="#ffc06b" stroke-width="1.6"/>
+  <text x="600" y="110" fill="#ffc06b" font-size="11" font-weight="700" text-anchor="middle">★ the router is the only trained part</text>
+  <text x="600" y="136" fill="#9aa7c5" font-size="10.5" text-anchor="middle">reads the question + the tree on the left</text>
+  <g font-size="11" font-family="ui-monospace,monospace">
+    <rect x="450" y="150" width="80" height="24" rx="5" fill="rgba(192,132,252,.14)" stroke="#c084fc"/>
+    <text x="490" y="166" fill="#c084fc" text-anchor="middle">[EXP] 5</text>
+    <text x="542" y="160" fill="#eef3fb" font-size="10.5">open heading 5,</text>
+    <text x="542" y="174" fill="#9aa7c5" font-size="10.5">close what was open</text>
+    <text x="756" y="167" fill="#c084fc" font-size="9" font-weight="700" letter-spacing="1.6" text-anchor="end">EXPLORE</text>
+    <rect x="450" y="192" width="80" height="24" rx="5" fill="rgba(126,231,135,.14)" stroke="#7ee787"/>
+    <text x="490" y="208" fill="#7ee787" text-anchor="middle">[ANS] 4</text>
+    <text x="542" y="202" fill="#eef3fb" font-size="10.5">take passage 4 out,</text>
+    <text x="542" y="216" fill="#9aa7c5" font-size="10.5">the tree is untouched</text>
+    <text x="756" y="209" fill="#7ee787" font-size="9" font-weight="700" letter-spacing="1.6" text-anchor="end">HARVEST</text>
+    <rect x="450" y="234" width="80" height="24" rx="5" fill="rgba(255,123,114,.08)" stroke="#ff7b72" stroke-opacity=".5"/>
+    <text x="490" y="250" fill="#ff7b72" fill-opacity=".6" text-anchor="middle">[REF] −1</text>
+    <text x="542" y="244" fill="#5a6a8a" font-size="10.5">not chosen this step —</text>
+    <text x="542" y="258" fill="#5a6a8a" font-size="10.5">would end this document</text>
+    <text x="756" y="251" fill="#ff7b72" fill-opacity=".7" font-size="9" font-weight="700" letter-spacing="1.6" text-anchor="end">STOP</text>
+  </g>
+  <text x="600" y="288" fill="#5a6a8a" font-size="10.5" text-anchor="middle">an action is ⟨tag, node id⟩ · several per step</text>
+  <text x="600" y="312" fill="#c084fc" font-size="10.5" text-anchor="middle">only [EXP] rewrites the tree →</text>
+  <text x="600" y="334" fill="#7ee787" font-size="10.5" text-anchor="middle">only [ANS] writes to the pile below ↓</text>
+  <line x1="772" y1="220" x2="786" y2="220" stroke="#c084fc" stroke-width="2.4" marker-end="url(#ar)"/>
+
+  <!-- ============ AFTER ============ -->
+  <text x="985" y="66" fill="#c084fc" font-size="13" font-weight="700" text-anchor="middle">after [EXP] 5 · the same tree, rewritten</text>
+  <rect x="790" y="76" width="390" height="304" rx="14" fill="#131b30" stroke="#c084fc" stroke-width="2"/>
+  <g font-family="ui-monospace,monospace" font-size="11">
+    <text x="810" y="112" fill="#c084fc">0: =Wonder Woman in other media=</text>
+    <text x="826" y="138" fill="#c084fc">2: ==Live action==</text>
+    <path d="M830 158 l0,9 l7,-4.5 z" fill="#5a6a8a"/>
+    <text x="844" y="166" fill="#5a6a8a">3: ===Theatrical releases===</text>
+    <text x="1084" y="166" fill="#ff7b72" font-size="9.5">← closed</text>
+    <path d="M830 186 l0,9 l7,-4.5 z" fill="#ffc06b" transform="rotate(90 833.5 190.5)"/>
+    <text x="844" y="194" fill="#ffc06b">5: ===Television===</text>
+    <text x="1084" y="194" fill="#7ee787" font-size="9.5">← opened</text>
+    <rect x="862" y="204" width="286" height="24" rx="5" fill="rgba(126,231,135,.1)" stroke="#7ee787"/>
+    <text x="870" y="220" fill="#7ee787">6: Cathy Lee Crosby portrays…</text>
+    <rect x="862" y="232" width="286" height="24" rx="5" fill="rgba(126,231,135,.1)" stroke="#7ee787"/>
+    <text x="870" y="248" fill="#7ee787">7: Lynda Carter portrays…</text>
+    <path d="M814 268 l0,9 l7,-4.5 z" fill="#5a6a8a"/>
+    <text x="828" y="278" fill="#5a6a8a">8: ==Animation==</text>
+    <path d="M814 292 l0,9 l7,-4.5 z" fill="#5a6a8a"/>
+    <text x="828" y="302" fill="#5a6a8a">10: ==Video games==</text>
+  </g>
+  <text x="985" y="334" fill="#eef3fb" font-size="10.5" text-anchor="middle">identical headings · one window of text swapped for another</text>
+  <text x="985" y="356" fill="#5a6a8a" font-size="10.5" text-anchor="middle">the tree never grows, so the prompt stays a fixed size</text>
+
+  <!-- ============ what [ANS] harvests, and where it ends up ============ -->
+  <path d="M480 344 L480 404" stroke="#7ee787" stroke-width="1.8" fill="none" marker-end="url(#arG)"/>
+  <rect x="20" y="396" width="880" height="60" rx="12" fill="#0f1525" stroke="#7ee787"/>
+  <text x="38" y="418" fill="#7ee787" font-size="11" font-weight="700">kept passages</text>
+  <text x="38" y="436" fill="#5a6a8a" font-size="9.5">outside the tree</text>
+  <text x="168" y="421" fill="#9aa7c5" font-size="10">what [ANS] pulls out of the tree,</text>
+  <text x="168" y="437" fill="#5a6a8a" font-size="10">step after step — the tree never holds it</text>
+  <rect x="440" y="412" width="190" height="28" rx="7" fill="rgba(126,231,135,.1)" stroke="#7ee787"/>
+  <text x="450" y="431" fill="#7ee787" font-size="10.5" font-family="ui-monospace,monospace">4: Gal Gadot portrays…</text>
+  <rect x="638" y="412" width="122" height="28" rx="7" fill="#0a0e1a" stroke="#3a4a6a" stroke-dasharray="4 3"/>
+  <text x="648" y="431" fill="#5a6a8a" font-size="10.5" font-family="ui-monospace,monospace">6, 7 next</text>
+  <text x="772" y="431" fill="#5a6a8a" font-size="10">grows until [REF]</text>
+  <line x1="906" y1="426" x2="926" y2="426" stroke="#7ee787" stroke-width="2" marker-end="url(#arG)"/>
+  <rect x="930" y="408" width="130" height="36" rx="10" fill="#2b1a2b" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="995" y="424" fill="#ff8fd8" font-size="11.5" font-weight="700" text-anchor="middle">Reader</text>
+  <text x="995" y="438" fill="#9aa7c5" font-size="9" text-anchor="middle">one call · q + every pile</text>
+  <line x1="1064" y1="426" x2="1084" y2="426" stroke="#ff8fd8" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="1092" y="430" fill="#eef3fb" font-size="11.5">answer</text>
+</svg>
+
+  </div>
+  <div class="foot">16 / 32</div>
+</div></section>
+<section class="pg" data-name="17_rdr2_train"><div class="slide">
+  <h1>RDR2: Training the Router</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st">② score-based, both ways</span><span class="sep">→</span><span class="st">③ LLM-guided instead</span><span class="sep">→</span><span class="st cur">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+<svg viewBox="0 0 1200 420">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#7ee787"/></marker>
+  </defs>
+
+  <rect x="24" y="24" width="1152" height="36" rx="10" fill="rgba(255,123,114,.07)" stroke="#ff7b72"/>
+  <text x="600" y="47" fill="#eef3fb" font-size="13" text-anchor="middle">the obstacle · standard RAG data gives a question and an answer, but <tspan fill="#ff7b72" font-weight="700">no routing trajectory to imitate</tspan></text>
+
+  <text x="600" y="88" fill="#7ee787" font-size="13.5" font-weight="700" text-anchor="middle">action curation · manufacture the trajectories from the question alone</text>
+
+  <!-- step 1 -->
+  <rect x="24" y="102" width="200" height="150" rx="12" fill="#131b30" stroke="#2a3a58"/>
+  <text x="124" y="126" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">① a question</text>
+  <rect x="48" y="140" width="152" height="46" rx="9" fill="#2b2413" stroke="#ffc06b"/>
+  <text x="124" y="160" fill="#eef3fb" font-size="11" text-anchor="middle">"who played</text>
+  <text x="124" y="176" fill="#eef3fb" font-size="11" text-anchor="middle">wonder woman?"</text>
+  <text x="124" y="208" fill="#7ee787" font-size="10.5" text-anchor="middle">the answer is never used</text>
+  <text x="124" y="228" fill="#5a6a8a" font-size="10" text-anchor="middle">so any question set works</text>
+  <line x1="228" y1="177" x2="248" y2="177" stroke="#9aa7c5" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- step 2 -->
+  <rect x="252" y="102" width="252" height="150" rx="12" fill="#131b30" stroke="#2a3a58"/>
+  <text x="378" y="126" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">② build the state</text>
+  <g font-size="10.5">
+    <rect x="272" y="140" width="212" height="24" rx="7" fill="#1b2640" stroke="#3a4a6a"/>
+    <text x="378" y="156" fill="#9aa7c5" text-anchor="middle">off-the-shelf retriever → top-k</text>
+    <rect x="272" y="170" width="212" height="24" rx="7" fill="#1b2640" stroke="#3a4a6a"/>
+    <text x="378" y="186" fill="#9aa7c5" text-anchor="middle">their originating documents</text>
+    <rect x="272" y="200" width="212" height="24" rx="7" fill="#1b2640" stroke="#c084fc"/>
+    <text x="378" y="216" fill="#c084fc" text-anchor="middle">→ retrieval subtree s</text>
+  </g>
+  <text x="378" y="242" fill="#5a6a8a" font-size="10" text-anchor="middle">the same state the router sees at inference</text>
+  <line x1="508" y1="177" x2="528" y2="177" stroke="#9aa7c5" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- step 3 -->
+  <rect x="532" y="102" width="286" height="150" rx="12" fill="#131b30" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="675" y="126" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">③ a teacher writes the actions</text>
+  <rect x="556" y="138" width="238" height="30" rx="10" fill="#2b1a2b" stroke="#ff8fd8"/>
+  <text x="675" y="158" fill="#ff8fd8" font-size="11.5" text-anchor="middle">DeepSeek-v3 · sees (q, s)</text>
+  <g font-family="ui-monospace,monospace" font-size="10.5">
+    <text x="566" y="190" fill="#c084fc">[EXP] 5: ===Television===</text>
+    <text x="566" y="210" fill="#7ee787">[ANS] 6,7: Cathy Lee Crosby…</text>
+    <text x="566" y="230" fill="#ff7b72">[REF] −1</text>
+  </g>
+  <text x="675" y="246" fill="#5a6a8a" font-size="10" text-anchor="middle">one step's worth of actions, not a full trajectory</text>
+  <line x1="822" y1="177" x2="842" y2="177" stroke="#9aa7c5" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- step 4 -->
+  <rect x="846" y="102" width="330" height="150" rx="12" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="1011" y="126" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">④ the training set</text>
+  <rect x="872" y="140" width="278" height="34" rx="9" fill="rgba(126,231,135,.08)" stroke="#7ee787"/>
+  <text x="1011" y="162" fill="#7ee787" font-size="13" text-anchor="middle" font-family="ui-monospace,monospace">⟨ q , s , A ⟩</text>
+  <text x="1011" y="192" fill="#9aa7c5" font-size="11" text-anchor="middle">ASQA training questions</text>
+  <text x="1011" y="212" fill="#eef3fb" font-size="12" text-anchor="middle" font-weight="700">23,827 samples</text>
+  <text x="1011" y="234" fill="#5a6a8a" font-size="10" text-anchor="middle">no human annotation anywhere</text>
+
+  <line x1="1011" y1="256" x2="1011" y2="278" stroke="#7ee787" stroke-width="2" marker-end="url(#arG)"/>
+
+  <!-- SFT -->
+  <rect x="640" y="284" width="536" height="106" rx="12" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="908" y="308" fill="#7ee787" font-size="13" font-weight="700" text-anchor="middle">supervised fine-tuning · plain next-token prediction</text>
+  <text x="908" y="336" fill="#eef3fb" font-size="15" text-anchor="middle" font-family="ui-monospace,monospace">ℒ = − log P(A | q, s)</text>
+  <text x="908" y="358" fill="#9aa7c5" font-size="10.5" text-anchor="middle">cross-entropy on the output tokens only</text>
+  <text x="908" y="378" fill="#9aa7c5" font-size="10.5" text-anchor="middle">Llama-3.1-8B-Instruct + LoRA · 3.5 epochs</text>
+
+  <!-- two notes -->
+  <rect x="24" y="284" width="596" height="50" rx="10" fill="rgba(255,192,107,.06)" stroke="#ffc06b"/>
+  <text x="40" y="306" fill="#ffc06b" font-size="11.5" font-weight="700">trained on single steps, never on whole trajectories</text>
+  <text x="40" y="324" fill="#9aa7c5" font-size="10.5">the model learns "what to do in this state"; the iteration is left to inference</text>
+  <rect x="24" y="340" width="596" height="50" rx="10" fill="rgba(192,132,252,.06)" stroke="#c084fc"/>
+  <text x="40" y="362" fill="#c084fc" font-size="11.5" font-weight="700">the output format carries the node id</text>
+  <text x="40" y="380" fill="#9aa7c5" font-size="10.5" font-family="ui-monospace,monospace">"[ACTION] id: text_prefix" — every action is bound to a real node</text>
+</svg>
+
+  </div>
+  <div class="foot">17 / 32</div>
+</div></section>
+<section class="pg" data-name="18_recap"><div class="slide">
+  <h1>Comparison of Tree-Based Search Methods</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st">② score-based, both ways</span><span class="sep">→</span><span class="st">③ LLM-guided instead</span><span class="sep">→</span><span class="st">④ traversal learned</span><span class="sep">→</span><span class="st cur">⑤ multimodal</span></div>
+
+
+<table>
+  <tr><th style="width:14%;">Method</th><th style="width:24%;">Who writes the hierarchy</th><th style="width:26%;">Who traverses it</th><th style="width:18%;">LLM calls / query</th><th style="width:18%;">Table · figure evidence</th></tr>
+  <tr><td><b>RAPTOR</b></td><td>machine · pyramid of cluster summaries</td><td>no traversal · flat similarity over all levels</td><td class="num">0</td><td class="dim">✗</td></tr>
+  <tr><td><b>TreeRAG</b></td><td>the document's own hierarchy</td><td>similarity · bidirectional (up + down)</td><td class="num">0</td><td class="dim">✗</td></tr>
+  <tr><td><b>MemWalker</b></td><td>machine · segment summaries</td><td>LLM reasoning + backtracking</td><td class="num">per step</td><td class="dim">✗</td></tr>
+  <tr><td><b>PageIndex</b></td><td>the document's own hierarchy</td><td>LLM reasoning (no vectors)</td><td class="num">iterative</td><td class="dim">✗</td></tr>
+  <tr><td><b>RDR2</b></td><td>the document's own hierarchy</td><td>a trained LLM navigator</td><td class="num">calls</td><td class="dim">✗</td></tr>
+  <tr style="background:rgba(255,192,107,.07);"><td><b class="amber">HiKEY</b></td><td>the document's own hierarchy (auto-parsed)</td><td>scores, two stages · pick docs → pick sections</td><td class="num">0 (reader only)</td><td><b class="ok">✓ first-class</b></td></tr>
+</table>
+<ul>
+  <li>One blank remains · documents whose <b>key evidence sits in tables and figures</b> → Part 3</li>
+</ul>
+
+
+  </div>
+  <div class="foot">18 / 32</div>
+</div></section>
+<section class="pg" data-name="19_divider_hikey"><div class="slide div">
+  <div class="part">PART 3</div>
+  <div class="dtitle">HiKEY: Hierarchical Multimodal Retrieval</div>
+  <div class="drule"></div>
+  <div class="nav">
+    <div class="it "><span class="n">Part 1</span> Motivation · why trees</div>
+    <div class="it "><span class="n">Part 2</span> A Tour of Tree-Based Search · the lineage</div>
+    <div class="it cur"><span class="n">Part 3</span> HiKEY · deep dive (ACL 2026)</div>
+  </div>
+  <div class="foot">19 / 32</div>
+</div></section>
+<section class="pg" data-name="20_bottlenecks"><div class="slide">
+  <h1>Two Bottlenecks in Industrial Document QA</h1>
+  <div class="body">
+
+
+<div class="two">
+  <div class="card">
+    <p style="font-size:2.1cqw; margin:0 0 .8cqw;"><b class="warn">① Can't find it</b> <span class="dim small">wrong document from the start</span></p>
+    <svg viewBox="0 0 480 210">
+      <rect x="20" y="80" width="150" height="60" rx="10" fill="#2b2413" stroke="#ffc06b"/>
+      <text x="95" y="106" fill="#ffc06b" font-size="14" text-anchor="middle">Q. X100 battery</text>
+      <text x="95" y="126" fill="#ffc06b" font-size="14" text-anchor="middle">inspection interval?</text>
+      <g fill="#131b30" stroke="#2a3a58">
+        <rect x="240" y="24" width="64" height="40" rx="6"/><rect x="316" y="24" width="64" height="40" rx="6"/><rect x="392" y="24" width="64" height="40" rx="6"/>
+        <rect x="240" y="76" width="64" height="40" rx="6"/><rect x="316" y="76" width="64" height="40" rx="6"/><rect x="392" y="76" width="64" height="40" rx="6"/>
+        <rect x="240" y="128" width="64" height="40" rx="6"/><rect x="316" y="128" width="64" height="40" rx="6"/><rect x="392" y="128" width="64" height="40" rx="6"/>
+      </g>
+      <text x="348" y="102" fill="#ff7b72" font-size="30" font-weight="800" text-anchor="middle">?</text>
+      <text x="272" y="102" fill="#ff7b72" font-size="30" font-weight="800" text-anchor="middle">?</text>
+      <text x="424" y="102" fill="#ff7b72" font-size="30" font-weight="800" text-anchor="middle">?</text>
+      <text x="348" y="196" fill="#5a6a8a" font-size="13.5" text-anchor="middle">thousands of docs · similar titles · similar sentences</text>
+    </svg>
+    <p class="small" style="margin:.7cqw 0 0;">when a question needs several docs, <b>missing one = failure</b></p>
+  </div>
+  <div class="card">
+    <p style="font-size:2.1cqw; margin:0 0 .8cqw;"><b class="warn">② Can't assemble it</b> <span class="dim small">evidence fragments even when found</span></p>
+    <svg viewBox="0 0 480 210">
+      <rect x="20" y="20" width="270" height="176" rx="10" fill="#131b30" stroke="#2a3a58"/>
+      <text x="155" y="44" fill="#9aa7c5" font-size="13.5" text-anchor="middle">even inside one document</text>
+      <rect x="40" y="58" width="110" height="34" rx="6" fill="rgba(124,196,255,.14)" stroke="#7cc4ff"/>
+      <text x="95" y="80" fill="#7cc4ff" font-size="13" text-anchor="middle">text p.12</text>
+      <rect x="170" y="100" width="100" height="40" rx="6" fill="rgba(255,192,107,.14)" stroke="#ffc06b"/>
+      <text x="220" y="124" fill="#ffc06b" font-size="13" text-anchor="middle">table p.39</text>
+      <rect x="40" y="146" width="110" height="38" rx="6" fill="rgba(255,143,216,.14)" stroke="#ff8fd8"/>
+      <text x="95" y="169" fill="#ff8fd8" font-size="13" text-anchor="middle">figure p.7</text>
+      <line x1="150" y1="80" x2="172" y2="110" stroke="#ff7b72" stroke-width="2" stroke-dasharray="5 5"/>
+      <line x1="150" y1="158" x2="176" y2="130" stroke="#ff7b72" stroke-width="2" stroke-dasharray="5 5"/>
+      <rect x="316" y="52" width="140" height="120" rx="10" fill="#0f1525" stroke="#2a3a58"/>
+      <text x="386" y="78" fill="#9aa7c5" font-size="13" text-anchor="middle">reader budget</text>
+      <rect x="334" y="92" width="104" height="22" rx="6" fill="#0a0e1a" stroke="#2a3a58"/>
+      <rect x="334" y="92" width="100" height="22" rx="6" fill="rgba(255,123,114,.3)" stroke="#ff7b72"/>
+      <text x="386" y="140" fill="#ff7b72" font-size="13" text-anchor="middle">all of it overflows,</text>
+      <text x="386" y="158" fill="#ff7b72" font-size="13" text-anchor="middle">cutting loses evidence</text>
+    </svg>
+    <p class="small" style="margin:.7cqw 0 0;">industrial docs = long PDFs · <b>tables and figures carry the evidence</b> · budget is finite</p>
+  </div>
+</div>
+<ul>
+  <li>HiKEY's diagnosis · both are symptoms of <b>search that ignores document structure</b></li>
+</ul>
+
+
+  </div>
+  <div class="foot">20 / 32</div>
+</div></section>
+<section class="pg" data-name="21_overview"><div class="slide">
+  <h1>Overview of HiKEY</h1>
+  <div class="body">
+
+
+<svg viewBox="0 0 1200 370">
+  <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#ffc06b"/></marker></defs>
+  <!-- build -->
+  <rect x="16" y="70" width="256" height="212" rx="16" fill="#131b30" stroke="#c084fc" stroke-width="2"/>
+  <text x="144" y="52" fill="#c084fc" font-size="18" font-weight="800" text-anchor="middle">BUILD</text>
+  <text x="144" y="106" fill="#eef3fb" font-size="16" text-anchor="middle">documents → trees, auto-parsed</text>
+  <g stroke="#3a4a6a" stroke-width="1.4">
+    <line x1="144" y1="132" x2="104" y2="168"/><line x1="144" y1="132" x2="184" y2="168"/>
+  </g>
+  <circle cx="144" cy="130" r="10" fill="#1b2640" stroke="#c084fc"/>
+  <circle cx="104" cy="172" r="10" fill="#1b2640" stroke="#7cc4ff"/>
+  <circle cx="184" cy="172" r="10" fill="#1b2640" stroke="#ffc06b"/>
+  <text x="144" y="216" fill="#9aa7c5" font-size="14.5" text-anchor="middle">two kinds of index cards</text>
+  <text x="144" y="240" fill="#9aa7c5" font-size="14.5" text-anchor="middle">doc cards · section cards</text>
+  <text x="144" y="268" fill="#5a6a8a" font-size="13" text-anchor="middle">offline, once</text>
+  <line x1="278" y1="176" x2="316" y2="176" stroke="#ffc06b" stroke-width="3" marker-end="url(#ar)"/>
+  <!-- walk1 -->
+  <rect x="322" y="70" width="256" height="212" rx="16" fill="#131b30" stroke="#7cc4ff" stroke-width="2"/>
+  <text x="450" y="52" fill="#7cc4ff" font-size="18" font-weight="800" text-anchor="middle">TRAVERSE ① Pick Documents</text>
+  <text x="450" y="110" fill="#eef3fb" font-size="16" text-anchor="middle">thousands → a few candidates</text>
+  <text x="450" y="152" fill="#9aa7c5" font-size="14.5" text-anchor="middle">score = word overlap + semantic sim</text>
+  <text x="450" y="176" fill="#9aa7c5" font-size="14.5" text-anchor="middle">target = title + heading paths</text>
+  <g font-size="13" text-anchor="middle">
+    <rect x="352" y="204" width="56" height="30" rx="6" fill="#2b2413" stroke="#ffc06b"/><text x="380" y="224" fill="#ffc06b">X100</text>
+    <rect x="422" y="204" width="56" height="30" rx="6" fill="#2b2413" stroke="#ffc06b"/><text x="450" y="224" fill="#ffc06b">Service</text>
+    <rect x="492" y="204" width="56" height="30" rx="6" fill="#2b2413" stroke="#ffc06b"/><text x="520" y="224" fill="#ffc06b">FAQ</text>
+  </g>
+  <line x1="584" y1="176" x2="622" y2="176" stroke="#ffc06b" stroke-width="3" marker-end="url(#ar)"/>
+  <!-- walk2 -->
+  <rect x="628" y="70" width="256" height="212" rx="16" fill="#131b30" stroke="#7cc4ff" stroke-width="2"/>
+  <text x="756" y="52" fill="#7cc4ff" font-size="18" font-weight="800" text-anchor="middle">TRAVERSE ② Pick Sections</text>
+  <text x="756" y="110" fill="#eef3fb" font-size="16" text-anchor="middle">candidates → top-K sections</text>
+  <text x="756" y="152" fill="#9aa7c5" font-size="14.5" text-anchor="middle">section score = its single best-</text>
+  <text x="756" y="176" fill="#9aa7c5" font-size="14.5" text-anchor="middle">matching unit (text·table·figure)</text>
+  <rect x="668" y="204" width="176" height="30" rx="6" fill="#2b2413" stroke="#ffc06b"/>
+  <text x="756" y="224" fill="#ffc06b" font-size="13.5" text-anchor="middle">5.3 Battery › table ★</text>
+  <line x1="890" y1="176" x2="928" y2="176" stroke="#ffc06b" stroke-width="3" marker-end="url(#ar)"/>
+  <!-- pack -->
+  <rect x="934" y="70" width="250" height="212" rx="16" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="1059" y="52" fill="#7ee787" font-size="18" font-weight="800" text-anchor="middle">PACK</text>
+  <text x="1059" y="110" fill="#eef3fb" font-size="16" text-anchor="middle">assemble within budget</text>
+  <text x="1059" y="150" fill="#9aa7c5" font-size="14" text-anchor="middle">key unit + heading path</text>
+  <text x="1059" y="174" fill="#9aa7c5" font-size="14" text-anchor="middle">+ neighboring tables·figures</text>
+  <rect x="974" y="198" width="170" height="24" rx="7" fill="#0f1525" stroke="#2a3a58"/>
+  <rect x="974" y="198" width="128" height="24" rx="7" fill="rgba(126,231,135,.25)" stroke="#7ee787"/>
+  <text x="1059" y="252" fill="#5a6a8a" font-size="13.5" text-anchor="middle">→ one reader call → answer</text>
+  <!-- bottom strip -->
+  <rect x="240" y="316" width="720" height="42" rx="12" fill="rgba(255,192,107,.07)" stroke="#ffc06b"/>
+  <text x="600" y="343" fill="#ffc06b" font-size="17" text-anchor="middle">zero LLM calls during search · narrowing is pure scoring → cheap and fast</text>
+</svg>
+
+
+  </div>
+  <div class="foot">21 / 32</div>
+</div></section>
+<section class="pg" data-name="22_build"><div class="slide">
+  <h1>Building Document Trees and Index Cards</h1>
+  <div class="body">
+
+
+<svg viewBox="0 0 1200 400">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker></defs>
+  <!-- page -->
+  <rect x="24" y="50" width="200" height="270" rx="10" fill="#131b30" stroke="#2a3a58"/>
+  <text x="124" y="34" fill="#9aa7c5" font-size="16" text-anchor="middle">a PDF page</text>
+  <rect x="44" y="72" width="160" height="40" rx="5" fill="rgba(124,196,255,.13)" stroke="#7cc4ff"/>
+  <text x="124" y="97" fill="#7cc4ff" font-size="13" text-anchor="middle">paragraph</text>
+  <rect x="44" y="124" width="160" height="70" rx="5" fill="rgba(255,192,107,.13)" stroke="#ffc06b"/>
+  <text x="124" y="163" fill="#ffc06b" font-size="13" text-anchor="middle">table</text>
+  <rect x="44" y="206" width="160" height="60" rx="5" fill="rgba(255,143,216,.13)" stroke="#ff8fd8"/>
+  <text x="124" y="240" fill="#ff8fd8" font-size="13" text-anchor="middle">figure</text>
+  <rect x="44" y="278" width="160" height="28" rx="5" fill="rgba(124,196,255,.13)" stroke="#7cc4ff"/>
+  <line x1="230" y1="185" x2="286" y2="185" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="258" y="166" fill="#9aa7c5" font-size="14" text-anchor="middle">auto-parse</text>
+  <!-- tree -->
+  <rect x="292" y="50" width="380" height="270" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="482" y="34" fill="#9aa7c5" font-size="16" text-anchor="middle">tree · every unit gets its heading path</text>
+  <g stroke="#2a3a58" stroke-width="1.5">
+    <line x1="482" y1="90" x2="388" y2="126"/><line x1="482" y1="90" x2="566" y2="126"/>
+    <line x1="566" y1="152" x2="566" y2="186"/>
+    <line x1="566" y1="212" x2="371" y2="248"/><line x1="566" y1="212" x2="490" y2="248"/><line x1="566" y1="212" x2="606" y2="248"/>
+  </g>
+  <rect x="428" y="62" width="108" height="28" rx="9" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="482" y="81" fill="#c084fc" font-size="13.5" text-anchor="middle">X100 Manual</text>
+  <g font-size="12" text-anchor="middle">
+    <rect x="338" y="126" width="100" height="26" rx="8" fill="#101828" stroke="#3a4a6a"/><text x="388" y="144" fill="#5a6a8a">2. Safety</text>
+    <rect x="508" y="126" width="116" height="26" rx="8" fill="#1b2640" stroke="#c084fc"/><text x="566" y="144" fill="#c084fc">5. Maintenance</text>
+    <rect x="514" y="186" width="104" height="26" rx="8" fill="rgba(255,192,107,.1)" stroke="#ffc06b" stroke-width="2"/><text x="566" y="204" fill="#ffc06b" font-weight="700">5.3 Battery</text>
+    <rect x="316" y="248" width="110" height="28" rx="5" fill="rgba(124,196,255,.12)" stroke="#7cc4ff"/><text x="371" y="266" fill="#7cc4ff">text · "consum…"</text>
+    <rect x="436" y="248" width="108" height="28" rx="5" fill="rgba(255,192,107,.15)" stroke="#ffc06b"/><text x="490" y="266" fill="#ffc06b">table · intervals</text>
+    <rect x="554" y="248" width="106" height="28" rx="5" fill="rgba(255,143,216,.15)" stroke="#ff8fd8"/><text x="607" y="266" fill="#ff8fd8">figure · location</text>
+  </g>
+  <text x="482" y="306" fill="#5a6a8a" font-size="13" text-anchor="middle">a caption-less figure gets its preceding paragraph attached as context</text>
+  <line x1="678" y1="185" x2="734" y2="185" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- cards -->
+  <text x="960" y="34" fill="#9aa7c5" font-size="16" text-anchor="middle">two kinds of search cards</text>
+  <rect x="740" y="44" width="440" height="150" rx="12" fill="#1b2640" stroke="#c084fc" stroke-width="2"/>
+  <text x="762" y="70" fill="#c084fc" font-size="15.5" font-weight="700">Doc card · one per document</text>
+  <rect x="756" y="80" width="408" height="82" rx="8" fill="#0f1525" stroke="#2a3a58"/>
+  <g font-family="ui-monospace,monospace">
+    <text x="772" y="102" fill="#eef3fb" font-size="13" font-weight="700">X100 User Manual</text>
+    <text x="786" y="122" fill="#5a6a8a" font-size="12">├ 2. Safety</text>
+    <text x="786" y="142" fill="#ffc06b" font-size="12">└ 5. Maintenance › 5.3 Battery</text>
+    <text x="1150" y="142" fill="#5a6a8a" font-size="11" text-anchor="end">… every path</text>
+  </g>
+  <text x="762" y="184" fill="#9aa7c5" font-size="11.5">= title + the <tspan fill="#eef3fb" font-weight="700">whole hierarchy skeleton</tspan> · paths only, no contents</text>
+  <rect x="740" y="208" width="440" height="172" rx="12" fill="#1b2640" stroke="#7cc4ff" stroke-width="2"/>
+  <text x="762" y="234" fill="#7cc4ff" font-size="15.5" font-weight="700">Section card · one per section</text>
+  <text x="762" y="258" fill="#ffc06b" font-size="12.5" font-family="ui-monospace,monospace">§ 5.3 Battery · path: X100 › 5. Maintenance</text>
+  <!-- component pictograms -->
+  <g>
+    <rect x="770" y="272" width="28" height="28" rx="4" fill="rgba(124,196,255,.1)" stroke="#7cc4ff" stroke-width="1.6"/>
+    <rect x="776" y="279" width="16" height="3" rx="1.5" fill="#7cc4ff"/>
+    <rect x="776" y="286" width="12" height="3" rx="1.5" fill="#7cc4ff"/>
+    <rect x="776" y="293" width="16" height="3" rx="1.5" fill="#7cc4ff"/>
+    <text x="806" y="284" fill="#7cc4ff" font-size="12.5" font-weight="700">text</text>
+    <text x="806" y="300" fill="#5a6a8a" font-size="11">"consum…"</text>
+    <rect x="908" y="272" width="28" height="28" rx="4" fill="rgba(255,192,107,.1)" stroke="#ffc06b" stroke-width="1.6"/>
+    <line x1="908" y1="286" x2="936" y2="286" stroke="#ffc06b" stroke-width="1.4"/>
+    <line x1="922" y1="272" x2="922" y2="300" stroke="#ffc06b" stroke-width="1.4"/>
+    <text x="944" y="284" fill="#ffc06b" font-size="12.5" font-weight="700">table</text>
+    <text x="944" y="300" fill="#5a6a8a" font-size="11">intervals</text>
+    <rect x="1046" y="272" width="28" height="28" rx="4" fill="rgba(255,143,216,.1)" stroke="#ff8fd8" stroke-width="1.6"/>
+    <circle cx="1055" cy="281" r="3" fill="#ff8fd8"/>
+    <path d="M1049 296 L1056 287 L1061 292 L1065 287 L1070 296" stroke="#ff8fd8" stroke-width="1.5" fill="none"/>
+    <text x="1080" y="284" fill="#ff8fd8" font-size="12.5" font-weight="700">figure</text>
+    <text x="1080" y="300" fill="#5a6a8a" font-size="11">location</text>
+  </g>
+  <text x="762" y="332" fill="#9aa7c5" font-size="11.5">= its name (path) + <tspan fill="#eef3fb" font-weight="700">every component beneath it</tspan>, each searchable</text>
+  <text x="762" y="356" fill="#5a6a8a" font-size="11">components keep their native form · tables &amp; figures never flattened to text</text>
+</svg>
+<ul>
+  <li><b>Structure becomes a first-class search signal</b> · heading paths live inside the cards</li>
+  <li><b>Tables and figures become first-class targets</b> · the blank in the lineage, filled</li>
+</ul>
+
+
+  </div>
+  <div class="foot">22 / 32</div>
+</div></section>
+<section class="pg" data-name="23_walk1"><div class="slide">
+  <h1>Traversal Stage 1: Selecting Candidate Documents</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 400">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker></defs>
+  <!-- inputs -->
+  <text x="124" y="40" fill="#9aa7c5" font-size="15" text-anchor="middle">inputs</text>
+  <text x="600" y="22" fill="#5a6a8a" font-size="11" text-anchor="middle">color code · <tspan fill="#ffc06b">the query</tspan> · <tspan fill="#c084fc">doc cards</tspan> · <tspan fill="#7ee787">pass</tspan></text>
+  <rect x="24" y="58" width="200" height="86" rx="12" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/>
+  <text x="42" y="88" fill="#ffc06b" font-size="15" font-weight="700">Q.</text>
+  <text x="42" y="112" fill="#eef3fb" font-size="14.5">X100 battery</text>
+  <text x="42" y="132" fill="#eef3fb" font-size="14.5">inspection interval?</text>
+  <rect x="48" y="196" width="176" height="58" rx="8" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="36" y="208" width="176" height="58" rx="8" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="24" y="220" width="176" height="58" rx="8" fill="#1b2640" stroke="#c084fc"/>
+  <rect x="38" y="238" width="16" height="22" rx="2" fill="#0f1525" stroke="#c084fc" stroke-width="1.3"/><rect x="41" y="242" width="10" height="2.5" rx="1" fill="#c084fc"/><rect x="41" y="247" width="7" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/><rect x="41" y="251" width="9" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/>
+  <text x="122" y="246" fill="#c084fc" font-size="14" text-anchor="middle">doc cards</text>
+  <text x="122" y="266" fill="#5a6a8a" font-size="12.5" text-anchor="middle">title + heading paths</text>
+  <text x="124" y="306" fill="#5a6a8a" font-size="13" text-anchor="middle">every document · × hundreds</text>
+  <line x1="228" y1="100" x2="274" y2="158" stroke="#9aa7c5" stroke-width="2.2" marker-end="url(#ar)"/>
+  <line x1="228" y1="248" x2="274" y2="230" stroke="#9aa7c5" stroke-width="2.2" marker-end="url(#ar)"/>
+  <!-- scoring function -->
+  <rect x="282" y="112" width="232" height="196" rx="14" fill="#131b30" stroke="#7cc4ff" stroke-width="2"/>
+  <text x="398" y="136" fill="#eef3fb" font-size="15" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">score(doc, q)</text>
+  <rect x="296" y="148" width="102" height="56" rx="8" fill="#1b2640" stroke="#7cc4ff"/>
+  <text x="347" y="165" fill="#7cc4ff" font-size="11.5" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">BM25</text>
+  <text x="347" y="179" fill="#9aa7c5" font-size="9.5" text-anchor="middle">word overlap</text>
+  <text x="347" y="196" fill="#7cc4ff" font-size="11" text-anchor="middle" font-family="ui-monospace,monospace">→ 0.88</text>
+  <rect x="400" y="148" width="102" height="56" rx="8" fill="#1b2640" stroke="#c084fc"/>
+  <text x="451" y="165" fill="#c084fc" font-size="11.5" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">dense emb.</text>
+  <text x="451" y="179" fill="#9aa7c5" font-size="9.5" text-anchor="middle">meaning close</text>
+  <text x="451" y="196" fill="#c084fc" font-size="11" text-anchor="middle" font-family="ui-monospace,monospace">→ 0.94</text>
+  <line x1="347" y1="208" x2="386" y2="240" stroke="#7cc4ff" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="451" y1="208" x2="412" y2="240" stroke="#c084fc" stroke-width="1.8" marker-end="url(#ar)"/>
+  <circle cx="399" cy="254" r="16" fill="#0f1525" stroke="#eef3fb" stroke-width="1.6"/>
+  <text x="399" y="259" fill="#eef3fb" font-size="12" text-anchor="middle" font-family="ui-monospace,monospace">α⊕</text>
+  <line x1="417" y1="254" x2="446" y2="254" stroke="#9aa7c5" stroke-width="1.8" marker-end="url(#ar)"/>
+  <rect x="450" y="242" width="52" height="24" rx="6" fill="#0f1525" stroke="#3a4a6a"/>
+  <text x="476" y="258" fill="#eef3fb" font-size="11.5" text-anchor="middle" font-family="ui-monospace,monospace">0.92</text>
+  <text x="342" y="258" fill="#5a6a8a" font-size="9.5" text-anchor="end">α : 1−α</text>
+  <text x="398" y="294" fill="#5a6a8a" font-size="10" text-anchor="middle">both min-max normalized before the blend</text>
+  <line x1="518" y1="208" x2="554" y2="208" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- ranked list -->
+  <rect x="560" y="46" width="400" height="308" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="760" y="76" fill="#9aa7c5" font-size="15" text-anchor="middle">every doc scored, then ranked</text>
+  <g font-size="13.5">
+    <rect x="576" y="92" width="368" height="40" rx="8" fill="rgba(126,231,135,.07)" stroke="#7ee787" stroke-width="2"/>
+    <rect x="588" y="101" width="16" height="22" rx="2" fill="#0f1525" stroke="#c084fc" stroke-width="1.3"/><rect x="591" y="105" width="10" height="2.5" rx="1" fill="#c084fc"/><rect x="591" y="110" width="7" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/><rect x="591" y="114" width="9" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/>
+    <text x="614" y="117" fill="#eef3fb">X100 Manual · "…5.3 <tspan fill="#ffc06b" font-weight="700">Battery</tspan>…"</text>
+    <text x="930" y="117" fill="#7ee787" text-anchor="end" font-family="ui-monospace,monospace">0.92</text>
+    <rect x="576" y="140" width="368" height="40" rx="8" fill="rgba(126,231,135,.04)" stroke="#7ee787" stroke-opacity=".5"/>
+    <rect x="588" y="149" width="16" height="22" rx="2" fill="#0f1525" stroke="#c084fc" stroke-width="1.3"/><rect x="591" y="153" width="10" height="2.5" rx="1" fill="#c084fc"/><rect x="591" y="158" width="7" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/><rect x="591" y="162" width="9" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/>
+    <text x="614" y="165" fill="#9aa7c5">Service Guide · "…<tspan fill="#ffc06b">battery</tspan> handling…"</text>
+    <text x="930" y="165" fill="#7ee787" fill-opacity=".8" text-anchor="end" font-family="ui-monospace,monospace">0.71</text>
+    <line x1="576" y1="196" x2="944" y2="196" stroke="#7ee787" stroke-dasharray="7 6" stroke-width="1.6"/>
+    <text x="940" y="212" fill="#7ee787" font-size="12" text-anchor="end">cutoff · these pass ✓</text>
+    <rect x="576" y="222" width="368" height="40" rx="8" fill="#101828" stroke="#3a4a6a"/>
+    <rect x="588" y="231" width="16" height="22" rx="2" fill="#0f1525" stroke="#c084fc" stroke-opacity=".45" stroke-width="1.3"/><rect x="591" y="235" width="10" height="2.5" rx="1" fill="#c084fc" stroke-opacity=".45"/><rect x="591" y="240" width="7" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/><rect x="591" y="244" width="9" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/>
+    <text x="614" y="247" fill="#5a6a8a">X200 Manual · similar, wrong model</text>
+    <text x="930" y="247" fill="#5a6a8a" text-anchor="end" font-family="ui-monospace,monospace">0.55</text>
+    <rect x="576" y="270" width="368" height="40" rx="8" fill="#101828" stroke="#3a4a6a"/>
+    <rect x="588" y="279" width="16" height="22" rx="2" fill="#0f1525" stroke="#c084fc" stroke-opacity=".45" stroke-width="1.3"/><rect x="591" y="283" width="10" height="2.5" rx="1" fill="#c084fc" stroke-opacity=".45"/><rect x="591" y="288" width="7" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/><rect x="591" y="292" width="9" height="2" rx="1" fill="#c084fc" fill-opacity=".55"/>
+    <text x="614" y="295" fill="#5a6a8a">Install Guide · no battery at all</text>
+    <text x="930" y="295" fill="#5a6a8a" text-anchor="end" font-family="ui-monospace,monospace">0.18</text>
+  </g>
+  <text x="760" y="340" fill="#5a6a8a" font-size="12.5" text-anchor="middle">the query word "battery" meets the heading path directly · structure boosts the score</text>
+  <line x1="964" y1="200" x2="1000" y2="200" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- output -->
+  <text x="1096" y="40" fill="#9aa7c5" font-size="15" text-anchor="middle">output</text>
+  <rect x="1006" y="112" width="180" height="176" rx="14" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="1096" y="142" fill="#7ee787" font-size="15" font-weight="700" text-anchor="middle">only a few pass</text>
+  <g font-size="13.5" text-anchor="middle">
+    <rect x="1026" y="160" width="140" height="34" rx="7" fill="#131b30" stroke="#c084fc"/><text x="1096" y="182" fill="#eef3fb"><tspan fill="#7ee787">✓ </tspan>X100 Manual</text>
+    <rect x="1026" y="204" width="140" height="34" rx="7" fill="#131b30" stroke="#c084fc" stroke-opacity=".6"/><text x="1096" y="226" fill="#9aa7c5"><tspan fill="#7ee787" fill-opacity=".8">✓ </tspan>Service Guide</text>
+  </g>
+  <text x="1096" y="266" fill="#5a6a8a" font-size="12.5" text-anchor="middle">thousands → a few</text>
+</svg>
+<ul>
+  <li>Thousands → a few · <b>the cheapest computation prunes the largest space</b></li>
+</ul>
+
+  </div>
+  <div class="foot">23 / 32</div>
+</div></section>
+<section class="pg" data-name="24_walk2"><div class="slide">
+  <h1>Traversal Stage 2: Scoring Sections</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 420">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker></defs>
+  <!-- input : stage-1 output -->
+  <text x="134" y="40" fill="#9aa7c5" font-size="15" text-anchor="middle">input · Stage-1 output</text>
+  <rect x="24" y="56" width="220" height="300" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <g font-size="13.5" text-anchor="middle">
+    <rect x="44" y="76" width="180" height="34" rx="7" fill="#131b30" stroke="#c084fc"/><text x="134" y="98" fill="#eef3fb"><tspan fill="#7ee787">✓ </tspan>X100 Manual</text>
+    <rect x="44" y="118" width="180" height="34" rx="7" fill="#131b30" stroke="#c084fc" stroke-opacity=".6"/><text x="134" y="140" fill="#9aa7c5"><tspan fill="#7ee787" fill-opacity=".8">✓ </tspan>Service Guide</text>
+  </g>
+  <line x1="134" y1="158" x2="134" y2="184" stroke="#9aa7c5" stroke-width="2" marker-end="url(#ar)"/>
+  <rect x="60" y="192" width="164" height="52" rx="8" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="48" y="204" width="164" height="52" rx="8" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="36" y="216" width="164" height="52" rx="8" fill="#1b2640" stroke="#7cc4ff"/>
+  <text x="118" y="240" fill="#7cc4ff" font-size="13.5" text-anchor="middle">section cards</text>
+  <text x="118" y="258" fill="#5a6a8a" font-size="12" text-anchor="middle">text · tables · figures</text>
+  <text x="134" y="300" fill="#5a6a8a" font-size="12.5" text-anchor="middle">every section of the candidates</text>
+  <text x="134" y="336" fill="#5a6a8a" font-size="12.5" text-anchor="middle">non-candidates: never opened</text>
+  <line x1="248" y1="210" x2="292" y2="210" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- scoring function -->
+  <rect x="298" y="56" width="330" height="330" rx="14" fill="#131b30" stroke="#7cc4ff" stroke-width="2"/>
+  <text x="463" y="88" fill="#eef3fb" font-size="16" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">score(section, q)</text>
+  <!-- text-unit path: the Stage-1 blend, reused -->
+  <rect x="314" y="98" width="118" height="42" rx="8" fill="#1b2640" stroke="#7cc4ff"/>
+  <text x="373" y="115" fill="#7cc4ff" font-size="10.5" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">text unit</text>
+  <text x="373" y="131" fill="#9aa7c5" font-size="9.5" text-anchor="middle">BM25 ⊕α dense</text>
+  <line x1="434" y1="119" x2="548" y2="119" stroke="#7cc4ff" stroke-width="1.6" marker-end="url(#ar)"/>
+  <text x="490" y="110" fill="#5a6a8a" font-size="9" text-anchor="middle">the Stage-1 blend, reused</text>
+  <rect x="552" y="107" width="60" height="24" rx="6" fill="#0f1525" stroke="#3a4a6a"/>
+  <rect x="558" y="113" width="15" height="13" rx="2" fill="rgba(124,196,255,.1)" stroke="#7cc4ff" stroke-width="1.2"/><rect x="561" y="116" width="9" height="1.6" rx=".8" fill="#7cc4ff"/><rect x="561" y="118.8" width="7" height="1.6" rx=".8" fill="#7cc4ff"/><rect x="561" y="121.6" width="9" height="1.6" rx=".8" fill="#7cc4ff"/><text x="592" y="123" fill="#eef3fb" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">0.64</text>
+  <!-- table/figure path: visual, gamma-blended with nearby text -->
+  <rect x="314" y="154" width="118" height="42" rx="8" fill="#1b2640" stroke="#ffc06b"/>
+  <text x="373" y="171" fill="#ffc06b" font-size="10.5" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">visual emb.</text>
+  <text x="373" y="187" fill="#9aa7c5" font-size="9.5" text-anchor="middle">the unit as an image</text>
+  <rect x="314" y="204" width="118" height="42" rx="8" fill="#1b2640" stroke="#7cc4ff"/>
+  <text x="373" y="221" fill="#7cc4ff" font-size="10.5" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">nearby text</text>
+  <text x="373" y="237" fill="#9aa7c5" font-size="9.5" text-anchor="middle">BM25 ⊕α dense on ctx</text>
+  <line x1="434" y1="175" x2="466" y2="192" stroke="#ffc06b" stroke-width="1.6" marker-end="url(#ar)"/>
+  <line x1="434" y1="225" x2="466" y2="208" stroke="#7cc4ff" stroke-width="1.6" marker-end="url(#ar)"/>
+  <circle cx="482" cy="200" r="15" fill="#0f1525" stroke="#eef3fb" stroke-width="1.5"/>
+  <text x="482" y="205" fill="#eef3fb" font-size="11" text-anchor="middle" font-family="ui-monospace,monospace">γ⊕</text>
+  <line x1="497" y1="192" x2="548" y2="172" stroke="#9aa7c5" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="497" y1="208" x2="548" y2="222" stroke="#9aa7c5" stroke-width="1.5" marker-end="url(#ar)"/>
+  <rect x="552" y="160" width="60" height="24" rx="6" fill="#0f1525" stroke="#3a4a6a"/>
+  <rect x="558" y="166" width="15" height="13" rx="2" fill="rgba(255,192,107,.1)" stroke="#ffc06b" stroke-width="1.2"/><line x1="558" y1="172.5" x2="573" y2="172.5" stroke="#ffc06b" stroke-width="1"/><line x1="565.5" y1="166" x2="565.5" y2="179" stroke="#ffc06b" stroke-width="1"/><text x="592" y="176" fill="#eef3fb" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">0.95</text>
+  <rect x="552" y="212" width="60" height="24" rx="6" fill="#0f1525" stroke="#3a4a6a"/>
+  <rect x="558" y="218" width="15" height="13" rx="2" fill="rgba(255,143,216,.1)" stroke="#ff8fd8" stroke-width="1.2"/><circle cx="562.5" cy="222" r="1.8" fill="#ff8fd8"/><path d="M560 229 L564 224 L566.5 227 L568.5 224.5 L571 229" stroke="#ff8fd8" stroke-width="1.1" fill="none"/><text x="592" y="228" fill="#eef3fb" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">0.41</text>
+  <!-- max over units -->
+  <line x1="582" y1="133" x2="560" y2="256" stroke="#5a6a8a" stroke-width="1.4" marker-end="url(#ar)"/>
+  <line x1="582" y1="186" x2="566" y2="256" stroke="#5a6a8a" stroke-width="1.4" marker-end="url(#ar)"/>
+  <line x1="582" y1="238" x2="574" y2="256" stroke="#5a6a8a" stroke-width="1.4" marker-end="url(#ar)"/>
+  <rect x="472" y="260" width="140" height="46" rx="10" fill="rgba(126,231,135,.09)" stroke="#7ee787" stroke-width="2"/>
+  <text x="542" y="279" fill="#7ee787" font-size="12.5" font-weight="700" text-anchor="middle">max over units</text>
+  <text x="542" y="297" fill="#7ee787" font-size="11" text-anchor="middle" font-family="ui-monospace,monospace">S_sec = 0.95 ★</text>
+  <text x="542" y="320" fill="#9aa7c5" font-size="9.5" text-anchor="middle">the winning unit is called the section's <tspan fill="#7ee787" font-weight="700">anchor ★</tspan></text>
+  <text x="390" y="284" fill="#5a6a8a" font-size="9.5" text-anchor="middle">one decisive hit is enough,</text>
+  <text x="390" y="298" fill="#5a6a8a" font-size="9.5" text-anchor="middle">no averaging</text>
+  <!-- lambda fusion -->
+  <text x="463" y="334" fill="#eef3fb" font-size="11.5" text-anchor="middle" font-family="ui-monospace,monospace">S_final = λ·S_doc ⊕ (1−λ)·S_sec</text>
+  <text x="463" y="354" fill="#5a6a8a" font-size="10" text-anchor="middle">the Stage-1 doc score is fused back in</text>
+  <line x1="632" y1="210" x2="672" y2="210" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- output -->
+  <text x="928" y="40" fill="#9aa7c5" font-size="15" text-anchor="middle">output · top-K sections</text>
+  <rect x="678" y="56" width="500" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <g font-size="13.5">
+    <rect x="698" y="76" width="460" height="40" rx="8" fill="rgba(126,231,135,.07)" stroke="#7ee787" stroke-width="2"/>
+    <text x="712" y="101" fill="#eef3fb">X100 › 5.3 Battery <tspan fill="#ffc06b">› table</tspan> <tspan fill="#7ee787" font-weight="700">★</tspan></text>
+    <text x="1144" y="101" fill="#7ee787" text-anchor="end" font-family="ui-monospace,monospace">0.95</text>
+    <rect x="698" y="124" width="460" height="40" rx="8" fill="rgba(126,231,135,.05)" stroke="#7ee787" stroke-opacity=".6"/>
+    <text x="712" y="149" fill="#9aa7c5">X100 › 2. Safety <tspan fill="#ffc06b">› table</tspan> <tspan fill="#7ee787" font-weight="700">★</tspan> (heat caution)</text>
+    <text x="1144" y="149" fill="#7ee787" fill-opacity=".85" text-anchor="end" font-family="ui-monospace,monospace">0.62</text>
+    <line x1="698" y1="176" x2="820" y2="176" stroke="#7ee787" stroke-dasharray="7 6" stroke-width="1.6"/>
+    <line x1="1036" y1="176" x2="1158" y2="176" stroke="#7ee787" stroke-dasharray="7 6" stroke-width="1.6"/>
+    <text x="928" y="180" fill="#7ee787" font-size="11.5" text-anchor="middle">top-K pass ✓ · K = 2 · each with its anchor ★</text>
+    <rect x="698" y="206" width="460" height="40" rx="8" fill="#101828" stroke="#3a4a6a"/>
+    <text x="712" y="231" fill="#5a6a8a">X100 › 5.1 Cleaning</text>
+    <text x="1144" y="231" fill="#5a6a8a" text-anchor="end" font-family="ui-monospace,monospace">0.22</text>
+    <rect x="698" y="254" width="460" height="40" rx="8" fill="#101828" stroke="#3a4a6a"/>
+    <text x="712" y="279" fill="#5a6a8a">Service Guide › 1. Overview</text>
+    <text x="1144" y="279" fill="#5a6a8a" text-anchor="end" font-family="ui-monospace,monospace">0.10</text>
+  </g>
+  <text x="928" y="326" fill="#9aa7c5" font-size="13" text-anchor="middle">final rank = doc score ⊕ section score</text>
+  <text x="928" y="356" fill="#7ee787" font-size="12.5" text-anchor="middle">→ handed to PACK</text>
+</svg>
+
+  </div>
+  <div class="foot">24 / 32</div>
+</div></section>
+<section class="pg" data-name="25_pack"><div class="slide">
+  <h1>Packing Evidence under a Reader Budget</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 470">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker></defs>
+  <!-- input : stage-2 output + budget -->
+  <text x="139" y="40" fill="#9aa7c5" font-size="15" text-anchor="middle">input · Stage-2 output + budget</text>
+  <rect x="24" y="56" width="230" height="376" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="40" y="76" width="198" height="52" rx="8" fill="rgba(126,231,135,.07)" stroke="#7ee787" stroke-width="2"/>
+  <text x="52" y="98" fill="#eef3fb" font-size="13">X100 › 5.3 Battery <tspan fill="#ffc06b">› table</tspan> <tspan fill="#7ee787" font-weight="700">★</tspan></text>
+  <text x="52" y="118" fill="#7ee787" font-size="11" font-family="ui-monospace,monospace">section + anchor · 0.95</text>
+  <rect x="40" y="140" width="198" height="52" rx="8" fill="rgba(126,231,135,.05)" stroke="#7ee787" stroke-opacity=".7"/>
+  <text x="52" y="162" fill="#eef3fb" font-size="13">X100 › 2. Safety <tspan fill="#ffc06b">› table</tspan> <tspan fill="#7ee787" font-weight="700">★</tspan></text>
+  <text x="52" y="182" fill="#7ee787" fill-opacity=".85" font-size="11" font-family="ui-monospace,monospace">section + anchor · 0.62</text>
+  <text x="139" y="214" fill="#5a6a8a" font-size="12.5" text-anchor="middle">the top-K sections · here K = 2</text>
+  <rect x="40" y="234" width="198" height="62" rx="8" fill="#0f1525" stroke="#7ee787"/>
+  <text x="139" y="258" fill="#7ee787" font-size="13" text-anchor="middle">reader budget</text>
+  <rect x="56" y="270" width="166" height="14" rx="5" fill="#0a0e1a" stroke="#2a3a58"/>
+  <text x="139" y="320" fill="#5a6a8a" font-size="12" text-anchor="middle">a fixed number of tokens</text>
+  <text x="139" y="360" fill="#5a6a8a" font-size="11" text-anchor="middle">note: rule ③ may pull visuals</text>
+  <text x="139" y="378" fill="#5a6a8a" font-size="11" text-anchor="middle">from outside the selected sections</text>
+  <line x1="258" y1="220" x2="296" y2="220" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- packing function -->
+  <rect x="302" y="56" width="330" height="376" rx="14" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="467" y="86" fill="#eef3fb" font-size="15" font-weight="700" text-anchor="middle" font-family="ui-monospace,monospace">pack(sections, budget)</text>
+  <rect x="316" y="96" width="148" height="56" rx="8" fill="rgba(255,192,107,.12)" stroke="#ffc06b"/>
+  <text x="390" y="112" fill="#ffc06b" font-size="10.5" font-weight="700" text-anchor="middle">① anchor + heading path</text>
+  <text x="390" y="127" fill="#9aa7c5" font-size="8.5" text-anchor="middle">= the Stage-2 winner ★</text>
+  <text x="390" y="143" fill="#5a6a8a" font-size="8.5" text-anchor="middle" font-family="ui-monospace,monospace">+2.1K tok</text>
+  <rect x="316" y="158" width="148" height="56" rx="8" fill="rgba(126,231,135,.1)" stroke="#7ee787"/>
+  <text x="390" y="174" fill="#7ee787" font-size="10.5" font-weight="700" text-anchor="middle">② sibling tbl·fig only</text>
+  <text x="390" y="189" fill="#9aa7c5" font-size="8.5" text-anchor="middle">same parent section as ★</text>
+  <text x="390" y="205" fill="#5a6a8a" font-size="8.5" text-anchor="middle">layout decides · +1.4K tok</text>
+  <rect x="316" y="220" width="148" height="56" rx="8" fill="rgba(192,132,252,.1)" stroke="#c084fc"/>
+  <text x="390" y="236" fill="#c084fc" font-size="10.5" font-weight="700" text-anchor="middle">③ distant visuals</text>
+  <text x="390" y="251" fill="#9aa7c5" font-size="8.5" text-anchor="middle">high sim(unit, ★) · corpus-wide</text>
+  <text x="390" y="267" fill="#5a6a8a" font-size="8.5" text-anchor="middle">similarity decides · +0.9K tok</text>
+  <line x1="466" y1="124" x2="492" y2="168" stroke="#ffc06b" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="466" y1="186" x2="492" y2="186" stroke="#7ee787" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="466" y1="248" x2="492" y2="206" stroke="#c084fc" stroke-width="1.8" marker-end="url(#ar)"/>
+  <rect x="496" y="146" width="120" height="80" rx="10" fill="#0f1525" stroke="#eef3fb" stroke-width="1.5"/>
+  <text x="556" y="170" fill="#eef3fb" font-size="11.5" font-weight="700" text-anchor="middle">budget left?</text>
+  <text x="556" y="190" fill="#7ee787" font-size="10" text-anchor="middle">yes → append ✓</text>
+  <text x="556" y="208" fill="#ff7b72" font-size="10" text-anchor="middle">no → stop ✂</text>
+  <line x1="556" y1="228" x2="556" y2="278" stroke="#9aa7c5" stroke-width="1.8" marker-end="url(#ar)"/>
+  <rect x="320" y="284" width="292" height="20" rx="6" fill="#0a0e1a" stroke="#2a3a58"/>
+  <rect x="322" y="286" width="120" height="16" rx="5" fill="rgba(255,192,107,.35)"/>
+  <rect x="444" y="286" width="84" height="16" rx="5" fill="rgba(126,231,135,.3)"/>
+  <rect x="530" y="286" width="50" height="16" rx="5" fill="rgba(192,132,252,.3)"/>
+  <text x="596" y="298" fill="#5a6a8a" font-size="9.5">slack</text>
+  <text x="466" y="322" fill="#9aa7c5" font-size="10" text-anchor="middle">greedy, per selected section · one pass</text>
+  <text x="466" y="338" fill="#5a6a8a" font-size="10" text-anchor="middle">budget shrinks → <tspan fill="#c084fc">③</tspan> then <tspan fill="#7ee787">②</tspan> dropped, <tspan fill="#ffc06b">①</tspan> survives</text>
+  <line x1="320" y1="350" x2="612" y2="350" stroke="#1b2640"/>
+  <text x="394" y="368" fill="#9aa7c5" font-size="9.5" text-anchor="middle">e.g. inside the §5.3 card</text>
+  <rect x="334" y="376" width="15" height="13" rx="2" fill="rgba(124,196,255,.1)" stroke="#7cc4ff" stroke-width="1.2"/><rect x="337" y="379" width="9" height="1.6" rx=".8" fill="#7cc4ff"/><rect x="337" y="381.8" width="7" height="1.6" rx=".8" fill="#7cc4ff"/><rect x="337" y="384.6" width="9" height="1.6" rx=".8" fill="#7cc4ff"/><rect x="386" y="376" width="15" height="13" rx="2" fill="rgba(255,192,107,.1)" stroke="#ffc06b" stroke-width="1.2"/><line x1="386" y1="382.5" x2="401" y2="382.5" stroke="#ffc06b" stroke-width="1"/><line x1="393.5" y1="376" x2="393.5" y2="389" stroke="#ffc06b" stroke-width="1"/><rect x="438" y="376" width="15" height="13" rx="2" fill="rgba(255,143,216,.1)" stroke="#ff8fd8" stroke-width="1.2"/><circle cx="442.5" cy="380" r="1.8" fill="#ff8fd8"/><path d="M440 387 L444 382 L446.5 385 L448.5 382.5 L451 387" stroke="#ff8fd8" stroke-width="1.1" fill="none"/>
+  <text x="341" y="406" fill="#5a6a8a" font-size="9" text-anchor="middle">✗ not tbl·fig</text>
+  <text x="393" y="406" fill="#ffc06b" font-size="9" text-anchor="middle">① = ★</text>
+  <text x="445" y="406" fill="#7ee787" font-size="9" text-anchor="middle">② ✓</text>
+  <line x1="490" y1="358" x2="490" y2="412" stroke="#1b2640"/>
+  <text x="556" y="368" fill="#9aa7c5" font-size="9.5" text-anchor="middle">outside · by sim to ★</text>
+  <rect x="516" y="376" width="15" height="13" rx="2" fill="rgba(255,143,216,.1)" stroke="#ff8fd8" stroke-width="1.2"/><circle cx="520.5" cy="380" r="1.8" fill="#ff8fd8"/><path d="M518 387 L522 382 L524.5 385 L526.5 382.5 L529 387" stroke="#ff8fd8" stroke-width="1.1" fill="none"/><g opacity=".45"><rect x="576" y="376" width="15" height="13" rx="2" fill="rgba(255,143,216,.1)" stroke="#ff8fd8" stroke-width="1.2"/><circle cx="580.5" cy="380" r="1.8" fill="#ff8fd8"/><path d="M578 387 L582 382 L584.5 385 L586.5 382.5 L589 387" stroke="#ff8fd8" stroke-width="1.1" fill="none"/></g>
+  <text x="523" y="406" fill="#c084fc" font-size="9" text-anchor="middle">③ ✓ · .81</text>
+  <text x="583" y="406" fill="#5a6a8a" font-size="9" text-anchor="middle">✗ · .22</text>
+  <line x1="636" y1="220" x2="674" y2="220" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <!-- output : the serialized context -->
+  <text x="930" y="40" fill="#9aa7c5" font-size="15" text-anchor="middle">output · what the reader receives</text>
+  <rect x="680" y="56" width="500" height="376" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="700" y="76" width="300" height="310" rx="6" fill="#101828" stroke="#3a4a6a"/>
+  <text x="712" y="97" fill="#5a6a8a" font-size="10" font-family="ui-monospace,monospace">packed context · serialized, ≤ budget</text>
+  <line x1="700" y1="106" x2="1000" y2="106" stroke="#2a3a58"/>
+  <g font-size="11" font-family="ui-monospace,monospace">
+    <rect x="710" y="116" width="17" height="17" rx="3" fill="rgba(255,192,107,.14)" stroke="#ffc06b"/><text x="718" y="129" fill="#ffc06b" font-size="9.5" text-anchor="middle">①</text>
+    <text x="734" y="129" fill="#c084fc">X100 › 5. Maint. › 5.3 Battery</text>
+    <text x="988" y="129" fill="#5a6a8a" font-size="9.5" text-anchor="end">0.3K</text>
+    <rect x="710" y="146" width="17" height="17" rx="3" fill="rgba(255,192,107,.14)" stroke="#ffc06b"/><text x="718" y="159" fill="#ffc06b" font-size="9.5" text-anchor="middle">①</text>
+    <rect x="734" y="147" width="15" height="13" rx="2" fill="rgba(255,192,107,.1)" stroke="#ffc06b" stroke-width="1.2"/><line x1="734" y1="153.5" x2="749" y2="153.5" stroke="#ffc06b" stroke-width="1"/><line x1="741.5" y1="147" x2="741.5" y2="160" stroke="#ffc06b" stroke-width="1"/><text x="756" y="159" fill="#eef3fb">intervals · battery 6 mo <tspan fill="#7ee787" font-weight="700">★</tspan></text>
+    <text x="988" y="159" fill="#5a6a8a" font-size="9.5" text-anchor="end">1.8K</text>
+    <rect x="710" y="176" width="17" height="17" rx="3" fill="rgba(126,231,135,.12)" stroke="#7ee787"/><text x="718" y="189" fill="#7ee787" font-size="9.5" text-anchor="middle">②</text>
+    <rect x="734" y="177" width="15" height="13" rx="2" fill="rgba(255,143,216,.1)" stroke="#ff8fd8" stroke-width="1.2"/><circle cx="738.5" cy="181" r="1.8" fill="#ff8fd8"/><path d="M736 188 L740 183 L742.5 186 L744.5 183.5 L747 188" stroke="#ff8fd8" stroke-width="1.1" fill="none"/><text x="756" y="189" fill="#9aa7c5">battery location</text>
+    <text x="988" y="189" fill="#5a6a8a" font-size="9.5" text-anchor="end">1.4K</text>
+    <rect x="710" y="206" width="17" height="17" rx="3" fill="rgba(255,192,107,.14)" stroke="#ffc06b"/><text x="718" y="219" fill="#ffc06b" font-size="9.5" text-anchor="middle">①</text>
+    <text x="734" y="219" fill="#c084fc">X100 › 2. Safety</text>
+    <text x="988" y="219" fill="#5a6a8a" font-size="9.5" text-anchor="end">0.2K</text>
+    <rect x="710" y="236" width="17" height="17" rx="3" fill="rgba(255,192,107,.14)" stroke="#ffc06b"/><text x="718" y="249" fill="#ffc06b" font-size="9.5" text-anchor="middle">①</text>
+    <rect x="734" y="237" width="15" height="13" rx="2" fill="rgba(255,192,107,.1)" stroke="#ffc06b" stroke-width="1.2"/><line x1="734" y1="243.5" x2="749" y2="243.5" stroke="#ffc06b" stroke-width="1"/><line x1="741.5" y1="237" x2="741.5" y2="250" stroke="#ffc06b" stroke-width="1"/><text x="756" y="249" fill="#eef3fb">heat caution · halve it <tspan fill="#7ee787" font-weight="700">★</tspan></text>
+    <text x="988" y="249" fill="#5a6a8a" font-size="9.5" text-anchor="end">0.7K</text>
+    <rect x="710" y="266" width="17" height="17" rx="3" fill="rgba(192,132,252,.12)" stroke="#c084fc"/><text x="718" y="279" fill="#c084fc" font-size="9.5" text-anchor="middle">③</text>
+    <rect x="734" y="267" width="15" height="13" rx="2" fill="rgba(255,143,216,.1)" stroke="#ff8fd8" stroke-width="1.2"/><circle cx="738.5" cy="271" r="1.8" fill="#ff8fd8"/><path d="M736 278 L740 273 L742.5 276 L744.5 273.5 L747 278" stroke="#ff8fd8" stroke-width="1.1" fill="none"/><text x="756" y="279" fill="#9aa7c5">§6 charging chart · similar</text>
+    <text x="988" y="279" fill="#5a6a8a" font-size="9.5" text-anchor="end">0.9K</text>
+  </g>
+  <line x1="710" y1="298" x2="990" y2="298" stroke="#2a3a58" stroke-dasharray="4 4"/>
+  <text x="712" y="318" fill="#7ee787" font-size="10.5" font-family="ui-monospace,monospace">total ≈ 5.3K of 16K</text>
+  <rect x="712" y="328" width="200" height="10" rx="4" fill="#0a0e1a" stroke="#2a3a58"/>
+  <rect x="713" y="329" width="38" height="8" rx="2" fill="rgba(255,192,107,.55)"/>
+  <rect x="751" y="329" width="17" height="8" rx="2" fill="rgba(126,231,135,.55)"/>
+  <rect x="768" y="329" width="12" height="8" rx="2" fill="rgba(192,132,252,.55)"/>
+  <text x="712" y="356" fill="#5a6a8a" font-size="9.5">heading paths ride along · provenance visible to the reader</text>
+  <rect x="1072" y="80" width="48" height="26" rx="13" fill="#2b2413" stroke="#ffc06b" stroke-width="1.6"/>
+  <text x="1096" y="98" fill="#ffc06b" font-size="12" text-anchor="middle" font-family="ui-monospace,monospace">q</text>
+  <line x1="1096" y1="108" x2="1096" y2="126" stroke="#ffc06b" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="1004" y1="160" x2="1022" y2="160" stroke="#9aa7c5" stroke-width="2" marker-end="url(#ar)"/>
+  <rect x="1026" y="130" width="140" height="58" rx="12" fill="#2b1a2b" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="1096" y="154" fill="#ff8fd8" font-size="12.5" font-weight="700" text-anchor="middle">Reader (LVLM)</text>
+  <text x="1096" y="174" fill="#9aa7c5" font-size="10.5" text-anchor="middle">one call · q + context</text>
+  <line x1="1096" y1="192" x2="1096" y2="216" stroke="#7ee787" stroke-width="2" marker-end="url(#ar)"/>
+  <rect x="1016" y="220" width="160" height="56" rx="10" fill="rgba(126,231,135,.07)" stroke="#7ee787" stroke-width="2"/>
+  <text x="1096" y="243" fill="#eef3fb" font-size="11.5" text-anchor="middle">"every 6 months,</text>
+  <text x="1096" y="262" fill="#7ee787" font-size="11.5" text-anchor="middle">3 in high heat"</text>
+  <text x="930" y="456" fill="#5a6a8a" font-size="11" text-anchor="middle">one prompt, one call · nothing else is sent</text>
+</svg>
+
+  </div>
+  <div class="foot">25 / 32</div>
+</div></section>
+<section class="pg" data-name="26_contrast"><div class="slide">
+  <h1>HiKEY versus the Surveyed Methods</h1>
+  <div class="body">
+
+<table>
+  <tr><th style="width:23%;">Their bet</th><th style="width:33%;">What they claimed</th><th style="width:44%;">What HiKEY does instead</th></tr>
+  <tr><td><b>RAPTOR</b> · generated summary pyramid</td><td>multi-level summaries make retrieval smarter</td><td>uses the hierarchy the document <b>already has</b> · nothing generated on the retrieval path</td></tr>
+  <tr><td><b>TreeRAG</b> · bidirectional traversal</td><td>traversing upward recovers the lost context</td><td>context is restored at <b>PACK</b>: ancestor headings ship with the evidence, no traversal needed</td></tr>
+  <tr><td><b>MemWalker · PageIndex</b> · LLM navigation</td><td>reasoning picks the right branch</td><td>same coarse-to-fine narrowing by plain scores · <b>zero LLM calls</b> per query</td></tr>
+  <tr><td><b>RDR2</b> · learned routing</td><td>training makes the traversal accurate</td><td><b>no training</b> · works out of the box on a new corpus</td></tr>
+  <tr style="background:rgba(255,192,107,.07);"><td><b class="amber">left open by all of them</b></td><td>tables and figures as evidence</td><td><b class="ok">first-class multimodal units</b> + budget-aware packing · the genuinely new part</td></tr>
+</table>
+<div class="callout">Every ingredient looks simple because it is borrowed. The contribution is <b>where the pieces sit</b>: structure enters at BUILD and PACK instead of a smarter TRAVERSAL, and the whole system runs on <b>one reader call</b>. The experiments have to show the combination wins.</div>
+
+  </div>
+  <div class="foot">26 / 32</div>
+</div></section>
+<section class="pg" data-name="27_divider_results"><div class="slide div">
+  <div class="part">PART 3</div>
+  <div class="dtitle">HiKEY: Experimental Results</div>
+  <div class="drule"></div>
+  <div class="nav">
+    <div class="it "><span class="n">Part 1</span> Motivation · why trees</div>
+    <div class="it "><span class="n">Part 2</span> A Tour of Tree-Based Search · the lineage</div>
+    <div class="it cur"><span class="n">Part 3</span> HiKEY · deep dive (ACL 2026)</div>
+  </div>
+  <div class="foot">27 / 32</div>
+</div></section>
+<section class="pg" data-name="28_setup"><div class="slide">
+  <h1>Experimental Setup</h1>
+  <div class="body">
+
+<div class="three" style="align-items:stretch;">
+  <div class="card">
+    <p class="shead">Benchmarks <span class="dim small">· corpus-level: one joint index</span></p>
+    <div class="srow"><span class="stag b">M3DocVQA</span><span class="sdesc">multi-page PDFs · evidence in <b>text, tables, figures</b> · multi-hop</span></div>
+    <div class="srow"><span class="stag b">FRAMES-PDF</span><span class="sdesc">Wikipedia questions re-rendered as PDFs · one query needs <b>several documents</b></span></div>
+  </div>
+  <div class="card">
+    <p class="shead">Competitors <span class="dim small">· 14 baselines</span></p>
+    <div class="srow"><span class="stag p">text chunks</span><span class="sdesc">page / length / structural chunking · LumberChunker · MultiDocFusion …</span></div>
+    <div class="srow"><span class="stag p">text graph</span><span class="sdesc"><b class="amber">RAPTOR</b> (from Part 2) · HopRAG</span></div>
+    <div class="srow"><span class="stag a">page-level MM</span><span class="sdesc">M3DocRAG · VDocRAG</span></div>
+    <div class="srow"><span class="stag a">MM graph</span><span class="sdesc">MoLoRAG · SimpleDoc</span></div>
+  </div>
+  <div class="card">
+    <p class="shead">Metrics</p>
+    <div class="srow"><span class="stag g">retrieval</span><span class="sdesc">Recall · MRR · Hit · <b>All</b> (every needed doc found · miss one = fail)</span></div>
+    <div class="srow"><span class="stag g">QA</span><span class="sdesc">EM (exact match) · ANLS · ROUGE-L · METEOR</span></div>
+  </div>
+</div>
+<div class="note">Fair control · every method gets the <b>same reader</b> (Qwen2.5-VL 7B), the <b>same 16K token budget</b>, and the <b>same encoders</b> (keyword + text embedding + visual embedding) → a difference between rows is a difference of method, not of budget or encoder</div>
+
+  </div>
+  <div class="foot">28 / 32</div>
+</div></section>
+<section class="pg" data-name="29_results1"><div class="slide">
+  <h1>Document-Level Retrieval Accuracy</h1>
+  <div class="body">
+
+<div class="two" style="align-items:start;">
+  <div>
+    <p class="grp"><b>Did it find the right documents</b> · avg recall (mean of two benchmarks)</p>
+    <div class="bar"><div class="nm">HiKEY</div><div class="track"><div class="fill hi" style="width:79.1%"></div></div><div class="v">79.1</div></div>
+    <div class="bar"><div class="nm">MultiDocFusion<span class="fam">best of text chunks</span></div><div class="track"><div class="fill mid" style="width:74.6%"></div></div><div class="v">74.6</div></div>
+    <div class="bar"><div class="nm">HopRAG<span class="fam">best of text graph</span></div><div class="track"><div class="fill mid" style="width:74.1%"></div></div><div class="v">74.1</div></div>
+    <div class="bar"><div class="nm">RAPTOR<span class="fam">text graph · Part 2</span></div><div class="track"><div class="fill mid" style="width:73.4%"></div></div><div class="v">73.4</div></div>
+    <div class="bar"><div class="nm">SimpleDoc<span class="fam">best of MM graph</span></div><div class="track"><div class="fill mid" style="width:69%"></div></div><div class="v">69.0</div></div>
+    <div class="bar"><div class="nm">VDocRAG<span class="fam">best of page-level MM</span></div><div class="track"><div class="fill mid" style="width:67.8%"></div></div><div class="v">67.8</div></div>
+  </div>
+  <div>
+    <p class="grp"><b>Did it find all of them</b> · All (miss one = fail)</p>
+    <div class="bar"><div class="nm">HiKEY</div><div class="track"><div class="fill hi" style="width:59.9%"></div></div><div class="v">59.9</div></div>
+    <div class="bar"><div class="nm">MultiDocFusion<span class="fam">best of text chunks</span></div><div class="track"><div class="fill mid" style="width:52.6%"></div></div><div class="v">52.6</div></div>
+    <div class="bar"><div class="nm">HopRAG<span class="fam">best of text graph</span></div><div class="track"><div class="fill mid" style="width:51.8%"></div></div><div class="v">51.8</div></div>
+    <div class="bar"><div class="nm">RAPTOR<span class="fam">text graph · Part 2</span></div><div class="track"><div class="fill mid" style="width:50.9%"></div></div><div class="v">50.9</div></div>
+    <div class="bar"><div class="nm">SimpleDoc<span class="fam">best of MM graph</span></div><div class="track"><div class="fill mid" style="width:46%"></div></div><div class="v">46.0</div></div>
+    <div class="bar"><div class="nm">VDocRAG<span class="fam">best of page-level MM</span></div><div class="track"><div class="fill mid" style="width:44.9%"></div></div><div class="v">44.9</div></div>
+  </div>
+</div>
+<p class="small" style="margin:0;">one bar per family: the strongest of the 14 baselines (+ RAPTOR from Part 2) · full 14-row tables are in the paper</p>
+<div class="note">On the multi-document benchmark (FRAMES), All improves by <b>+11.4pt</b> · hierarchy-path routing misses fewer of the scattered documents</div>
+
+
+  </div>
+  <div class="foot">29 / 32</div>
+</div></section>
+<section class="pg" data-name="30_results2"><div class="slide">
+  <h1>Token-Budget Robustness and End-to-End QA</h1>
+  <div class="body">
+
+<div class="two" style="align-items:start;">
+  <div class="card">
+    <p style="font-size:1.9cqw; margin:0 0 .8cqw;"><b>Does it survive a tighter budget</b> <span class="dim small">document recall@10</span></p>
+    <table>
+      <tr><th>Budget</th><th class="num">HiKEY</th><th class="num">MultiDocFusion</th><th class="num">page methods</th></tr>
+      <tr><td>0.5K tokens</td><td class="num"><b class="amber">78.8</b></td><td class="num">74.3</td><td class="num" rowspan="3" style="color:var(--warn); text-align:center;">cannot adapt<br>(whole pages)</td></tr>
+      <tr><td>1K tokens</td><td class="num"><b class="amber">79.1</b></td><td class="num">74.6</td></tr>
+      <tr><td>2K tokens</td><td class="num"><b class="amber">81.3</b></td><td class="num">76.8</td></tr>
+    </table>
+    <p class="small" style="margin:.8cqw 0 0;">the <b>Pack stage</b> at work · still best at 1/32 of the full budget</p>
+  </div>
+  <div class="card">
+    <p style="font-size:1.9cqw; margin:0 0 .8cqw;"><b>Do the answers improve</b> <span class="dim small">EM · exact match, mean of two benchmarks</span></p>
+    <div class="bar"><div class="nm">HiKEY</div><div class="track"><div class="fill hi" style="width:19%"></div></div><div class="v">19.0</div></div>
+    <div class="bar"><div class="nm">MultiDocFusion<span class="fam">best of text chunks</span></div><div class="track"><div class="fill mid" style="width:15.4%"></div></div><div class="v">15.4</div></div>
+    <div class="bar"><div class="nm">HopRAG<span class="fam">best of text graph</span></div><div class="track"><div class="fill mid" style="width:15.3%"></div></div><div class="v">15.3</div></div>
+    <div class="bar"><div class="nm">SimpleDoc<span class="fam">best of MM graph</span></div><div class="track"><div class="fill mid" style="width:15.3%"></div></div><div class="v">15.3</div></div>
+    <div class="bar"><div class="nm">RAPTOR<span class="fam">text graph · Part 2</span></div><div class="track"><div class="fill mid" style="width:15%"></div></div><div class="v">15.0</div></div>
+    <div class="bar"><div class="nm">VDocRAG<span class="fam">best of page-level MM</span></div><div class="track"><div class="fill mid" style="width:14.5%"></div></div><div class="v">14.5</div></div>
+    <p class="small" style="margin:.9cqw 0 0;">largest gaps on <b>table/figure-grounded questions</b> and <b>multi-hop (3+) questions</b></p>
+  </div>
+</div>
+
+  </div>
+  <div class="foot">30 / 32</div>
+</div></section>
+<section class="pg" data-name="31_ablation"><div class="slide">
+  <h1>Ablation Study</h1>
+  <div class="body">
+
+<p class="small" style="margin:0;">document recall (Avg R@10) when one design choice is removed · bar length = the value on a 0–100 axis</p>
+<div class="two" style="align-items:stretch;">
+  <div class="card">
+    <p class="ah"><b>hierarchy in the index</b> · does the Doc card need it?</p>
+    <div class="abar"><div class="nm">body text only</div><div class="track"><div class="fill" style="width:81.2%"></div></div><div class="v">81.2</div></div>
+    <div class="abar"><div class="nm">+ titles, concatenated</div><div class="track"><div class="fill" style="width:84.6%"></div></div><div class="v">84.6</div></div>
+    <div class="abar"><div class="nm"><b>separate hierarchy field</b></div><div class="track"><div class="fill ours" style="width:88.6%"></div></div><div class="v">88.6</div></div>
+    <p class="at">hierarchy as an explicit signal: <b style="color:var(--amber);">+7.4</b> over no hierarchy</p>
+  </div>
+  <div class="card">
+    <p class="ah"><b>two-stage routing</b> · is coarse-to-fine needed?</p>
+    <div class="abar"><div class="nm">sections only</div><div class="track"><div class="fill" style="width:76.1%"></div></div><div class="v">76.1</div></div>
+    <div class="abar"><div class="nm">documents only</div><div class="track"><div class="fill" style="width:87.7%"></div></div><div class="v">87.7</div></div>
+    <div class="abar"><div class="nm"><b>docs → sections</b></div><div class="track"><div class="fill ours" style="width:88.6%"></div></div><div class="v">88.6</div></div>
+    <p class="at">skipping the document stage collapses recall (−12.5)</p>
+  </div>
+  <div class="card">
+    <p class="ah"><b>search scope</b> · does narrowing help at all?</p>
+    <div class="abar"><div class="nm">whole corpus, no routing</div><div class="track"><div class="fill" style="width:81%"></div></div><div class="v">81.0</div></div>
+    <div class="abar"><div class="nm">candidate docs only</div><div class="track"><div class="fill" style="width:87.9%"></div></div><div class="v">87.9</div></div>
+    <div class="abar"><div class="nm"><b>+ anchor subtree</b></div><div class="track"><div class="fill ours" style="width:88.6%"></div></div><div class="v">88.6</div></div>
+    <p class="at">routing itself is worth <b style="color:var(--amber);">+7.6</b></p>
+  </div>
+  <div class="card">
+    <p class="ah"><b>score signals</b> · does each one earn its place?</p>
+    <div class="abar"><div class="nm">keywords only</div><div class="track"><div class="fill" style="width:87.6%"></div></div><div class="v">87.6</div></div>
+    <div class="abar"><div class="nm">+ text embeddings</div><div class="track"><div class="fill" style="width:88.2%"></div></div><div class="v">88.2</div></div>
+    <div class="abar"><div class="nm"><b>+ visual embeddings</b></div><div class="track"><div class="fill ours" style="width:88.6%"></div></div><div class="v">88.6</div></div>
+    <p class="at">each signal adds a little · the visual one completes it</p>
+  </div>
+</div>
+<div class="note">No latency or cost experiment in the paper · the efficiency case rests on <b>zero query-time LLM calls</b> (by design) and the <b>budget robustness</b> of the previous slide; offline DHP indexing overhead is acknowledged as a limitation, without numbers</div>
+
+  </div>
+  <div class="foot">31 / 32</div>
+</div></section>
+<section class="pg" data-name="32_takeaways"><div class="slide">
+  <h1>Takeaways</h1>
+  <div class="body">
+
+<div class="three" style="align-items:stretch;">
+  <div class="card" style="border-color:rgba(124,196,255,.5);">
+    <p style="font-size:2.0cqw; margin:0 0 .8cqw;"><b class="accent">The hierarchy is a free signal</b></p>
+    <p class="small">Documents already carry the structure that should steer search. This is why the lineage moved from chunk similarity to hierarchy traversal.</p>
+  </div>
+  <div class="card" style="border-color:rgba(255,192,107,.5);">
+    <p style="font-size:2.0cqw; margin:0 0 .8cqw;"><b class="amber">Narrow, then bundle</b></p>
+    <p class="small">HiKEY's answer: narrow in two stages, documents → sections (zero LLM calls), then fill the budget core-first. A combination tuned to the industrial setting: thousands of docs, tables and figures, a finite reader budget.</p>
+  </div>
+  <div class="card" style="border-color:rgba(255,123,114,.5);">
+    <p style="font-size:2.0cqw; margin:0 0 .8cqw;"><b class="warn">The open question (discussion)</b></p>
+    <p class="small">Whichever direction the traversal takes, and however it is trained, it happens <b>over headings and summaries</b>. A fact they fail to carry is invisible to every method here. Who breaks this limit?</p>
+  </div>
+</div>
+<div class="callout" style="margin-top:1cqw;">One line · document-QA search has become a <b>hierarchy-traversal problem</b>, and HiKEY is where that traversal converges for multimodal industrial documents: cheap and robust</div>
+
+  </div>
+  <div class="foot">32 / 32</div>
+</div></section>
+<div id="nav"><button id="p">&#9666;</button><span id="ind"></span><button id="n">&#9656;</button></div>
+<script>
+  var pages=[].slice.call(document.querySelectorAll('.pg')), cur=0;
+  function show(i){ cur=Math.max(0,Math.min(pages.length-1,i));
+    pages.forEach(function(p,k){ p.classList.toggle('on', k===cur); });
+    document.getElementById('ind').textContent=cur+' / '+(pages.length-1);
+    if(history.replaceState) history.replaceState(null,'','#'+cur); }
+  document.getElementById('n').onclick=function(e){e.stopPropagation();show(cur+1);};
+  document.getElementById('p').onclick=function(e){e.stopPropagation();show(cur-1);};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(cur+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(cur-1);}
+    else if(e.key==='Home'){show(0);} else if(e.key==='End'){show(pages.length-1);} });
+  show(parseInt((location.hash||'#0').slice(1))||0);
+</script>
+</body></html>

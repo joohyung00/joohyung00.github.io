@@ -3,6 +3,7 @@
 or a seminar deck into assets/seminars/<key>/ with --into assets/seminars.
 
     python build/talks_import.py <key> [--slides deck.pptx|deck.pdf] [--poster poster.pptx|poster.pdf] [--into assets/seminars]
+    python build/talks_import.py <key> --html ~/.claude/data/slides/items/<deck> --into assets/seminars
 
 Writes, under assets/talks/<key>/:
     slides/NN.webp         1280px-wide slide images        (from --slides)
@@ -12,6 +13,11 @@ Writes, under assets/talks/<key>/:
     poster_thumb.webp      640px thumbnail for the listing
     poster.pdf
     meta.json              {"slides": N, "poster": {"w":..,"h":..}}  — read by build.py
+With --html (a Slides-Hub deck: one NN_*.html per slide, order in its index.html) the slides are served as
+the original HTML files instead of images:
+    html/NN_*.html, html/deck.html   copied verbatim (self-contained pages; deck.html = all slides on one page)
+    slides/thumb/NN.webp, slides.pdf  from a Playwright print of the deck (build/html_deck_pdf.py)
+    meta.json              {"slides": N, "html": ["00_cover.html", ...]}
 
 Then add/adjust the entry in build/content/talks.yml and run `python build/build.py`.
 
@@ -51,14 +57,35 @@ def main():
     ap.add_argument("key")
     ap.add_argument("--slides")
     ap.add_argument("--poster")
+    ap.add_argument("--html", metavar="DECKDIR", help="Slides-Hub HTML deck folder: serve the slide pages themselves (see docstring)")
     ap.add_argument("--into", default="assets/talks", help="destination folder under the repo root (default assets/talks; use assets/seminars for seminars.yml entries)")
     a = ap.parse_args()
-    if not (a.slides or a.poster):
-        ap.error("give --slides and/or --poster")
+    if not (a.slides or a.poster or a.html):
+        ap.error("give --slides, --poster and/or --html")
     dest = os.path.join(ROOT, *a.into.strip("/").split("/"), a.key)
     meta_path = os.path.join(dest, "meta.json")
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {}
     with tempfile.TemporaryDirectory() as tmp:
+        if a.html:
+            import re
+            deck = os.path.abspath(a.html)
+            names = re.findall(r'\["([^"]+\.html)"', open(os.path.join(deck, "index.html"), encoding="utf-8").read())
+            hd = os.path.join(dest, "html"); shutil.rmtree(hd, ignore_errors=True); os.makedirs(hd)
+            for n in names:
+                shutil.copy(os.path.join(deck, n), os.path.join(hd, n))
+            if os.path.exists(os.path.join(deck, "deck.html")):
+                shutil.copy(os.path.join(deck, "deck.html"), os.path.join(hd, "deck.html"))
+            pdf = os.path.join(tmp, "deck.pdf")
+            subprocess.run([sys.executable, os.path.join(HERE, "html_deck_pdf.py"), deck, pdf], check=True, stdout=subprocess.DEVNULL)
+            sd = os.path.join(dest, "slides"); shutil.rmtree(sd, ignore_errors=True)
+            os.makedirs(os.path.join(sd, "thumb"))
+            subprocess.run(["pdftoppm", "-png", "-scale-to-x", "640", "-scale-to-y", "-1", pdf, os.path.join(tmp, "s")], check=True)
+            pngs = sorted(glob.glob(os.path.join(tmp, "s-*.png")))
+            for i, p in enumerate(pngs, 1):
+                webp(p, os.path.join(sd, "thumb", f"{i:02d}.webp"), 320, 75)
+            shutil.copy(pdf, os.path.join(dest, "slides.pdf"))
+            meta["slides"] = len(names); meta["html"] = names
+            print(f"{a.key}: {len(names)} html slides")
         if a.slides:
             pdf = to_pdf(os.path.abspath(a.slides), tmp)
             sd = os.path.join(dest, "slides"); shutil.rmtree(sd, ignore_errors=True)
@@ -69,7 +96,7 @@ def main():
                 webp(p, os.path.join(sd, f"{i:02d}.webp"), 1280)
                 webp(p, os.path.join(sd, "thumb", f"{i:02d}.webp"), 320, 75)
             shutil.copy(pdf, os.path.join(dest, "slides.pdf"))
-            meta["slides"] = len(pngs)
+            meta["slides"] = len(pngs); meta.pop("html", None)
             print(f"{a.key}: {len(pngs)} slides")
         if a.poster:
             pdf = to_pdf(os.path.abspath(a.poster), tmp)

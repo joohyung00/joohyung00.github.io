@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tree-search — Flat Retrieval by Chunking and Similarity Matching</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style></head>
+<body>
+<div class="slide">
+  <h1>Flat Retrieval by Chunking and Similarity Matching</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 380">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker></defs>
+  <!-- docs -->
+  <g>
+    <rect x="30" y="120" width="120" height="150" rx="10" fill="#131b30" stroke="#2a3a58"/>
+    <rect x="46" y="104" width="120" height="150" rx="10" fill="#131b30" stroke="#2a3a58"/>
+    <rect x="62" y="88" width="120" height="150" rx="10" fill="#161f35" stroke="#2a3a58"/>
+    <text x="122" y="168" fill="#9aa7c5" font-size="16" text-anchor="middle">documents</text>
+    <text x="122" y="300" fill="#5a6a8a" font-size="15" text-anchor="middle">with structure + hierarchy</text>
+  </g>
+  <line x1="192" y1="180" x2="252" y2="180" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="222" y="162" fill="#9aa7c5" font-size="15" text-anchor="middle">① chunk</text>
+  <!-- chunks -->
+  <g>
+    <g fill="#1b2640" stroke="#7cc4ff">
+      <rect x="262" y="92" width="92" height="34" rx="6"/><rect x="262" y="136" width="92" height="34" rx="6"/>
+      <rect x="262" y="180" width="92" height="34" rx="6"/><rect x="262" y="224" width="92" height="34" rx="6"/>
+    </g>
+    <text x="308" y="290" fill="#5a6a8a" font-size="15" text-anchor="middle">uniform chunks</text>
+    <text x="308" y="312" fill="#ff7b72" font-size="14" text-anchor="middle">hierarchy thrown away ✂</text>
+  </g>
+  <line x1="366" y1="180" x2="426" y2="180" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="396" y="162" fill="#9aa7c5" font-size="15" text-anchor="middle">② embed</text>
+  <!-- embedding space -->
+  <g>
+    <rect x="436" y="52" width="400" height="270" rx="14" fill="#0f1525" stroke="#2a3a58"/>
+    <text x="646" y="80" fill="#9aa7c5" font-size="16" text-anchor="middle">semantic space · similar meaning = nearby points</text>
+    <g fill="#3a4a6a">
+      <circle cx="490" cy="140" r="7"/><circle cx="540" cy="250" r="7"/><circle cx="590" cy="120" r="7"/>
+      <circle cx="640" cy="280" r="7"/><circle cx="700" cy="150" r="7"/><circle cx="770" cy="250" r="7"/>
+      <circle cx="820" cy="120" r="7"/><circle cx="500" cy="300" r="7"/><circle cx="790" cy="300" r="7"/>
+    </g>
+    <g fill="#7cc4ff"><circle cx="690" cy="212" r="8"/><circle cx="730" cy="190" r="8"/><circle cx="672" cy="176" r="8"/></g>
+    <text x="702" y="196" fill="#ffc06b" font-size="26" text-anchor="middle" font-weight="800">★</text>
+    <circle cx="700" cy="195" r="52" fill="none" stroke="#ffc06b" stroke-dasharray="7 6" stroke-width="2"/>
+    <text x="700" y="286" fill="#ffc06b" font-size="15" text-anchor="middle">★ query and its top-k nearest chunks</text>
+  </g>
+  <line x1="846" y1="180" x2="930" y2="180" stroke="#9aa7c5" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="888" y="162" fill="#9aa7c5" font-size="15" text-anchor="middle">③ hand over</text>
+  <!-- reader -->
+  <rect x="938" y="120" width="230" height="120" rx="14" fill="#2b1a2b" stroke="#ff8fd8" stroke-width="2"/>
+  <text x="1053" y="172" fill="#ff8fd8" font-size="20" text-anchor="middle" font-weight="700">Reader (LLM)</text>
+  <text x="1053" y="202" fill="#9aa7c5" font-size="15" text-anchor="middle">reads k chunks, writes the answer</text>
+</svg>
+<ul>
+  <li><b>A single criterion</b> · is the chunk semantically close to the question</li>
+  <li>Simple and fast · still the most widely used baseline</li>
+</ul>
+
+  </div>
+  <div class="foot">03 / 32</div>
+</div>
+</body></html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tree-search — Ablation Study</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .abar{ display:grid; grid-template-columns:14cqw 1fr 4.5cqw; align-items:center; gap:.8cqw; font-size:1.35cqw; }
+  .abar .nm{ color:var(--muted); text-align:right; }
+  .abar .nm b{ color:#fff; }
+  .abar .track{ background:var(--code-bg); border:1px solid var(--edge); border-radius:.45cqw; height:1.9cqw; overflow:hidden; }
+  .abar .fill{ height:100%; border-radius:.45cqw 0 0 .45cqw; background:linear-gradient(90deg,#3a6ea5,var(--accent)); }
+  .abar .fill.ours{ background:linear-gradient(90deg,#8a6d2e,var(--amber)); }
+  .abar .v{ font-family:ui-monospace,monospace; color:var(--muted); }
+  .ah{ font-size:1.7cqw; margin:0 0 .6cqw; }
+  .ah b{ color:var(--accent); }
+  .at{ font-size:1.35cqw; color:var(--dim); margin:.5cqw 0 0; }
+</style></head>
+<body>
+<div class="slide">
+  <h1>Ablation Study</h1>
+  <div class="body">
+
+<p class="small" style="margin:0;">document recall (Avg R@10) when one design choice is removed · bar length = the value on a 0–100 axis</p>
+<div class="two" style="align-items:stretch;">
+  <div class="card">
+    <p class="ah"><b>hierarchy in the index</b> · does the Doc card need it?</p>
+    <div class="abar"><div class="nm">body text only</div><div class="track"><div class="fill" style="width:81.2%"></div></div><div class="v">81.2</div></div>
+    <div class="abar"><div class="nm">+ titles, concatenated</div><div class="track"><div class="fill" style="width:84.6%"></div></div><div class="v">84.6</div></div>
+    <div class="abar"><div class="nm"><b>separate hierarchy field</b></div><div class="track"><div class="fill ours" style="width:88.6%"></div></div><div class="v">88.6</div></div>
+    <p class="at">hierarchy as an explicit signal: <b style="color:var(--amber);">+7.4</b> over no hierarchy</p>
+  </div>
+  <div class="card">
+    <p class="ah"><b>two-stage routing</b> · is coarse-to-fine needed?</p>
+    <div class="abar"><div class="nm">sections only</div><div class="track"><div class="fill" style="width:76.1%"></div></div><div class="v">76.1</div></div>
+    <div class="abar"><div class="nm">documents only</div><div class="track"><div class="fill" style="width:87.7%"></div></div><div class="v">87.7</div></div>
+    <div class="abar"><div class="nm"><b>docs → sections</b></div><div class="track"><div class="fill ours" style="width:88.6%"></div></div><div class="v">88.6</div></div>
+    <p class="at">skipping the document stage collapses recall (−12.5)</p>
+  </div>
+  <div class="card">
+    <p class="ah"><b>search scope</b> · does narrowing help at all?</p>
+    <div class="abar"><div class="nm">whole corpus, no routing</div><div class="track"><div class="fill" style="width:81%"></div></div><div class="v">81.0</div></div>
+    <div class="abar"><div class="nm">candidate docs only</div><div class="track"><div class="fill" style="width:87.9%"></div></div><div class="v">87.9</div></div>
+    <div class="abar"><div class="nm"><b>+ anchor subtree</b></div><div class="track"><div class="fill ours" style="width:88.6%"></div></div><div class="v">88.6</div></div>
+    <p class="at">routing itself is worth <b style="color:var(--amber);">+7.6</b></p>
+  </div>
+  <div class="card">
+    <p class="ah"><b>score signals</b> · does each one earn its place?</p>
+    <div class="abar"><div class="nm">keywords only</div><div class="track"><div class="fill" style="width:87.6%"></div></div><div class="v">87.6</div></div>
+    <div class="abar"><div class="nm">+ text embeddings</div><div class="track"><div class="fill" style="width:88.2%"></div></div><div class="v">88.2</div></div>
+    <div class="abar"><div class="nm"><b>+ visual embeddings</b></div><div class="track"><div class="fill ours" style="width:88.6%"></div></div><div class="v">88.6</div></div>
+    <p class="at">each signal adds a little · the visual one completes it</p>
+  </div>
+</div>
+<div class="note">No latency or cost experiment in the paper · the efficiency case rests on <b>zero query-time LLM calls</b> (by design) and the <b>budget robustness</b> of the previous slide; offline DHP indexing overhead is acknowledged as a limitation, without numbers</div>
+
+  </div>
+  <div class="foot">31 / 32</div>
+</div>
+</body></html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — Question Types in Long-Term Conversation Benchmarks</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+벤치마크가 묻는 것. LoCoMo: 한 대화가 평균 300턴·9K 토큰, 여러 세션이 몇 주 간격, 질문은 대화가 다 끝난 뒤. F1·BLEU-1 로 채점.
+네 유형을 러닝 예시 위에 얹었다: 단일 홉(페이지 하나), 다중 홉(페이지 둘을 이어야), 시간(페이지 + 타임스탬프), 오픈 도메인(페이지 + 바깥 지식·취향).
+GVD 는 15명 가상 사용자 × 10일 대화, LLM 심판(DeepSeek-R1)이 검색 정확도·정답성·일관성을 채점.
+-->
+<div class="slide">
+  <h1>Question Types in Long-Term Conversation Benchmarks</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+
+<svg viewBox="0 0 1200 480">
+  <!-- LoCoMo scale strip -->
+  <rect x="0" y="0" width="1200" height="84" rx="12" fill="#161f35" stroke="#2a3a58"/>
+  <text x="18" y="30" fill="#ffc06b" font-size="15" font-weight="800">LoCoMo</text>
+  <text x="18" y="54" fill="#9aa7c5" font-size="12.5">≈ 300 turns</text>
+  <text x="18" y="72" fill="#9aa7c5" font-size="12.5">≈ 9K tokens / conversation</text>
+  <g>
+<rect x="230" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="251" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="272" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="293" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="314" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="335" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="356" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="377" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="398" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="419" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="440" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="461" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="482" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="503" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="524" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="545" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="566" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="587" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="608" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="629" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="650" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="671" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="692" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="713" y="36" width="17" height="24" rx="3" fill="#1d1630" stroke="#c084fc" opacity=".8"/><rect x="734" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="755" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="776" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="797" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="818" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/><rect x="839" y="30" width="17" height="30" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".8"/>
+  </g>
+  <text x="230" y="78" fill="#5a6a8a" font-size="11.5">session 1</text>
+  <text x="356" y="78" fill="#5a6a8a" font-size="11.5">session 2</text>
+  <text x="482" y="78" fill="#5a6a8a" font-size="11.5">session 3</text>
+  <text x="608" y="78" fill="#5a6a8a" font-size="11.5">…</text>
+  <text x="734" y="78" fill="#5a6a8a" font-size="11.5">weeks apart</text>
+  <rect x="900" y="20" width="282" height="48" rx="8" fill="#2b2413" stroke="#ffc06b"/>
+  <text x="1041" y="40" fill="#ffc06b" font-size="12.5" font-weight="700" text-anchor="middle">questions asked after the whole conversation</text>
+  <text x="1041" y="58" fill="#9aa7c5" font-size="11.5" text-anchor="middle">scored by F1 and BLEU-1 against a gold answer</text>
+  <!-- GVD strip -->
+  <rect x="0" y="98" width="1200" height="48" rx="12" fill="#161f35" stroke="#2a3a58"/>
+  <text x="18" y="128" fill="#7cc4ff" font-size="15" font-weight="800">GVD</text>
+  <text x="90" y="128" fill="#9aa7c5" font-size="12.5">15 virtual users × 10 days · at least two topics per day · an LLM judge scores retrieval accuracy, correctness, coherence</text>
+
+  <rect x="0" y="166" width="282" height="300" rx="12" fill="#161f35" stroke="#7cc4ff" stroke-width="1.8"/>
+  <text x="141" y="194" fill="#7cc4ff" font-size="16" font-weight="800" text-anchor="middle">single-hop</text>
+  <g transform="translate(0,0)"><rect x="34" y="226" width="70" height="40" rx="6" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/><text x="69" y="250" fill="#eef3fb" font-size="11.5" text-anchor="middle">p1 park</text><rect x="114" y="226" width="70" height="40" rx="6" fill="#0f1525" stroke="#3a4a6a" stroke-width="1"/><text x="149" y="250" fill="#5a6a8a" font-size="11.5" text-anchor="middle">p2 squirrels</text><rect x="194" y="226" width="70" height="40" rx="6" fill="#0f1525" stroke="#3a4a6a" stroke-width="1"/><text x="229" y="250" fill="#5a6a8a" font-size="11.5" text-anchor="middle">p3 run</text><line x1="69" y1="266" x2="69" y2="296" stroke="#7cc4ff" stroke-width="2"/><text x="69" y="310" fill="#7cc4ff" font-size="11.5" text-anchor="middle">one page</text></g>
+  <rect x="16" y="318" width="250" height="70" rx="8" fill="#10233a" stroke="#7cc4ff" opacity=".95"/>
+  <text x="28" y="342" fill="#eef3fb" font-size="13">Where did the user go</text>
+  <text x="28" y="362" fill="#eef3fb" font-size="13">last week?</text>
+  <text x="16" y="420" fill="#9aa7c5" font-size="12.5">needs · one page</text>
+  <text x="16" y="444" fill="#9aa7c5" font-size="12.5">answer · <tspan fill="#7cc4ff" font-weight="700">the wetland park</tspan></text>
+
+  <rect x="306" y="166" width="282" height="300" rx="12" fill="#161f35" stroke="#c084fc" stroke-width="1.8"/>
+  <text x="447" y="194" fill="#c084fc" font-size="16" font-weight="800" text-anchor="middle">multi-hop</text>
+  <g transform="translate(306,0)"><rect x="34" y="226" width="70" height="40" rx="6" fill="#0f1525" stroke="#3a4a6a" stroke-width="1"/><text x="69" y="250" fill="#5a6a8a" font-size="11.5" text-anchor="middle">p1 park</text><rect x="114" y="226" width="70" height="40" rx="6" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/><text x="149" y="250" fill="#eef3fb" font-size="11.5" text-anchor="middle">p2 squirrels</text><rect x="194" y="226" width="70" height="40" rx="6" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/><text x="229" y="250" fill="#eef3fb" font-size="11.5" text-anchor="middle">p3 run</text><path d="M229,266 L229,284 L149,284 L149,266" fill="none" stroke="#c084fc" stroke-width="2"/><text x="189" y="302" fill="#c084fc" font-size="11.5" text-anchor="middle">two pages, linked</text></g>
+  <rect x="322" y="318" width="250" height="70" rx="8" fill="#1d1630" stroke="#c084fc" opacity=".95"/>
+  <text x="334" y="342" fill="#eef3fb" font-size="13">What did the user see at the</text>
+  <text x="334" y="362" fill="#eef3fb" font-size="13">place where they went running?</text>
+  <text x="322" y="420" fill="#9aa7c5" font-size="12.5">needs · two pages joined</text>
+  <text x="322" y="444" fill="#9aa7c5" font-size="12.5">answer · <tspan fill="#c084fc" font-weight="700">squirrels</tspan></text>
+
+  <rect x="612" y="166" width="282" height="300" rx="12" fill="#161f35" stroke="#ffc06b" stroke-width="1.8"/>
+  <text x="753" y="194" fill="#ffc06b" font-size="16" font-weight="800" text-anchor="middle">temporal</text>
+  <g transform="translate(612,0)"><rect x="34" y="226" width="70" height="40" rx="6" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/><text x="69" y="250" fill="#eef3fb" font-size="11.5" text-anchor="middle">p1 park</text><rect x="114" y="226" width="70" height="40" rx="6" fill="#0f1525" stroke="#3a4a6a" stroke-width="1"/><text x="149" y="250" fill="#5a6a8a" font-size="11.5" text-anchor="middle">p2 squirrels</text><rect x="194" y="226" width="70" height="40" rx="6" fill="#0f1525" stroke="#3a4a6a" stroke-width="1"/><text x="229" y="250" fill="#5a6a8a" font-size="11.5" text-anchor="middle">p3 run</text><rect x="34" y="272" width="70" height="20" rx="4" fill="#2b2413" stroke="#ffc06b"/><text x="69" y="286" fill="#ffc06b" font-size="11.5" text-anchor="middle">T · week 1</text><text x="118" y="286" fill="#ffc06b" font-size="11.5">+ today’s date</text></g>
+  <rect x="628" y="318" width="250" height="70" rx="8" fill="#2b2413" stroke="#ffc06b" opacity=".95"/>
+  <text x="640" y="342" fill="#eef3fb" font-size="13">How many weeks ago did the</text>
+  <text x="640" y="362" fill="#eef3fb" font-size="13">user visit the park?</text>
+  <text x="628" y="420" fill="#9aa7c5" font-size="12.5">needs · a page plus its timestamp</text>
+  <text x="628" y="444" fill="#9aa7c5" font-size="12.5">answer · <tspan fill="#ffc06b" font-weight="700">three weeks ago</tspan></text>
+
+  <rect x="918" y="166" width="282" height="300" rx="12" fill="#161f35" stroke="#7ee787" stroke-width="1.8"/>
+  <text x="1059" y="194" fill="#7ee787" font-size="16" font-weight="800" text-anchor="middle">open-domain</text>
+  <g transform="translate(918,0)"><rect x="34" y="226" width="70" height="40" rx="6" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/><text x="69" y="250" fill="#eef3fb" font-size="11.5" text-anchor="middle">p1 park</text><rect x="114" y="226" width="70" height="40" rx="6" fill="#0f1525" stroke="#3a4a6a" stroke-width="1"/><text x="149" y="250" fill="#5a6a8a" font-size="11.5" text-anchor="middle">p2 squirrels</text><rect x="194" y="226" width="70" height="40" rx="6" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/><text x="229" y="250" fill="#eef3fb" font-size="11.5" text-anchor="middle">p3 run</text><rect x="34" y="272" width="240" height="20" rx="4" fill="#0f2a1c" stroke="#7ee787"/><text x="154" y="286" fill="#7ee787" font-size="11.5" text-anchor="middle">+ world knowledge · + preferences</text></g>
+  <rect x="934" y="318" width="250" height="70" rx="8" fill="#0f2a1c" stroke="#7ee787" opacity=".95"/>
+  <text x="946" y="342" fill="#eef3fb" font-size="13">What would be a good gift</text>
+  <text x="946" y="362" fill="#eef3fb" font-size="13">for the user?</text>
+  <text x="934" y="420" fill="#9aa7c5" font-size="12.5">needs · pages plus outside knowledge</text>
+  <text x="934" y="444" fill="#9aa7c5" font-size="12.5">answer · <tspan fill="#7ee787" font-weight="700">running shoes</tspan></text>
+
+</svg>
+
+  </div>
+  <div class="foot">03 / 25</div>
+</div>
+</body></html>

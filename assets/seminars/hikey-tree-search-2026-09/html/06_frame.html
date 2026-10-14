@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tree-search — A Common Frame: Build, Traverse, Pack</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style></head>
+<body>
+<div class="slide">
+  <h1>A Common Frame: Build, Traverse, Pack</h1>
+  <div class="body">
+
+<svg viewBox="0 0 1200 360">
+  <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#9aa7c5"/></marker></defs>
+  <!-- build -->
+  <rect x="20" y="60" width="330" height="220" rx="16" fill="#131b30" stroke="#c084fc" stroke-width="2"/>
+  <text x="185" y="98" fill="#c084fc" font-size="23" font-weight="800" text-anchor="middle">① BUILD</text>
+  <text x="185" y="130" fill="#9aa7c5" font-size="16" text-anchor="middle">give each document a hierarchy (tree)</text>
+  <text x="185" y="153" fill="#9aa7c5" font-size="16" text-anchor="middle">with headings and summaries</text>
+  <g stroke="#3a4a6a" stroke-width="1.5">
+    <line x1="185" y1="190" x2="135" y2="230"/><line x1="185" y1="190" x2="235" y2="230"/>
+  </g>
+  <circle cx="185" cy="188" r="11" fill="#1b2640" stroke="#c084fc"/>
+  <circle cx="135" cy="234" r="11" fill="#1b2640" stroke="#c084fc"/>
+  <circle cx="235" cy="234" r="11" fill="#1b2640" stroke="#c084fc"/>
+  <text x="185" y="268" fill="#5a6a8a" font-size="14" text-anchor="middle">offline · once per corpus</text>
+  <line x1="356" y1="170" x2="416" y2="170" stroke="#9aa7c5" stroke-width="3" marker-end="url(#ar)"/>
+  <!-- walk -->
+  <rect x="424" y="60" width="330" height="220" rx="16" fill="#131b30" stroke="#7cc4ff" stroke-width="2"/>
+  <text x="589" y="98" fill="#7cc4ff" font-size="23" font-weight="800" text-anchor="middle">② TRAVERSE</text>
+  <text x="589" y="130" fill="#9aa7c5" font-size="16" text-anchor="middle">per question, narrow the tree</text>
+  <text x="589" y="153" fill="#9aa7c5" font-size="16" text-anchor="middle">down to the places worth reading</text>
+  <g stroke="#3a4a6a" stroke-width="1.5">
+    <line x1="589" y1="190" x2="539" y2="230"/><line x1="589" y1="190" x2="639" y2="230"/>
+  </g>
+  <circle cx="589" cy="188" r="11" fill="#1b2640" stroke="#7cc4ff"/>
+  <circle cx="539" cy="234" r="11" fill="#101828" stroke="#3a4a6a"/>
+  <circle cx="639" cy="234" r="11" fill="#2b2413" stroke="#ffc06b" stroke-width="2.5"/>
+  <text x="589" y="268" fill="#5a6a8a" font-size="14" text-anchor="middle">online · per question</text>
+  <line x1="760" y1="170" x2="820" y2="170" stroke="#9aa7c5" stroke-width="3" marker-end="url(#ar)"/>
+  <!-- pack -->
+  <rect x="828" y="60" width="330" height="220" rx="16" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="993" y="98" fill="#7ee787" font-size="23" font-weight="800" text-anchor="middle">③ PACK</text>
+  <text x="993" y="130" fill="#9aa7c5" font-size="16" text-anchor="middle">bundle the chosen evidence</text>
+  <text x="993" y="153" fill="#9aa7c5" font-size="16" text-anchor="middle">to fit the reader budget</text>
+  <rect x="898" y="184" width="190" height="26" rx="7" fill="#0f1525" stroke="#2a3a58"/>
+  <rect x="898" y="184" width="132" height="26" rx="7" fill="rgba(126,231,135,.25)" stroke="#7ee787"/>
+  <text x="993" y="236" fill="#5a6a8a" font-size="14" text-anchor="middle">budget gauge</text>
+  <text x="993" y="268" fill="#5a6a8a" font-size="14" text-anchor="middle">→ reader writes the answer</text>
+  <!-- bottom -->
+  <text x="600" y="336" fill="#eef3fb" font-size="19" text-anchor="middle">every method that follows = <tspan fill="#ffc06b" font-weight="700">a different way to fill these three boxes</tspan></text>
+</svg>
+
+  </div>
+  <div class="foot">06 / 32</div>
+</div>
+</body></html>

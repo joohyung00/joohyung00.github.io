@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — Memory Retrieval and Response Generation</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+질의 "버거 추천해줘". 세 저장소에서 꺼내 온다(6단계 클릭).
+1단계 match score 는 폴더당 임베딩 하나(e_s) + 키워드 집합 하나(K_s, LLM 요약)로 계산: cos(e_s, e_q) + Jaccard(K_s, K_q). 폴더 안 page 별로 max/avg 를 내는 게 아니다.
+공개 코드(eval/mid_term_memory.py, 논문 실험용)로 확인한 것: e_s = 폴더 요약문의 임베딩. 질의 키워드는 별도 LLM 호출로 추출(프롬프트 "대화 주제 키워드, 최대 3개"). 실제 순서는 요약 임베딩 내적으로 FAISS top-5 폴더를 먼저 뽑고, 그 5개에만 키워드 항을 더해 0.8 임계로 거른다. 키워드 항 식은 Jaccard 가 아니라 0.5·(|겹침|/|K_q| + |겹침|/|K_s|). 2단계는 page 텍스트(질문+시각+답) 임베딩과 질의의 내적 ≥ 0.7. 검색 시 recency 가중은 코드에서 1 로 꺼 둠.
+pypi 배포판(memoryos-pypi)은 질의 키워드 추출을 아예 제거해 검색 때 키워드 항이 0 이다(삽입 때는 Jaccard 유지).
+LPM 은 전부 넣는 게 아니다: User KB 와 Agent Traits 는 질의 벡터와의 유사도 top-10 만, User Profile · Agent Profile · User Traits 는 전부.
+s1 STM: 큐의 7 페이지를 그대로(순위 없음) · s2 MTM 1단계: 매치 점수(임베딩 코사인 + 키워드 자카드)로 폴더 top-m=5 · s3 MTM 2단계: 그 폴더 안 페이지를 의미 유사도로 top-k=10, 꺼낸 폴더는 N_visit+1·recency 갱신(더 뜨거워짐) · s4 LPM: User KB·Agent Traits 각 top-10 + Profile/Traits 전부 · s5 네 블록을 하나의 프롬프트로 → LLM 한 번 → "치즈버거… 운동 잊지 마".
+숫자는 LoCoMo 설정(top-k=10; GVD 는 5). 페이지 점수는 예시.
+-->
+<div class="slide anim">
+  <h1>Memory Retrieval and Response Generation</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+<div class="mapstrip"><svg viewBox="0 0 1200 44"><defs><marker id="mp_on" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#ffc06b"/></marker><marker id="mp_off" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#3f4d6b"/></marker></defs><line x1="836" y1="6" x2="836" y2="38" stroke="#2a3a58"/><rect x="0" y="3" width="190" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="95.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">STM · recent turns</text><text x="95.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">queue of pages · FIFO</text><line x1="194" y1="22" x2="302" y2="22" stroke="#3f4d6b" stroke-width="1.2" marker-end="url(#mp_off)"/><text x="250.0" y="12" font-size="10.5" fill="#3f4d6b" text-anchor="middle">oldest page spills · match score</text><rect x="310" y="3" width="190" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="405.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">MTM · topic folders</text><text x="405.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">pages by topic · heat · evict</text><line x1="504" y1="22" x2="612" y2="22" stroke="#3f4d6b" stroke-width="1.2" marker-end="url(#mp_off)"/><text x="560.0" y="12" font-size="10.5" fill="#3f4d6b" text-anchor="middle">heat > τ · promote</text><rect x="620" y="3" width="190" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="715.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">LPM · persona</text><text x="715.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">user · agent</text><rect x="860" y="3" width="160" height="38" rx="7" fill="rgba(255,192,107,.14)" stroke="#ffc06b" stroke-width="1.8"/><text x="940.0" y="19" font-size="12.5" font-weight="700" fill="#ffc06b" text-anchor="middle">retrieve</text><text x="940.0" y="33" font-size="10.5" fill="#eef3fb" text-anchor="middle">all three tiers → prompt</text><line x1="1024" y1="22" x2="1042" y2="22" stroke="#3f4d6b" stroke-width="1.2" marker-end="url(#mp_off)"/><rect x="1050" y="3" width="150" height="38" rx="7" fill="rgba(255,192,107,.14)" stroke="#ffc06b" stroke-width="1.8"/><text x="1125.0" y="19" font-size="12.5" font-weight="700" fill="#ffc06b" text-anchor="middle">generate</text><text x="1125.0" y="33" font-size="10.5" fill="#eef3fb" text-anchor="middle">LLM → answer → new page</text></svg></div>
+<svg viewBox="0 0 1200 470">
+  <defs><marker id="a16" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+        <marker id="a16a" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#ffc06b"/></marker></defs>
+  <!-- s0: query + three tiers -->
+  <rect x="270" y="6" width="660" height="34" rx="17" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/>
+  <text x="600" y="28" fill="#ffc06b" font-size="14" font-weight="700" text-anchor="middle">query · "I feel like eating a burger, any recommendations?" · week 4</text>
+  <rect x="20" y="64" width="290" height="250" rx="12" fill="#10233a" stroke="#7cc4ff" stroke-width="1.8"/>
+  <text x="36" y="88" fill="#7cc4ff" font-size="14" font-weight="800">STM · recent turns</text>
+  <rect x="330" y="64" width="440" height="250" rx="12" fill="#1d1630" stroke="#c084fc" stroke-width="1.8"/>
+  <text x="346" y="88" fill="#c084fc" font-size="14" font-weight="800">MTM · topic folders</text>
+  <rect x="790" y="64" width="390" height="250" rx="12" fill="#0f2a1c" stroke="#7ee787" stroke-width="1.8"/>
+  <text x="806" y="88" fill="#7ee787" font-size="14" font-weight="800">LPM · user &amp; agent persona</text>
+  <g font-size="11.5" fill="#5a6a8a">
+    <rect x="36" y="102" width="258" height="24" rx="5" fill="#0f1525" stroke="#2a3a58"/><text x="46" y="118">p9 · "remember the wetland park?"</text>
+    <rect x="36" y="130" width="258" height="24" rx="5" fill="#0f1525" stroke="#2a3a58"/><text x="46" y="146">p8 · "flying to Busan next month"</text>
+    <rect x="36" y="158" width="258" height="24" rx="5" fill="#0f1525" stroke="#2a3a58"/><text x="46" y="174">p7 · "gym three times a week"</text>
+    <rect x="36" y="186" width="258" height="24" rx="5" fill="#0f1525" stroke="#2a3a58"/><text x="46" y="202">p6 · "a pasta recipe for dinner?"</text>
+    <text x="165" y="226" text-anchor="middle">… p5, p4, p3 · 7 pages in the queue</text>
+  </g>
+  <!-- s1: STM all -->
+  <g class="st" data-s="1">
+    <path d="M300,40 L165,40 L165,60" fill="none" stroke="#ffc06b" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a16a)"/>
+    <rect x="36" y="246" width="258" height="50" rx="8" fill="#161f35" stroke="#7cc4ff" stroke-width="1.5"/>
+    <text x="165" y="266" fill="#7cc4ff" font-size="12.5" font-weight="700" text-anchor="middle">all 7 pages, taken as they are</text>
+    <text x="165" y="284" fill="#9aa7c5" font-size="11.5" text-anchor="middle">no ranking · the current context</text>
+  </g>
+  <!-- s2: MTM stage 1 -->
+  <g class="st" data-s="2">
+    <path d="M600,40 L450,40 L450,60" fill="none" stroke="#ffc06b" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a16a)"/>
+    <text x="346" y="108" fill="#9aa7c5" font-size="11.5">stage 1 · match score per folder</text>
+    <g font-size="11.5">
+      <rect x="346" y="116" width="200" height="20" rx="4" fill="#161f35" stroke="#c084fc"/><text x="354" y="130" fill="#eef3fb">wetland park outing</text><text x="540" y="130" fill="#c084fc" text-anchor="end">0.83</text>
+      <rect x="346" y="140" width="200" height="20" rx="4" fill="#161f35" stroke="#c084fc"/><text x="354" y="154" fill="#eef3fb">recipe ideas</text><text x="540" y="154" fill="#c084fc" text-anchor="end">0.71</text>
+      <rect x="346" y="164" width="200" height="20" rx="4" fill="#161f35" stroke="#c084fc"/><text x="354" y="178" fill="#eef3fb">favourite restaurants</text><text x="540" y="178" fill="#c084fc" text-anchor="end">0.66</text>
+      <rect x="346" y="188" width="200" height="20" rx="4" fill="#161f35" stroke="#c084fc"/><text x="354" y="202" fill="#eef3fb">work deadlines</text><text x="540" y="202" fill="#c084fc" text-anchor="end">0.58</text>
+      <rect x="346" y="212" width="200" height="20" rx="4" fill="#161f35" stroke="#c084fc"/><text x="354" y="226" fill="#eef3fb">old laptop issue</text><text x="540" y="226" fill="#c084fc" text-anchor="end">0.49</text>
+      <text x="446" y="250" fill="#5a6a8a" text-anchor="middle">… ~2,000 folders below</text>
+    </g>
+    <rect x="346" y="262" width="200" height="22" rx="11" fill="#2b2413" stroke="#ffc06b"/><text x="446" y="277" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">top-m = 5 folders</text>
+  </g>
+  <!-- s3: MTM stage 2 -->
+  <g class="st" data-s="3">
+    <line x1="552" y1="176" x2="568" y2="176" stroke="#c084fc" stroke-width="1.8" marker-end="url(#a16)"/>
+    <text x="572" y="108" fill="#9aa7c5" font-size="11.5">stage 2 · semantic similarity</text>
+    <g font-size="11.5">
+      <rect x="572" y="116" width="182" height="20" rx="4" fill="#161f35" stroke="#2a3a58"/><text x="580" y="130" fill="#eef3fb">p3 · ran two laps, slimmer</text><text x="748" y="130" fill="#c084fc" text-anchor="end">0.78</text>
+      <rect x="572" y="140" width="182" height="20" rx="4" fill="#161f35" stroke="#2a3a58"/><text x="580" y="154" fill="#eef3fb">p−12 · no fast food, tracking</text><text x="748" y="154" fill="#c084fc" text-anchor="end">0.72</text>
+      <rect x="572" y="164" width="182" height="20" rx="4" fill="#161f35" stroke="#2a3a58"/><text x="580" y="178" fill="#eef3fb">p−7 · best burger in town?</text><text x="748" y="178" fill="#c084fc" text-anchor="end">0.70</text>
+      <rect x="572" y="188" width="182" height="20" rx="4" fill="#161f35" stroke="#2a3a58"/><text x="580" y="202" fill="#eef3fb">p−9 · a lighter dinner idea</text><text x="748" y="202" fill="#c084fc" text-anchor="end">0.61</text>
+      <rect x="572" y="212" width="182" height="20" rx="4" fill="#161f35" stroke="#2a3a58"/><text x="580" y="226" fill="#eef3fb">p1 · wetland park scenery</text><text x="748" y="226" fill="#c084fc" text-anchor="end">0.55</text>
+      <text x="663" y="250" fill="#5a6a8a" text-anchor="middle">… within the 5 folders</text>
+    </g>
+    <rect x="572" y="262" width="182" height="22" rx="11" fill="#2b2413" stroke="#ffc06b"/><text x="663" y="277" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">top-k = 10 pages</text>
+    <rect x="346" y="290" width="408" height="18" rx="9" fill="#161f35" stroke="#2a3a58"/><text x="550" y="303" fill="#9aa7c5" font-size="11.5" text-anchor="middle">chosen folders: N<tspan font-size="9" dy="2">visit</tspan><tspan dy="-2"> += 1 · recency ← now (they get hotter)</tspan></text>
+  </g>
+  <!-- s4: LPM -->
+  <g class="st" data-s="4">
+    <path d="M900,40 L985,40 L985,60" fill="none" stroke="#ffc06b" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a16a)"/>
+    <g font-size="11.5">
+      <rect x="806" y="102" width="358" height="58" rx="7" fill="#161f35" stroke="#7ee787"/>
+      <text x="816" y="120" fill="#7ee787" font-weight="700">User KB · top-10 by similarity</text>
+      <text x="816" y="138" fill="#eef3fb">"wants to get slimmer" · "ran two laps in the park"</text>
+      <text x="816" y="153" fill="#eef3fb">"went to the wetland park (week 1)" · …</text>
+      <rect x="806" y="168" width="358" height="44" rx="7" fill="#161f35" stroke="#7ee787"/>
+      <text x="816" y="186" fill="#7ee787" font-weight="700">Agent Traits · top-10 by similarity</text>
+      <text x="816" y="204" fill="#eef3fb">"promised to keep the user motivated" · …</text>
+      <rect x="806" y="220" width="358" height="44" rx="7" fill="#161f35" stroke="#7ee787" stroke-dasharray="4 3"/>
+      <text x="816" y="238" fill="#7ee787" font-weight="700">User Profile · Agent Profile · User Traits</text>
+      <text x="816" y="256" fill="#eef3fb">taken whole: name, role, "goal: get slimmer", …</text>
+    </g>
+    <rect x="806" y="274" width="358" height="22" rx="11" fill="#2b2413" stroke="#ffc06b"/><text x="985" y="289" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">who the user is · what the agent promised</text>
+  </g>
+  <!-- s5: prompt + answer -->
+  <g class="st" data-s="5">
+    <path d="M165,314 L165,345" fill="none" stroke="#7cc4ff" stroke-width="1.5" marker-end="url(#a16)"/>
+    <path d="M550,314 L550,330 L300,330 L300,345" fill="none" stroke="#c084fc" stroke-width="1.5" marker-end="url(#a16)"/>
+    <path d="M985,314 L985,330 L435,330 L435,345" fill="none" stroke="#7ee787" stroke-width="1.5" marker-end="url(#a16)"/>
+    <text x="20" y="364" fill="#9aa7c5" font-size="12" font-weight="700">final prompt</text>
+    <g font-size="12" font-weight="700" text-anchor="middle">
+      <rect x="110" y="348" width="110" height="34" rx="6" fill="#10233a" stroke="#7cc4ff"/><text x="165" y="370" fill="#7cc4ff">STM pages</text>
+      <rect x="245" y="348" width="110" height="34" rx="6" fill="#1d1630" stroke="#c084fc"/><text x="300" y="370" fill="#c084fc">MTM pages</text>
+      <rect x="380" y="348" width="110" height="34" rx="6" fill="#0f2a1c" stroke="#7ee787"/><text x="435" y="370" fill="#7ee787">LPM persona</text>
+      <rect x="515" y="348" width="90" height="34" rx="6" fill="#2b2413" stroke="#ffc06b"/><text x="560" y="370" fill="#ffc06b">query</text>
+    </g>
+    <text x="232" y="370" fill="#9aa7c5" font-size="15" text-anchor="middle">+</text><text x="367" y="370" fill="#9aa7c5" font-size="15" text-anchor="middle">+</text><text x="502" y="370" fill="#9aa7c5" font-size="15" text-anchor="middle">+</text>
+    <line x1="606" y1="365" x2="636" y2="365" stroke="#9aa7c5" stroke-width="1.8" marker-end="url(#a16)"/>
+    <circle cx="668" cy="365" r="26" fill="#2a1530" stroke="#ff8fd8" stroke-width="2.5"/><text x="668" y="370" fill="#ff8fd8" font-size="13" font-weight="800" text-anchor="middle">LLM</text>
+    <line x1="696" y1="365" x2="726" y2="365" stroke="#9aa7c5" stroke-width="1.8" marker-end="url(#a16)"/>
+    <rect x="730" y="340" width="450" height="50" rx="10" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/>
+    <text x="955" y="361" fill="#ffc06b" font-size="13" font-weight="700" text-anchor="middle">"The cheeseburger at […] is great,</text>
+    <text x="955" y="379" fill="#ffc06b" font-size="13" font-weight="700" text-anchor="middle">just don't forget you're hitting the gym!"</text>
+    <text x="600" y="416" fill="#9aa7c5" font-size="12.5" text-anchor="middle">recent context from STM · the relevant past from MTM · who the user is from LPM · one generation call</text>
+  </g>
+</svg>
+
+  </div>
+<div class="ctrl"><button id="prev">◂</button><span id="ind"></span><button id="next">▸</button></div>
+  <div class="foot">18 / 25</div>
+</div>
+<script>
+(function(){
+  const els=[...document.querySelectorAll('.st')]; const N=Math.max(...els.map(e=>+e.dataset.s))+1;
+  let cur = location.search.includes('all') ? N-1 : 0;
+  const ind=document.getElementById('ind');
+  function render(){ els.forEach(e=>e.classList.toggle('shown', +e.dataset.s<=cur)); if(ind) ind.textContent='step '+cur+' / '+(N-1); }
+  function go(d){ cur=Math.max(0,Math.min(N-1,cur+d)); render(); }
+  const nx=document.getElementById('next'), pv=document.getElementById('prev');
+  if(nx) nx.onclick=e=>{e.stopPropagation();go(1);}; if(pv) pv.onclick=e=>{e.stopPropagation();go(-1);};
+  document.querySelector('.slide').addEventListener('click',()=>go(1));
+  document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1);} else if(e.key==='ArrowLeft'){e.preventDefault();go(-1);} });
+  render();
+})();
+</script>
+</body></html>

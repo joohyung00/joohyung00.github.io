@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — Fixed Context Window as the Root Cause</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+왜 기본 LLM 은 못 하나. 대화 전체를 토큰 띠로 그리면, 모델은 오른쪽 끝의 고정 길이 창(앰버)만 본다. 1주차 세션(파랑)은 창 밖이라 "모른다".
+창을 키우는 것은 답이 아니다: 대화는 계속 자라고, 창 안에 있어도 "이 사용자가 누구인지"는 어디에도 없다.
+그래서 메모리 시스템이 답해야 할 질문 넷: 무엇을 저장·어떻게 갱신·무엇을 꺼낼지·어떻게 답에 넣을지. 이게 MemoryOS 의 네 모듈(storage, updating, retrieval, generation)이 된다.
+-->
+<div class="slide">
+  <h1>Fixed Context Window as the Root Cause</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+
+<svg viewBox="0 0 1200 460">
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#ff7b72"/></marker></defs>
+  <text x="8" y="22" fill="#7cc4ff" font-size="14" font-weight="700">week 1 · park, squirrels, ran two laps</text>
+  <text x="600" y="22" fill="#5a6a8a" font-size="13" text-anchor="middle">… weeks of other conversations, ≈ 9K tokens and growing …</text>
+  <text x="1192" y="22" fill="#ffc06b" font-size="14" font-weight="700" text-anchor="end">today · "remember the park?"</text>
+  <text x="8" y="56" fill="#5a6a8a" font-size="12">the whole conversation, in tokens</text>
+  <!-- context window -->
+  <rect x="722" y="38" width="474" height="106" rx="10" fill="rgba(255,192,107,.06)" stroke="#ffc06b" stroke-width="2.5"/>
+  <text x="1188" y="58" fill="#ffc06b" font-size="13" font-weight="700" text-anchor="end">context window · fixed length</text>
+  <text x="1188" y="134" fill="#ffc06b" font-size="12" text-anchor="end">only this part reaches the model</text>
+  <rect x="8.0" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="27.8" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="47.6" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="67.4" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="87.2" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="107.0" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="126.8" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="146.6" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="166.4" y="74" width="16" height="34" rx="3" fill="#10233a" stroke="#7cc4ff"/><rect x="186.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="206.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="225.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="245.6" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="265.4" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="285.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="305.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="324.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="344.6" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="364.4" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="384.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="404.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="423.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="443.6" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="463.4" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="483.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="503.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="522.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="542.6" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="562.4" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="582.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="602.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="621.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="641.6" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="661.4" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="681.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="701.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="720.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="740.6" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="760.4" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="780.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="800.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="819.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="839.6" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="859.4" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="879.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="899.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="918.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="938.6" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="958.4" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="978.2" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="998.0" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="1017.8" y="74" width="16" height="34" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="1037.6" y="74" width="16" height="34" rx="3" fill="#2b2413" stroke="#ffc06b"/><rect x="1057.4" y="74" width="16" height="34" rx="3" fill="#2b2413" stroke="#ffc06b"/><rect x="1077.2" y="74" width="16" height="34" rx="3" fill="#2b2413" stroke="#ffc06b"/><rect x="1097.0" y="74" width="16" height="34" rx="3" fill="#2b2413" stroke="#ffc06b"/><rect x="1116.8" y="74" width="16" height="34" rx="3" fill="#2b2413" stroke="#ffc06b"/><rect x="1136.6" y="74" width="16" height="34" rx="3" fill="#2b2413" stroke="#ffc06b"/><rect x="1156.4" y="74" width="16" height="34" rx="3" fill="#2b2413" stroke="#ffc06b"/><rect x="1176.2" y="74" width="16" height="34" rx="3" fill="#2b2413" stroke="#ffc06b"/>
+  <!-- outside -->
+  <rect x="8" y="112" width="170" height="2" fill="#ff7b72"/>
+  <path d="M90,116 L90,160" fill="none" stroke="#ff7b72" stroke-width="2" marker-end="url(#ar)"/>
+  <rect x="8" y="168" width="560" height="56" rx="10" fill="rgba(255,123,114,.08)" stroke="#ff7b72"/>
+  <text x="24" y="190" fill="#ff7b72" font-size="12.5" font-weight="700">outside the window → gone</text>
+  <text x="24" y="212" fill="#eef3fb" font-size="13.5">"Sorry, I don't remember you mentioning the park."</text>
+  <rect x="640" y="168" width="556" height="56" rx="10" fill="#161f35" stroke="#2a3a58"/>
+  <text x="656" y="190" fill="#9aa7c5" font-size="12.5" font-weight="700">a bigger window is not a fix</text>
+  <text x="656" y="212" fill="#9aa7c5" font-size="13">conversations keep growing · and nothing says who the user is</text>
+  <text x="8" y="254" fill="#9aa7c5" font-size="13.5">so a memory system has to answer four questions</text>
+
+  <rect x="0" y="268" width="282" height="150" rx="12" fill="#161f35" stroke="#2a3a58"/>
+  <circle cx="30" cy="298" r="13" fill="#7cc4ff"/><text x="30" y="303" fill="#0a0e1a" font-size="13" font-weight="800" text-anchor="middle">1</text>
+  <text x="52" y="303" fill="#eef3fb" font-size="16" font-weight="700">what to store</text>
+  <rect x="16" y="328" width="250" height="40" rx="8" fill="#0f1525" stroke="#7cc4ff" stroke-dasharray="4 3"/>
+  <text x="141" y="353" fill="#7cc4ff" font-size="13" font-weight="700" text-anchor="middle">becomes the storage module</text>
+  <text x="16" y="400" fill="#5a6a8a" font-size="12.5">tiers, pages, topic folders</text>
+
+  <rect x="306" y="268" width="282" height="150" rx="12" fill="#161f35" stroke="#2a3a58"/>
+  <circle cx="336" cy="298" r="13" fill="#c084fc"/><text x="336" y="303" fill="#0a0e1a" font-size="13" font-weight="800" text-anchor="middle">2</text>
+  <text x="358" y="303" fill="#eef3fb" font-size="16" font-weight="700">how to update</text>
+  <rect x="322" y="328" width="250" height="40" rx="8" fill="#0f1525" stroke="#c084fc" stroke-dasharray="4 3"/>
+  <text x="447" y="353" fill="#c084fc" font-size="13" font-weight="700" text-anchor="middle">becomes the updating module</text>
+  <text x="322" y="400" fill="#5a6a8a" font-size="12.5">what moves where, what is dropped</text>
+
+  <rect x="612" y="268" width="282" height="150" rx="12" fill="#161f35" stroke="#2a3a58"/>
+  <circle cx="642" cy="298" r="13" fill="#ffc06b"/><text x="642" y="303" fill="#0a0e1a" font-size="13" font-weight="800" text-anchor="middle">3</text>
+  <text x="664" y="303" fill="#eef3fb" font-size="16" font-weight="700">what to recall</text>
+  <rect x="628" y="328" width="250" height="40" rx="8" fill="#0f1525" stroke="#ffc06b" stroke-dasharray="4 3"/>
+  <text x="753" y="353" fill="#ffc06b" font-size="13" font-weight="700" text-anchor="middle">becomes the retrieval module</text>
+  <text x="628" y="400" fill="#5a6a8a" font-size="12.5">which pages return for a query</text>
+
+  <rect x="918" y="268" width="282" height="150" rx="12" fill="#161f35" stroke="#2a3a58"/>
+  <circle cx="948" cy="298" r="13" fill="#7ee787"/><text x="948" y="303" fill="#0a0e1a" font-size="13" font-weight="800" text-anchor="middle">4</text>
+  <text x="970" y="303" fill="#eef3fb" font-size="16" font-weight="700">how to answer</text>
+  <rect x="934" y="328" width="250" height="40" rx="8" fill="#0f1525" stroke="#7ee787" stroke-dasharray="4 3"/>
+  <text x="1059" y="353" fill="#7ee787" font-size="13" font-weight="700" text-anchor="middle">becomes the generation module</text>
+  <text x="934" y="400" fill="#5a6a8a" font-size="12.5">how recalled memory enters the prompt</text>
+
+</svg>
+<ul>
+  <li><b>root cause</b> · the model sees only what fits in the window, and earlier sessions do not</li>
+</ul>
+
+  </div>
+  <div class="foot">04 / 25</div>
+</div>
+</body></html>

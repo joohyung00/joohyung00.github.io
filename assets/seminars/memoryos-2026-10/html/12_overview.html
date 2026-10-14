@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — MemoryOS on the Running Example</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+덱의 탑 비주얼. Fig.1 을 왼쪽→오른쪽 세 저장소(STM 최근 턴 / MTM 토픽 폴더 / LPM 사용자·에이전트 페르소나) + 오른쪽 응답 생성으로 다시 그림. 위 네 칩이 논문의 네 모듈.
+step 1: 몇 주 뒤 "버거 추천?" 질의가 들어오고, (답한 뒤) 새 page 가 STM 큐 맨 위로 push.
+step 2: 큐가 7개를 넘으면 가장 오래된 p3 이 MTM 으로 흘러내리고, match score(의미 유사 + 키워드 겹침) > θ 인 폴더 "wetland park outing"(p1, p2 가 먼저 와 있음)에 합류. MTM 에는 큐에서 밀려난 page 만 있다. 폴더 요약은 LLM 이 갱신(분홍 L).
+step 3: 열(heat) > τ 인 폴더는 LPM 으로 승격되어 LLM 이 사실(User KB)·성향(User Traits)·에이전트가 한 일(Agent Traits)을 뽑아 넣음. 가장 차가운 폴더는 폴더 수가 꽉 차면 삭제.
+step 4: 매 질의마다 세 저장소에서 동시에 꺼냄: STM 전부, MTM 은 top-m 폴더 → top-k page, LPM 은 의미검색 top-10 + 프로필 전부. 한 프롬프트로 묶어 LLM 에 → "치즈버거… 운동 잊지 마세요".
+핵심 메시지: 저장·갱신·검색·생성이 한 루프로 매 턴 돈다.
+-->
+<div class="slide anim">
+  <h1>MemoryOS on the Running Example</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+
+<svg viewBox="0 0 1200 540">
+  <defs>
+    <marker id="aw" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9aa7c5"/></marker>
+    <marker id="aa" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ffc06b"/></marker>
+    <marker id="ag" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7ee787"/></marker>
+    <marker id="ap" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#c084fc"/></marker>
+  </defs>
+
+  <!-- ===== step 0 · the three tiers + modules ===== -->
+  <g class="st" data-s="0">
+    <!-- module legend -->
+    <g font-size="12.5" font-weight="700" text-anchor="middle">
+      <rect x="20" y="4" width="250" height="26" rx="13" fill="#161f35" stroke="#2a3a58"/><text x="145" y="22" fill="#eef3fb">storage · three tiers</text>
+      <rect x="290" y="4" width="250" height="26" rx="13" fill="#161f35" stroke="#2a3a58"/><text x="415" y="22" fill="#eef3fb">updating · spill, promote, evict</text>
+      <rect x="560" y="4" width="250" height="26" rx="13" fill="#161f35" stroke="#2a3a58"/><text x="685" y="22" fill="#eef3fb">retrieval · all three tiers</text>
+      <rect x="830" y="4" width="350" height="26" rx="13" fill="#161f35" stroke="#2a3a58"/><text x="1005" y="22" fill="#eef3fb">generation · one prompt, one answer</text>
+    </g>
+
+    <!-- STM -->
+    <rect x="20" y="48" width="240" height="392" rx="12" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/>
+    <text x="140" y="74" fill="#7cc4ff" font-size="15" font-weight="800" text-anchor="middle">STM · recent turns</text>
+    <text x="140" y="92" fill="#5a6a8a" font-size="11.5" text-anchor="middle">fixed-length queue of 7 pages</text>
+    <g font-size="12" fill="#eef3fb">
+      <rect x="40" y="104" width="200" height="34" rx="6" fill="#0f1525" stroke="#7cc4ff" stroke-dasharray="4 3"/><text x="52" y="126" fill="#5a6a8a">← new page</text>
+      <rect x="40" y="146" width="200" height="34" rx="6" fill="#161f35" stroke="#3a4a6a"/><text x="52" y="168">p9 · remember the park?</text>
+      <rect x="40" y="188" width="200" height="34" rx="6" fill="#161f35" stroke="#3a4a6a"/><text x="52" y="210">p8 · flight to Busan</text>
+      <rect x="40" y="230" width="200" height="34" rx="6" fill="#161f35" stroke="#3a4a6a"/><text x="52" y="252">p7 · gym schedule</text>
+      <rect x="40" y="272" width="200" height="34" rx="6" fill="#161f35" stroke="#3a4a6a"/><text x="52" y="294">p6 · pasta recipe</text>
+      <rect x="40" y="314" width="200" height="34" rx="6" fill="#161f35" stroke="#3a4a6a"/><text x="52" y="336">p5 · cinema near home</text>
+      <rect x="40" y="356" width="200" height="34" rx="6" fill="#161f35" stroke="#3a4a6a"/><text x="52" y="378">p3 · ran two laps</text>
+    </g>
+    <text x="140" y="420" fill="#5a6a8a" font-size="11.5" text-anchor="middle">newest on top · oldest at the bottom</text>
+
+    <!-- MTM -->
+    <rect x="300" y="48" width="320" height="392" rx="12" fill="#1d1630" stroke="#c084fc" stroke-width="2"/>
+    <text x="460" y="74" fill="#c084fc" font-size="15" font-weight="800" text-anchor="middle">MTM · topic folders</text>
+    <text x="460" y="92" fill="#5a6a8a" font-size="11.5" text-anchor="middle">pages on one topic + summary · heat per folder</text>
+    <!-- folder A -->
+    <rect x="318" y="104" width="284" height="96" rx="8" fill="#161f35" stroke="#c084fc"/>
+    <text x="330" y="124" fill="#eef3fb" font-size="12.5" font-weight="700">wetland park outing</text>
+    <text x="330" y="142" fill="#9aa7c5" font-size="11.5">summary · keywords {park, run, squirrels}</text>
+    <g font-size="11" text-anchor="middle"><rect x="330" y="152" width="34" height="20" rx="5" fill="#0f1525" stroke="#3a4a6a"/><text x="347" y="166" fill="#9aa7c5">p1</text>
+      <rect x="370" y="152" width="34" height="20" rx="5" fill="#0f1525" stroke="#3a4a6a"/><text x="387" y="166" fill="#9aa7c5">p2</text></g>
+    <rect x="548" y="112" width="12" height="80" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="548" y="132" width="12" height="60" rx="3" fill="#ff7b72"/>
+    <text x="580" y="130" fill="#9aa7c5" font-size="11" text-anchor="middle">heat</text><text x="580" y="160" fill="#ff7b72" font-size="11.5" font-weight="700" text-anchor="middle">hot</text>
+    <!-- folder B -->
+    <rect x="318" y="212" width="284" height="96" rx="8" fill="#161f35" stroke="#5a4a7a"/>
+    <text x="330" y="232" fill="#eef3fb" font-size="12.5" font-weight="700">work deadlines</text>
+    <text x="330" y="250" fill="#9aa7c5" font-size="11.5">summary · keywords {report, deadline}</text>
+    <g font-size="11" text-anchor="middle"><rect x="330" y="260" width="34" height="20" rx="5" fill="#0f1525" stroke="#3a4a6a"/><text x="347" y="274" fill="#9aa7c5">p−4</text>
+      <rect x="370" y="260" width="34" height="20" rx="5" fill="#0f1525" stroke="#3a4a6a"/><text x="387" y="274" fill="#9aa7c5">p−3</text></g>
+    <rect x="548" y="220" width="12" height="80" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="548" y="262" width="12" height="38" rx="3" fill="#ffc06b"/>
+    <text x="580" y="268" fill="#ffc06b" font-size="11.5" font-weight="700" text-anchor="middle">warm</text>
+    <!-- folder C -->
+    <rect x="318" y="320" width="284" height="96" rx="8" fill="#161f35" stroke="#5a4a7a"/>
+    <text x="330" y="340" fill="#eef3fb" font-size="12.5" font-weight="700">old laptop issue</text>
+    <text x="330" y="358" fill="#9aa7c5" font-size="11.5">summary · keywords {laptop, battery}</text>
+    <g font-size="11" text-anchor="middle"><rect x="330" y="368" width="34" height="20" rx="5" fill="#0f1525" stroke="#3a4a6a"/><text x="347" y="382" fill="#9aa7c5">p−9</text></g>
+    <rect x="548" y="328" width="12" height="80" rx="3" fill="#0f1525" stroke="#3a4a6a"/><rect x="548" y="398" width="12" height="10" rx="3" fill="#5a6a8a"/>
+    <text x="580" y="376" fill="#5a6a8a" font-size="11.5" font-weight="700" text-anchor="middle">cold</text>
+    <text x="460" y="432" fill="#5a6a8a" font-size="11.5" text-anchor="middle">up to 2000 folders</text>
+
+    <!-- LPM -->
+    <rect x="660" y="48" width="260" height="392" rx="12" fill="#0f2a1c" stroke="#7ee787" stroke-width="2"/>
+    <text x="790" y="74" fill="#7ee787" font-size="15" font-weight="800" text-anchor="middle">LPM · who they are</text>
+    <text x="790" y="92" fill="#5a6a8a" font-size="11.5" text-anchor="middle">user persona · agent persona</text>
+    <rect x="676" y="104" width="228" height="196" rx="8" fill="#161f35" stroke="#3a6a4a"/>
+    <text x="688" y="124" fill="#7ee787" font-size="12.5" font-weight="700">User Persona</text>
+    <text x="688" y="146" fill="#eef3fb" font-size="12">Profile <tspan fill="#5a6a8a">· name, birth year</tspan></text>
+    <text x="688" y="176" fill="#eef3fb" font-size="12">User KB <tspan fill="#5a6a8a">· learned facts</tspan></text>
+    <text x="700" y="194" fill="#9aa7c5" font-size="11.5">· lives near the river</text>
+    <text x="688" y="236" fill="#eef3fb" font-size="12">User Traits <tspan fill="#5a6a8a">· 90 tags</tspan></text>
+    <text x="700" y="254" fill="#9aa7c5" font-size="11.5">· enjoys nature</text>
+    <rect x="676" y="312" width="228" height="112" rx="8" fill="#161f35" stroke="#3a6a4a"/>
+    <text x="688" y="332" fill="#7ee787" font-size="12.5" font-weight="700">Agent Persona</text>
+    <text x="688" y="354" fill="#eef3fb" font-size="12">Profile <tspan fill="#5a6a8a">· assistant role</tspan></text>
+    <text x="688" y="384" fill="#eef3fb" font-size="12">Traits <tspan fill="#5a6a8a">· what it did for the user</tspan></text>
+
+    <!-- generation box -->
+    <rect x="960" y="158" width="220" height="282" rx="12" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/>
+    <text x="1070" y="184" fill="#ffc06b" font-size="15" font-weight="800" text-anchor="middle">Response Generation</text>
+    <rect x="976" y="200" width="188" height="120" rx="8" fill="#161f35" stroke="#3a4a6a" stroke-dasharray="4 3"/>
+    <text x="1070" y="222" fill="#9aa7c5" font-size="12" text-anchor="middle">prompt</text>
+  </g>
+
+  <!-- ===== step 1 · query arrives, new page pushed ===== -->
+  <g class="st" data-s="1">
+    <rect x="960" y="48" width="220" height="86" rx="12" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/>
+    <text x="1070" y="70" fill="#ffc06b" font-size="12.5" font-weight="700" text-anchor="middle">query · a few weeks later</text>
+    <text x="1070" y="92" fill="#eef3fb" font-size="12.5" text-anchor="middle">"I feel like eating a burger,</text>
+    <text x="1070" y="110" fill="#eef3fb" font-size="12.5" text-anchor="middle">any recommendations?"</text>
+    <line x1="1070" y1="134" x2="1070" y2="152" stroke="#ffc06b" stroke-width="2" marker-end="url(#aa)"/>
+    <rect x="40" y="104" width="200" height="34" rx="6" fill="#2b2413" stroke="#ffc06b" stroke-width="2"/>
+    <text x="52" y="126" fill="#ffc06b" font-size="12" font-weight="700">p10 · burger? + reply</text>
+    <path d="M960,91 L930,91 L930,39 L140,39 L140,98" fill="none" stroke="#ffc06b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#aa)"/>
+    <rect x="540" y="31" width="230" height="16" rx="8" fill="#0a0e1a"/>
+    <text x="655" y="43" fill="#ffc06b" font-size="11" text-anchor="middle">push the new page to STM (FIFO)</text>
+  </g>
+
+  <!-- ===== step 2 · oldest page spills into a folder ===== -->
+  <g class="st" data-s="2">
+    <rect x="40" y="356" width="200" height="34" rx="6" fill="#0f1525" stroke="#c084fc" stroke-dasharray="4 3"/>
+    <text x="52" y="378" fill="#5a6a8a" font-size="12">p3 → MTM</text>
+    <path d="M240,373 L280,373 L280,176 L318,176" fill="none" stroke="#c084fc" stroke-width="2" marker-end="url(#ap)"/>
+    <rect x="410" y="152" width="34" height="20" rx="5" fill="#2b2413" stroke="#ffc06b"/><text x="427" y="166" fill="#ffc06b" font-size="11" text-anchor="middle">p3</text>
+    <rect x="262" y="236" width="38" height="62" rx="6" fill="#0a0e1a"/>
+    <text x="281" y="256" fill="#c084fc" font-size="11.5" text-anchor="middle">queue</text>
+    <text x="281" y="272" fill="#c084fc" font-size="11.5" text-anchor="middle">full →</text>
+    <text x="281" y="288" fill="#c084fc" font-size="11.5" text-anchor="middle">spill</text>
+    <text x="460" y="188" fill="#c084fc" font-size="11.5" text-anchor="middle">match score > θ → join this folder</text>
+    <circle cx="590" cy="190" r="7" fill="#ff8fd8"/><text x="590" y="194" fill="#0a0e1a" font-size="9" font-weight="800" text-anchor="middle">L</text>
+  </g>
+
+  <!-- ===== step 3 · promote the hot folder, evict the cold one ===== -->
+  <g class="st" data-s="3">
+    <path d="M602,152 L640,152 L640,210 L676,210" fill="none" stroke="#7ee787" stroke-width="2" marker-end="url(#ag)"/>
+    <rect x="606" y="166" width="70" height="34" rx="6" fill="#0a0e1a"/>
+    <text x="641" y="180" fill="#7ee787" font-size="11.5" text-anchor="middle">heat > τ</text>
+    <text x="641" y="194" fill="#7ee787" font-size="11.5" text-anchor="middle">promote</text>
+    <text x="700" y="212" fill="#ffc06b" font-size="11.5">· went to the wetland park</text>
+    <text x="700" y="272" fill="#ffc06b" font-size="11.5">· goal: get slimmer</text>
+    <text x="700" y="290" fill="#ffc06b" font-size="11.5">· likes outdoor exercise</text>
+    <text x="700" y="404" fill="#ffc06b" font-size="11.5">· promised to keep the user motivated</text>
+    <circle cx="658" cy="232" r="7" fill="#ff8fd8"/><text x="658" y="236" fill="#0a0e1a" font-size="9" font-weight="800" text-anchor="middle">L</text>
+    <rect x="318" y="320" width="284" height="96" rx="8" fill="rgba(255,123,114,.10)" stroke="#ff7b72" stroke-width="2"/>
+    <text x="460" y="406" fill="#ff7b72" font-size="13.5" font-weight="800" text-anchor="middle">✗ evicted (coldest)</text>
+  </g>
+
+  <!-- ===== step 4 · retrieve from all three tiers, answer ===== -->
+  <g class="st" data-s="4">
+    <line x1="140" y1="440" x2="140" y2="476" stroke="#ffc06b" stroke-width="2" stroke-dasharray="5 4"/>
+    <line x1="460" y1="440" x2="460" y2="476" stroke="#ffc06b" stroke-width="2" stroke-dasharray="5 4"/>
+    <line x1="790" y1="440" x2="790" y2="476" stroke="#ffc06b" stroke-width="2" stroke-dasharray="5 4"/>
+    <line x1="140" y1="476" x2="1070" y2="476" stroke="#ffc06b" stroke-width="2" stroke-dasharray="5 4"/>
+    <line x1="1070" y1="476" x2="1070" y2="446" stroke="#ffc06b" stroke-width="2" marker-end="url(#aa)"/>
+    <g font-size="11.5" fill="#ffc06b" text-anchor="middle">
+      <rect x="160" y="450" width="118" height="18" rx="9" fill="#0a0e1a"/><text x="219" y="463">all 7 pages</text>
+      <rect x="480" y="450" width="190" height="18" rx="9" fill="#0a0e1a"/><text x="575" y="463">top-m folders → top-k pages</text>
+      <rect x="806" y="450" width="150" height="18" rx="9" fill="#0a0e1a"/><text x="881" y="463">top-10 entries + profiles</text>
+      <text x="600" y="500" fill="#9aa7c5">retrieve · one prompt = recent turns + relevant pages + persona + query</text>
+    </g>
+    <rect x="976" y="200" width="188" height="120" rx="8" fill="#161f35" stroke="#ffc06b"/>
+    <g font-size="11.5" fill="#eef3fb"><text x="988" y="222">prompt</text>
+      <text x="988" y="242" fill="#7cc4ff">· recent turns (STM)</text>
+      <text x="988" y="260" fill="#c084fc">· park pages (MTM)</text>
+      <text x="988" y="278" fill="#7ee787">· goal: get slimmer (LPM)</text>
+      <text x="988" y="296" fill="#ffc06b">· burger question</text>
+      <text x="988" y="314" fill="#5a6a8a">→ LLM</text></g>
+    <circle cx="1150" cy="310" r="7" fill="#ff8fd8"/><text x="1150" y="314" fill="#0a0e1a" font-size="9" font-weight="800" text-anchor="middle">L</text>
+    <rect x="976" y="334" width="188" height="94" rx="8" fill="#0f2a1c" stroke="#7ee787"/>
+    <text x="988" y="354" fill="#7ee787" font-size="12" font-weight="700">answer</text>
+    <text x="988" y="374" fill="#eef3fb" font-size="11.5">"The cheeseburger […],</text>
+    <text x="988" y="390" fill="#eef3fb" font-size="11.5">just don't forget you're</text>
+    <text x="988" y="406" fill="#eef3fb" font-size="11.5">hitting the gym!"</text>
+  </g>
+
+  <!-- legend for LLM marker (always visible with base) -->
+  <g class="st" data-s="0">
+    <circle cx="1060" cy="520" r="7" fill="#ff8fd8"/><text x="1060" y="524" fill="#0a0e1a" font-size="9" font-weight="800" text-anchor="middle">L</text>
+    <text x="1074" y="524" fill="#9aa7c5" font-size="11.5">= an LLM call</text>
+  </g>
+</svg>
+
+  </div>
+<div class="ctrl"><button id="prev">◂</button><span id="ind"></span><button id="next">▸</button></div>
+  <div class="foot">12 / 25</div>
+</div>
+<script>
+(function(){
+  const els=[...document.querySelectorAll('.st')]; const N=Math.max(...els.map(e=>+e.dataset.s))+1;
+  let cur = location.search.includes('all') ? N-1 : 0;
+  const ind=document.getElementById('ind');
+  function render(){ els.forEach(e=>e.classList.toggle('shown', +e.dataset.s<=cur)); if(ind) ind.textContent='step '+cur+' / '+(N-1); }
+  function go(d){ cur=Math.max(0,Math.min(N-1,cur+d)); render(); }
+  const nx=document.getElementById('next'), pv=document.getElementById('prev');
+  if(nx) nx.onclick=e=>{e.stopPropagation();go(1);}; if(pv) pv.onclick=e=>{e.stopPropagation();go(-1);};
+  document.querySelector('.slide').addEventListener('click',()=>go(1));
+  document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1);} else if(e.key==='ArrowLeft'){e.preventDefault();go(-1);} });
+  render();
+})();
+</script>
+</body></html>

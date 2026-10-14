@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — Structure of MemoryOS</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+09 의 세 아이디어를 뼈대 그림 하나로. 예시 없이 구조만.
+① 위 축: 저장 수명이 다른 세 계층(분 단위 최근 턴 / 며칠~몇 주 반복 토픽 / 몇 달 사용자 정체성).
+STM = 고정 길이 7 큐, 원소는 page {Q, R, T, chain meta}. MTM = ② 토픽 폴더: 한 토픽의 page 들 + LLM 요약 + 키워드 + heat. LPM = 사용자/에이전트 페르소나(프로필·지식베이스·90차원 traits).
+흐름: 큐가 차면 가장 오래된 page 가 넘쳐 match score 로 폴더를 고름 → ③ heat 가 τ 를 넘는 폴더는 승격되어 LLM 이 사실·성향을 추출, 가장 차가운 폴더는 삭제.
+아래 띠 = 인터페이스: 매 턴 query → 세 계층에서 retrieve → 프롬프트 하나 → LLM → 답 → 이 턴이 새 page 로 STM 에 기록.
+다음 슬라이드부터 이 그림을 왼쪽에서 오른쪽으로 걷는다. 제목 밑 띠가 "지금 보는 부분"을 앰버로 표시.
+-->
+<div class="slide">
+  <h1>Structure of MemoryOS</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+
+<svg viewBox="0 0 1200 540">
+  <defs>
+    <marker id="s10" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9aa7c5"/></marker>
+    <marker id="s10a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ffc06b"/></marker>
+    <marker id="s10r" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ff7b72"/></marker>
+  </defs>
+  <!-- ① lifetime axis -->
+  <line x1="60" y1="30" x2="985" y2="30" stroke="#5a6a8a" stroke-width="1.5" marker-end="url(#s10)"/>
+  <circle cx="72" cy="30" r="9" fill="#ffc06b"/><text x="72" y="34" font-size="11" font-weight="800" fill="#0a0e1a" text-anchor="middle">①</text>
+  <text x="90" y="34" font-size="12" fill="#9aa7c5">lifetime of what is stored</text>
+  <text x="185" y="52" font-size="11.5" fill="#7cc4ff" text-anchor="middle">this conversation · minutes</text>
+  <text x="525" y="52" font-size="11.5" fill="#c084fc" text-anchor="middle">recurring topics · days to weeks</text>
+  <text x="865" y="52" font-size="11.5" fill="#7ee787" text-anchor="middle">who the user is · months</text>
+
+  <!-- STM -->
+  <rect x="60" y="64" width="250" height="270" rx="12" fill="#10233a" stroke="#7cc4ff" stroke-width="2"/>
+  <text x="185" y="88" font-size="15" font-weight="800" fill="#7cc4ff" text-anchor="middle">STM · short-term</text>
+  <text x="185" y="106" font-size="11.5" fill="#9aa7c5" text-anchor="middle">recent turns, kept verbatim</text>
+  <g fill="#0f1525" stroke="#3a4a6a">
+    <rect x="90" y="120" width="190" height="16" rx="4"/><rect x="90" y="140" width="190" height="16" rx="4"/><rect x="90" y="160" width="190" height="16" rx="4"/>
+    <rect x="90" y="180" width="190" height="16" rx="4"/><rect x="90" y="200" width="190" height="16" rx="4"/><rect x="90" y="220" width="190" height="16" rx="4"/>
+  </g>
+  <rect x="90" y="240" width="190" height="16" rx="4" fill="#10233a" stroke="#7cc4ff"/>
+  <text x="185" y="252" font-size="10.5" fill="#7cc4ff" text-anchor="middle">newest page</text>
+  <text x="185" y="132" font-size="10.5" fill="#5a6a8a" text-anchor="middle">oldest page</text>
+  <text x="185" y="280" font-size="12" fill="#eef3fb" text-anchor="middle">page = { Q, R, T, chain meta }</text>
+  <text x="185" y="300" font-size="11.5" fill="#9aa7c5" text-anchor="middle">one user turn + the reply + time</text>
+  <text x="185" y="322" font-size="11" fill="#5a6a8a" text-anchor="middle">a queue of fixed length (7) · FIFO</text>
+
+  <!-- MTM -->
+  <rect x="400" y="64" width="250" height="270" rx="12" fill="#1d1630" stroke="#c084fc" stroke-width="2"/>
+  <text x="525" y="88" font-size="15" font-weight="800" fill="#c084fc" text-anchor="middle">MTM · mid-term</text>
+  <text x="525" y="106" font-size="11.5" fill="#9aa7c5" text-anchor="middle">pages grouped into topic folders</text>
+  <circle cx="418" cy="124" r="9" fill="#ffc06b"/><text x="418" y="128" font-size="11" font-weight="800" fill="#0a0e1a" text-anchor="middle">②</text>
+  <g>
+    <rect x="432" y="116" width="186" height="60" rx="8" fill="#161f35" stroke="#c084fc"/>
+    <text x="444" y="133" font-size="11" fill="#eef3fb">folder · one topic</text>
+    <text x="444" y="148" font-size="10" fill="#9aa7c5">summary · keywords</text>
+    <g fill="#0f1525" stroke="#3a4a6a"><rect x="444" y="155" width="30" height="13" rx="3"/><rect x="478" y="155" width="30" height="13" rx="3"/><rect x="512" y="155" width="30" height="13" rx="3"/></g>
+    <text x="459" y="165" font-size="8.5" fill="#5a6a8a" text-anchor="middle">page</text><text x="493" y="165" font-size="8.5" fill="#5a6a8a" text-anchor="middle">page</text><text x="527" y="165" font-size="8.5" fill="#5a6a8a" text-anchor="middle">page</text>
+    <rect x="596" y="124" width="10" height="44" rx="4" fill="#0f1525" stroke="#3a4a6a"/><rect x="596" y="138" width="10" height="30" rx="4" fill="#ffc06b"/>
+    <text x="601" y="186" font-size="9.5" fill="#ffc06b" text-anchor="middle">heat</text>
+  </g>
+  <g opacity=".55">
+    <rect x="432" y="196" width="186" height="40" rx="8" fill="#161f35" stroke="#c084fc"/>
+    <text x="444" y="213" font-size="11" fill="#eef3fb">folder · another topic</text><text x="444" y="228" font-size="10" fill="#9aa7c5">summary · keywords · pages</text>
+    <rect x="596" y="202" width="10" height="28" rx="4" fill="#0f1525" stroke="#3a4a6a"/><rect x="596" y="220" width="10" height="10" rx="4" fill="#ffc06b"/>
+  </g>
+  <text x="525" y="262" font-size="12" fill="#eef3fb" text-anchor="middle">folder = pages on one topic</text>
+  <text x="525" y="280" font-size="11.5" fill="#9aa7c5" text-anchor="middle">+ LLM summary + keywords + heat</text>
+  <text x="525" y="300" font-size="11.5" fill="#9aa7c5" text-anchor="middle">heat = visits + size + recency</text>
+  <text x="525" y="322" font-size="11" fill="#5a6a8a" text-anchor="middle">up to 2000 folders</text>
+
+  <!-- LPM -->
+  <rect x="740" y="64" width="250" height="270" rx="12" fill="#0f2a1c" stroke="#7ee787" stroke-width="2"/>
+  <text x="865" y="88" font-size="15" font-weight="800" fill="#7ee787" text-anchor="middle">LPM · long-term persona</text>
+  <text x="865" y="106" font-size="11.5" fill="#9aa7c5" text-anchor="middle">distilled facts and preferences</text>
+  <rect x="768" y="118" width="194" height="92" rx="8" fill="#161f35" stroke="#7ee787"/>
+  <text x="780" y="136" font-size="11.5" font-weight="700" fill="#7ee787">user persona</text>
+  <text x="780" y="154" font-size="10.5" fill="#eef3fb">profile <tspan fill="#5a6a8a">· name, birth year (static)</tspan></text>
+  <text x="780" y="172" font-size="10.5" fill="#eef3fb">knowledge base <tspan fill="#5a6a8a">· learned facts</tspan></text>
+  <text x="780" y="190" font-size="10.5" fill="#eef3fb">traits <tspan fill="#5a6a8a">· 90 preference dimensions</tspan></text>
+  <rect x="768" y="220" width="194" height="58" rx="8" fill="#161f35" stroke="#7ee787"/>
+  <text x="780" y="238" font-size="11.5" font-weight="700" fill="#7ee787">agent persona</text>
+  <text x="780" y="256" font-size="10.5" fill="#eef3fb">profile <tspan fill="#5a6a8a">· its role (static)</tspan></text>
+  <text x="780" y="272" font-size="10.5" fill="#eef3fb">traits <tspan fill="#5a6a8a">· what it did for this user</tspan></text>
+  <text x="865" y="300" font-size="11.5" fill="#9aa7c5" text-anchor="middle">written by an LLM from hot folders</text>
+  <text x="865" y="322" font-size="11" fill="#5a6a8a" text-anchor="middle">facts and traits · queues of 100</text>
+
+  <!-- flows between tiers -->
+  <line x1="312" y1="190" x2="396" y2="190" stroke="#ffc06b" stroke-width="2" marker-end="url(#s10a)"/>
+  <text x="355" y="178" font-size="10.5" fill="#ffc06b" text-anchor="middle">queue full →</text>
+  <text x="355" y="206" font-size="10" fill="#9aa7c5" text-anchor="middle">oldest page spills;</text>
+  <text x="355" y="219" font-size="10" fill="#9aa7c5" text-anchor="middle">match score picks</text>
+  <text x="355" y="232" font-size="10" fill="#9aa7c5" text-anchor="middle">its folder</text>
+  <line x1="652" y1="190" x2="736" y2="190" stroke="#ffc06b" stroke-width="2" marker-end="url(#s10a)"/>
+  <circle cx="694" cy="160" r="9" fill="#ffc06b"/><text x="694" y="164" font-size="11" font-weight="800" fill="#0a0e1a" text-anchor="middle">③</text>
+  <text x="694" y="178" font-size="10.5" fill="#ffc06b" text-anchor="middle">heat > τ →</text>
+  <text x="694" y="206" font-size="10" fill="#9aa7c5" text-anchor="middle">hot folder promoted;</text>
+  <text x="694" y="219" font-size="10" fill="#9aa7c5" text-anchor="middle">LLM extracts facts</text>
+  <text x="694" y="232" font-size="10" fill="#9aa7c5" text-anchor="middle">and traits</text>
+  <line x1="525" y1="336" x2="525" y2="372" stroke="#ff7b72" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#s10r)"/>
+  <circle cx="548" cy="356" r="9" fill="#ffc06b"/><text x="548" y="360" font-size="11" font-weight="800" fill="#0a0e1a" text-anchor="middle">③</text>
+  <text x="562" y="360" font-size="10.5" fill="#ff7b72">coldest folder evicted when full</text>
+
+  <!-- interface: one turn -->
+  <text x="60" y="404" font-size="12" font-weight="700" fill="#9aa7c5">interface · every turn</text>
+  <rect x="60" y="414" width="90" height="46" rx="9" fill="#2b2413" stroke="#ffc06b"/><text x="105" y="441" font-size="12" font-weight="700" fill="#ffc06b" text-anchor="middle">query</text>
+  <line x1="152" y1="437" x2="176" y2="437" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#s10)"/>
+  <rect x="180" y="414" width="300" height="46" rx="9" fill="#161f35" stroke="#2a3a58"/>
+  <text x="330" y="432" font-size="12" font-weight="700" fill="#eef3fb" text-anchor="middle">retrieve from all three tiers</text>
+  <text x="330" y="450" font-size="10.5" fill="#9aa7c5" text-anchor="middle">STM: everything · MTM: top folders → top pages · LPM: relevant entries</text>
+  <line x1="482" y1="437" x2="506" y2="437" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#s10)"/>
+  <rect x="510" y="414" width="110" height="46" rx="9" fill="#161f35" stroke="#2a3a58"/><text x="565" y="441" font-size="12" font-weight="700" fill="#eef3fb" text-anchor="middle">one prompt</text>
+  <line x1="622" y1="437" x2="646" y2="437" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#s10)"/>
+  <circle cx="672" cy="437" r="22" fill="rgba(255,143,216,.12)" stroke="#ff8fd8" stroke-width="1.6"/><text x="672" y="441" font-size="11.5" font-weight="700" fill="#ff8fd8" text-anchor="middle">LLM</text>
+  <line x1="696" y1="437" x2="720" y2="437" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#s10)"/>
+  <rect x="724" y="414" width="100" height="46" rx="9" fill="#2b2413" stroke="#ffc06b"/><text x="774" y="441" font-size="12" font-weight="700" fill="#ffc06b" text-anchor="middle">answer</text>
+  <line x1="826" y1="437" x2="850" y2="437" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#s10)"/>
+  <rect x="854" y="414" width="136" height="46" rx="9" fill="#10233a" stroke="#7cc4ff"/>
+  <text x="922" y="432" font-size="12" font-weight="700" fill="#7cc4ff" text-anchor="middle">new page → STM</text>
+  <text x="922" y="450" font-size="10.5" fill="#9aa7c5" text-anchor="middle">the turn is written back</text>
+  <path d="M922,414 L922,392 L1000,392 L1000,46 L995,46" fill="none" stroke="#7cc4ff" stroke-width="1.2" stroke-dasharray="4 3" opacity=".6"/>
+  <text x="640" y="490" font-size="11" fill="#5a6a8a" text-anchor="middle">everything above runs between the user's message and the reply; the LLM is called for the answer and for the summaries and extractions inside the tiers</text>
+
+  <!-- legend of the three ideas -->
+  <rect x="1010" y="64" width="180" height="270" rx="12" fill="#161f35" stroke="#2a3a58"/>
+  <text x="1100" y="88" font-size="12" font-weight="700" fill="#9aa7c5" text-anchor="middle">the three ideas</text>
+  <circle cx="1030" cy="118" r="9" fill="#ffc06b"/><text x="1030" y="122" font-size="11" font-weight="800" fill="#0a0e1a" text-anchor="middle">①</text><text x="1046" y="114" font-size="11.5" fill="#eef3fb">three memory tiers</text><text x="1046" y="129" font-size="11.5" fill="#eef3fb">by lifetime</text>
+  <circle cx="1030" cy="172" r="9" fill="#ffc06b"/><text x="1030" y="176" font-size="11" font-weight="800" fill="#0a0e1a" text-anchor="middle">②</text><text x="1046" y="168" font-size="11.5" fill="#eef3fb">topic folders of</text><text x="1046" y="183" font-size="11.5" fill="#eef3fb">dialogue pages</text>
+  <circle cx="1030" cy="226" r="9" fill="#ffc06b"/><text x="1030" y="230" font-size="11" font-weight="800" fill="#0a0e1a" text-anchor="middle">③</text><text x="1046" y="222" font-size="11.5" fill="#eef3fb">heat-based eviction</text><text x="1046" y="237" font-size="11.5" fill="#eef3fb">and promotion</text>
+  <text x="1100" y="278" font-size="10.5" fill="#5a6a8a" text-anchor="middle">next slides walk this</text>
+  <text x="1100" y="292" font-size="10.5" fill="#5a6a8a" text-anchor="middle">picture left to right,</text>
+  <text x="1100" y="306" font-size="10.5" fill="#5a6a8a" text-anchor="middle">then the interface</text>
+</svg>
+
+  </div>
+  <div class="foot">10 / 25</div>
+</div>
+</body></html>

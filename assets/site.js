@@ -71,7 +71,7 @@
     var track = v.querySelector('.track'), figs = [].slice.call(track.children), n = figs.length;
     var count = v.querySelector('.count b'), rail = v.querySelector('.rail');
     var thumbs = rail ? [].slice.call(rail.children) : [], idx = 0, lock = false;
-    function warm(i) { var f = figs[i]; if (f) { var im = f.querySelector('img'); if (im && im.loading === 'lazy') im.loading = 'eager'; } }
+    function warm(i) { var f = figs[i]; if (f) { var im = f.querySelector('img,iframe'); if (im && im.loading === 'lazy') im.loading = 'eager'; } }   // img or html-deck iframe
     function paint() {
       if (count) count.textContent = idx + 1;
       thumbs.forEach(function (b, i) { b.classList.toggle('on', i === idx); });

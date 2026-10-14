@@ -126,6 +126,7 @@ def load_decks(data, name, folder):
         meta_path = os.path.join(ROOT, "assets", folder, t["key"], "meta.json")
         meta = json.load(open(meta_path, encoding="utf-8")) if os.path.exists(meta_path) else {}
         t["slides"] = meta.get("slides", 0)
+        t["html"] = meta.get("html")            # Slides-Hub decks: the slide pages themselves, shown in iframes
         t["poster"] = meta.get("poster")
         if not (t["slides"] or t["poster"]):
             print(f"warning: {folder}/{t['key']} has no slides or poster (run build/talks_import.py)", file=sys.stderr)

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — Update to Long-Term Persona Memory</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+User Traits = 90개의 고정 슬롯(Li et al. 2025 의 사용자 수준 정렬 스키마). 세 범주: 기본 욕구·성격 / AI 정렬 차원(AI 가 어떻게 대해 주길 원하나) / 콘텐츠 플랫폼 관심 태그. 승격된 폴더에서 LLM 이 슬롯 값을 채우고 갱신.
+Agent Traits = 에이전트 쪽의 동적 속성: 사용자가 대화 중 준 새 설정 + 상호작용 이력(예: 추천해 준 항목). 길이 100 FIFO 큐. User KB 도 같은 큐.
+MTM 폴더의 heat 가 τ=5 를 넘으면 LPM 으로 승격. LLM 이 폴더 요약과 페이지에서 세 갈래로 추출: 사실 → User KB, 취향 → 90차원 User Traits(기본 욕구·성격 / AI 정렬 차원 / 콘텐츠 관심 태그), 에이전트가 해 준 것 → Agent Traits.
+User KB 와 Agent Traits 는 길이 100 FIFO 큐. User Profile·Agent Profile 은 고정 설정이라 여기서 안 씀.
+승격 후 L_interaction 을 0 으로 리셋해 열을 떨어뜨림 → 같은 내용이 반복 승격되지 않음(논문: continuous persona evolution without redundancy).
+-->
+<div class="slide">
+  <h1>Update to Long-Term Persona Memory</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+<div class="mapstrip"><svg viewBox="0 0 1200 44"><defs><marker id="mp_on" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#ffc06b"/></marker><marker id="mp_off" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#3f4d6b"/></marker></defs><line x1="836" y1="6" x2="836" y2="38" stroke="#2a3a58"/><rect x="0" y="3" width="190" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="95.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">STM · recent turns</text><text x="95.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">queue of pages · FIFO</text><line x1="194" y1="22" x2="302" y2="22" stroke="#3f4d6b" stroke-width="1.2" marker-end="url(#mp_off)"/><text x="250.0" y="12" font-size="10.5" fill="#3f4d6b" text-anchor="middle">oldest page spills · match score</text><rect x="310" y="3" width="190" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="405.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">MTM · topic folders</text><text x="405.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">pages by topic · heat · evict</text><line x1="504" y1="22" x2="612" y2="22" stroke="#ffc06b" stroke-width="2" marker-end="url(#mp_on)"/><text x="560.0" y="12" font-size="10.5" fill="#ffc06b" text-anchor="middle">heat > τ · promote</text><rect x="620" y="3" width="190" height="38" rx="7" fill="rgba(255,192,107,.14)" stroke="#ffc06b" stroke-width="1.8"/><text x="715.0" y="19" font-size="12.5" font-weight="700" fill="#ffc06b" text-anchor="middle">LPM · persona</text><text x="715.0" y="33" font-size="10.5" fill="#eef3fb" text-anchor="middle">user · agent</text><rect x="860" y="3" width="160" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="940.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">retrieve</text><text x="940.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">all three tiers → prompt</text><line x1="1024" y1="22" x2="1042" y2="22" stroke="#3f4d6b" stroke-width="1.2" marker-end="url(#mp_off)"/><rect x="1050" y="3" width="150" height="38" rx="7" fill="#121a2e" stroke="#2a3a58" stroke-width="1"/><text x="1125.0" y="19" font-size="12.5" font-weight="700" fill="#5a6a8a" text-anchor="middle">generate</text><text x="1125.0" y="33" font-size="10.5" fill="#3f4d6b" text-anchor="middle">LLM → answer → new page</text></svg></div>
+<svg viewBox="0 0 1200 430">
+  <defs><marker id="a15" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#ff8fd8"/></marker>
+        <marker id="a15p" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#c084fc"/></marker></defs>
+  <!-- left: the promoted folder -->
+  <rect x="20" y="16" width="330" height="334" rx="12" fill="#1d1630" stroke="#c084fc" stroke-width="2"/>
+  <text x="36" y="42" fill="#c084fc" font-size="14" font-weight="800">topic folder · wetland park outing</text>
+  <rect x="36" y="54" width="146" height="22" rx="11" fill="#2b2413" stroke="#ffc06b"/><text x="109" y="69" fill="#ffc06b" font-size="12" font-weight="700" text-anchor="middle">heat 5.4 &gt; τ = 5</text>
+  <text x="192" y="69" fill="#5a6a8a" font-size="11.5">→ promoted</text>
+  <text x="36" y="100" fill="#9aa7c5" font-size="12">summary · a relaxing park visit, squirrels,</text>
+  <text x="36" y="116" fill="#9aa7c5" font-size="12">two laps of running, a goal to get slimmer</text>
+  <text x="36" y="136" fill="#5a6a8a" font-size="11.5">keywords · park · squirrels · running · slimmer</text>
+  <g font-size="12">
+    <rect x="36" y="152" width="298" height="52" rx="7" fill="#10233a" stroke="#2a3a58"/>
+    <text x="48" y="171" fill="#7cc4ff" font-weight="700">p1 · week 1</text>
+    <text x="48" y="192" fill="#eef3fb">went to the wetland park, beautiful scenery</text>
+    <rect x="36" y="212" width="298" height="52" rx="7" fill="#10233a" stroke="#2a3a58"/>
+    <text x="48" y="231" fill="#7cc4ff" font-weight="700">p2 · week 1</text>
+    <text x="48" y="252" fill="#eef3fb">little squirrels running in the trees</text>
+    <rect x="36" y="272" width="298" height="52" rx="7" fill="#10233a" stroke="#2a3a58"/>
+    <text x="48" y="291" fill="#7cc4ff" font-weight="700">p3 · week 1</text>
+    <text x="48" y="312" fill="#eef3fb">ran two laps, will keep working out to get slimmer</text>
+  </g>
+  <!-- middle: LLM extraction -->
+  <line x1="350" y1="183" x2="420" y2="183" stroke="#c084fc" stroke-width="2" marker-end="url(#a15p)"/>
+  <circle cx="470" cy="183" r="44" fill="#2a1530" stroke="#ff8fd8" stroke-width="2.5"/>
+  <text x="470" y="179" fill="#ff8fd8" font-size="15" font-weight="800" text-anchor="middle">LLM</text>
+  <text x="470" y="197" fill="#ff8fd8" font-size="11.5" text-anchor="middle">extract</text>
+  <path d="M514,170 C560,120 560,86 596,86" fill="none" stroke="#ff8fd8" stroke-width="2" marker-end="url(#a15)"/>
+  <path d="M514,185 L596,189" fill="none" stroke="#ff8fd8" stroke-width="2" marker-end="url(#a15)"/>
+  <path d="M514,196 C560,250 560,282 596,282" fill="none" stroke="#ff8fd8" stroke-width="2" marker-end="url(#a15)"/>
+  <g font-size="11.5" fill="#ff8fd8" text-anchor="middle">
+    <text x="548" y="98">facts</text>
+    <text x="556" y="174">preferences</text>
+    <text x="552" y="300">what the agent did</text>
+  </g>
+  <!-- right: LPM targets -->
+  <text x="600" y="30" fill="#7ee787" font-size="13" font-weight="800">long-term persona memory (LPM)</text>
+  <rect x="600" y="44" width="580" height="86" rx="10" fill="#0f2a1c" stroke="#7ee787" stroke-width="1.8"/>
+  <text x="616" y="66" fill="#7ee787" font-size="13.5" font-weight="800">User KB · learned facts</text>
+  <rect x="1046" y="52" width="124" height="20" rx="10" fill="#161f35" stroke="#2a3a58"/><text x="1108" y="66" fill="#9aa7c5" font-size="11.5" text-anchor="middle">FIFO queue · 100</text>
+  <g font-size="12" fill="#eef3fb">
+    <text x="616" y="92">• went to the wetland park (week 1)</text>
+    <text x="616" y="112">• ran two laps in the park</text>
+    <text x="900" y="92">• saw squirrels in the trees</text>
+    <text x="900" y="112" fill="#5a6a8a">• … older facts leave first</text>
+  </g>
+  <rect x="600" y="142" width="580" height="98" rx="10" fill="#0f2a1c" stroke="#7ee787" stroke-width="1.8"/>
+  <text x="616" y="164" fill="#7ee787" font-size="13.5" font-weight="800">User Traits · 90 dimensions in 3 categories</text>
+  <g font-size="11.5" text-anchor="middle">
+    <rect x="616" y="174" width="172" height="20" rx="10" fill="#161f35" stroke="#2a3a58"/><text x="702" y="188" fill="#9aa7c5">basic needs &amp; personality</text>
+    <rect x="796" y="174" width="172" height="20" rx="10" fill="#161f35" stroke="#2a3a58"/><text x="882" y="188" fill="#9aa7c5">AI-alignment dimensions</text>
+    <rect x="976" y="174" width="194" height="20" rx="10" fill="#161f35" stroke="#2a3a58"/><text x="1073" y="188" fill="#9aa7c5">content-platform interest tags</text>
+  </g>
+  <g font-size="12" fill="#eef3fb">
+    <text x="616" y="222">• goal: get slimmer</text>
+    <text x="800" y="222">• likes outdoor exercise</text>
+    <text x="990" y="222">• welcomes encouragement</text>
+  </g>
+  <rect x="600" y="252" width="580" height="64" rx="10" fill="#0f2a1c" stroke="#7ee787" stroke-width="1.8"/>
+  <text x="616" y="274" fill="#7ee787" font-size="13.5" font-weight="800">Agent Traits · what it did for the user, and settings the user gave it</text>
+  <rect x="1046" y="260" width="124" height="20" rx="10" fill="#161f35" stroke="#2a3a58"/><text x="1108" y="274" fill="#9aa7c5" font-size="11.5" text-anchor="middle">FIFO queue · 100</text>
+  <text x="616" y="300" fill="#eef3fb" font-size="12">• promised to keep the user motivated &nbsp; • recommended the park run</text>
+  <g font-size="11.5">
+    <rect x="600" y="328" width="283" height="30" rx="8" fill="#161f35" stroke="#2a3a58" stroke-dasharray="4 3"/>
+    <text x="741" y="347" fill="#5a6a8a" text-anchor="middle">User Profile · static: name, gender, birth year</text>
+    <rect x="897" y="328" width="283" height="30" rx="8" fill="#161f35" stroke="#2a3a58" stroke-dasharray="4 3"/>
+    <text x="1038" y="347" fill="#5a6a8a" text-anchor="middle">Agent Profile · static: role, character</text>
+  </g>
+  <text x="890" y="378" fill="#5a6a8a" font-size="11.5" text-anchor="middle">dashed = fixed settings, not written by this update</text>
+  <rect x="20" y="392" width="1160" height="32" rx="9" fill="rgba(255,192,107,.07)" stroke="#ffc06b"/>
+  <text x="600" y="413" fill="#ffc06b" font-size="13" text-anchor="middle">after the transfer the folder's L<tspan font-size="10" dy="3">interaction</tspan><tspan dy="-3"> resets to 0, so its heat drops and the same content is not promoted twice</tspan></text>
+</svg>
+<ul>
+  <li><b>heat &gt; τ</b> · one LLM pass writes facts, 90-dim traits, and agent traits · queues of 100</li>
+</ul>
+
+  </div>
+  <div class="foot">17 / 25</div>
+</div>
+</body></html>

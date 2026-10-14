@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tree-search — PageIndex: Retrieval by Reasoning over the Hierarchy</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .arcline{ display:flex; gap:.55cqw; align-items:center; font-size:1.18cqw; color:var(--dim);
+            font-family:ui-monospace,monospace; flex-wrap:nowrap; }
+  .arcline .st{ padding:.18cqw .75cqw; border:1px solid var(--edge); border-radius:5cqw; white-space:nowrap; }
+  .arcline .st.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.10); font-weight:700; }
+  .arcline .sep{ color:var(--edge); }
+</style></head>
+<body>
+<div class="slide">
+  <h1>PageIndex: Retrieval by Reasoning over the Hierarchy</h1>
+  <div class="body">
+<div class="arcline"><span class="st">① a tree, no traversal</span><span class="sep">→</span><span class="st">② score-based, both ways</span><span class="sep">→</span><span class="st cur">③ LLM-guided instead</span><span class="sep">→</span><span class="st">④ traversal learned</span><span class="sep">→</span><span class="st">⑤ multimodal</span></div>
+
+<svg viewBox="0 0 1200 470">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#9aa7c5"/></marker>
+    <marker id="arA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#ffc06b"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#7ee787"/></marker>
+  </defs>
+
+  <!-- ================= A · the hierarchy index ================= -->
+  <text x="150" y="42" fill="#c084fc" font-size="13.5" font-weight="700" text-anchor="middle">the hierarchy index · fetched whole</text>
+  <rect x="20" y="52" width="260" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <text x="34" y="74" fill="#5a6a8a" font-size="9" font-family="ui-monospace,monospace">title</text>
+  <text x="266" y="74" fill="#5a6a8a" font-size="9" font-family="ui-monospace,monospace" text-anchor="end">pages</text>
+  <line x1="32" y1="82" x2="268" y2="82" stroke="#2a3a58"/>
+  <rect x="30" y="164" width="240" height="20" rx="4" fill="rgba(255,192,107,.12)" stroke="#ffc06b" stroke-opacity=".6"/>
+  <rect x="30" y="260" width="240" height="20" rx="4" fill="rgba(255,192,107,.12)" stroke="#ffc06b" stroke-opacity=".6"/>
+  <g font-size="10" font-family="ui-monospace,monospace">
+    <text x="36" y="104" fill="#9aa7c5">X100 User Manual</text><text x="266" y="104" fill="#5a6a8a" text-anchor="end">1-52</text>
+    <text x="48" y="128" fill="#5a6a8a">1. Introduction</text><text x="266" y="128" fill="#5a6a8a" text-anchor="end">1-4</text>
+    <text x="48" y="152" fill="#9aa7c5">2. Safety</text><text x="266" y="152" fill="#5a6a8a" text-anchor="end">5-9</text>
+    <text x="60" y="178" fill="#ffc06b">2.1 Operating Env.</text><text x="266" y="178" fill="#ffc06b" text-anchor="end">7-8</text>
+    <text x="48" y="202" fill="#9aa7c5">5. Maintenance</text><text x="266" y="202" fill="#5a6a8a" text-anchor="end">30-44</text>
+    <text x="60" y="226" fill="#5a6a8a">5.1 Cleaning</text><text x="266" y="226" fill="#5a6a8a" text-anchor="end">30-33</text>
+    <text x="60" y="250" fill="#5a6a8a">5.2 Filter</text><text x="266" y="250" fill="#5a6a8a" text-anchor="end">34-37</text>
+    <text x="60" y="274" fill="#ffc06b">5.3 Battery</text><text x="266" y="274" fill="#ffc06b" text-anchor="end">38-41</text>
+    <text x="60" y="298" fill="#5a6a8a">5.4 Firmware</text><text x="266" y="298" fill="#5a6a8a" text-anchor="end">42-44</text>
+    <text x="48" y="322" fill="#5a6a8a">6. FAQ</text><text x="266" y="322" fill="#5a6a8a" text-anchor="end">45-48</text>
+  </g>
+  <text x="150" y="350" fill="#9aa7c5" font-size="10" text-anchor="middle">every node carries its own page range</text>
+  <text x="150" y="368" fill="#5a6a8a" font-size="10" text-anchor="middle">a parent range = union of its children</text>
+
+  <!-- ================= B · step 1 : reason -> which pages ================= -->
+  <text x="471" y="42" fill="#7cc4ff" font-size="13.5" font-weight="700" text-anchor="middle">1 · reason over it → which pages to read</text>
+  <rect x="306" y="52" width="330" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="322" y="68" width="52" height="22" rx="11" fill="#2b1a2b" stroke="#ff8fd8"/>
+  <text x="348" y="83" fill="#ff8fd8" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">LLM</text>
+  <text x="384" y="83" fill="#9aa7c5" font-size="10">sees titles + ranges · no page text yet</text>
+  <text x="322" y="108" fill="#ff8fd8" font-size="10" font-family="ui-monospace,monospace">Thinking: intervals live under Maintenance;</text>
+  <text x="322" y="124" fill="#ff8fd8" font-size="10" font-family="ui-monospace,monospace">heat may matter → check Operating Env. too</text>
+  <text x="352" y="152" fill="#5a6a8a" font-size="9.5" text-anchor="middle">picks titles</text>
+  <text x="556" y="152" fill="#5a6a8a" font-size="9.5" text-anchor="middle">copies their stored range</text>
+  <rect x="322" y="160" width="136" height="26" rx="6" fill="rgba(255,192,107,.1)" stroke="#ffc06b"/>
+  <text x="332" y="178" fill="#eef3fb" font-size="10" font-family="ui-monospace,monospace">2.1 Operating Env.</text>
+  <line x1="462" y1="173" x2="506" y2="173" stroke="#ffc06b" stroke-width="1.6" marker-end="url(#arA)"/>
+  <rect x="510" y="160" width="92" height="26" rx="6" fill="#0f1525" stroke="#ffc06b"/>
+  <text x="556" y="178" fill="#ffc06b" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">7-8</text>
+  <rect x="322" y="198" width="136" height="26" rx="6" fill="rgba(255,192,107,.1)" stroke="#ffc06b"/>
+  <text x="332" y="216" fill="#eef3fb" font-size="10" font-family="ui-monospace,monospace">5.3 Battery</text>
+  <line x1="462" y1="211" x2="506" y2="211" stroke="#ffc06b" stroke-width="1.6" marker-end="url(#arA)"/>
+  <rect x="510" y="198" width="92" height="26" rx="6" fill="#0f1525" stroke="#ffc06b"/>
+  <text x="556" y="216" fill="#ffc06b" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">38-41</text>
+  <path d="M506 173 Q474 212 472 256" stroke="#9aa7c5" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+  <path d="M556 226 L556 258" stroke="#9aa7c5" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+  <rect x="330" y="262" width="282" height="34" rx="8" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.6"/>
+  <text x="471" y="284" fill="#eef3fb" font-size="11.5" text-anchor="middle" font-family="ui-monospace,monospace">get_page_content(<tspan fill="#ffc06b">"7-8, 38-41"</tspan>)</text>
+  <text x="471" y="320" fill="#9aa7c5" font-size="10" text-anchor="middle">the numbers are <tspan fill="#eef3fb" font-weight="700">copied from the index</tspan>, never guessed</text>
+  <text x="471" y="338" fill="#5a6a8a" font-size="10" text-anchor="middle">one call carries several ranges = several sections</text>
+  <text x="471" y="364" fill="#5a6a8a" font-size="9.5" text-anchor="middle">choosing a parent instead (5. Maintenance → 30-44) pulls every subsection</text>
+  <path d="M276 172 Q292 168 318 170" stroke="#ffc06b" stroke-width="1.3" stroke-dasharray="3 3" fill="none" marker-end="url(#arA)"/>
+  <path d="M276 268 Q296 250 318 214" stroke="#ffc06b" stroke-width="1.3" stroke-dasharray="3 3" fill="none" marker-end="url(#arA)"/>
+
+  <!-- ================= C · step 2 : read, then judge ================= -->
+  <text x="789" y="42" fill="#ffc06b" font-size="13.5" font-weight="700" text-anchor="middle">2 · read those pages, then judge</text>
+  <rect x="662" y="52" width="254" height="330" rx="14" fill="#131b30" stroke="#2a3a58"/>
+  <rect x="706" y="72" width="188" height="138" rx="4" fill="#0f1525" stroke="#2a3a58"/>
+  <text x="800" y="86" fill="#5a6a8a" font-size="9" text-anchor="middle" font-family="ui-monospace,monospace">p.7-8</text>
+  <rect x="684" y="88" width="188" height="138" rx="4" fill="#101828" stroke="#3a4a6a"/>
+  <text x="694" y="106" fill="#5a6a8a" font-size="9" font-family="ui-monospace,monospace">p.38-41 · 5.3 Battery</text>
+  <rect x="694" y="114" width="96" height="4" rx="2" fill="#7cc4ff" fill-opacity=".5"/>
+  <rect x="694" y="126" width="150" height="3.5" rx="1.7" fill="#2a3a58"/>
+  <rect x="694" y="136" width="132" height="3.5" rx="1.7" fill="#2a3a58"/>
+  <rect x="694" y="150" width="160" height="60" rx="3" fill="#0f1525" stroke="#3a4a6a"/>
+  <line x1="694" y1="178" x2="854" y2="178" stroke="#3a4a6a"/>
+  <line x1="784" y1="150" x2="784" y2="210" stroke="#3a4a6a"/>
+  <text x="702" y="170" fill="#5a6a8a" font-size="9">fan</text>
+  <text x="792" y="170" fill="#5a6a8a" font-size="9">12 mo</text>
+  <rect x="785" y="179" width="68" height="30" fill="rgba(255,192,107,.18)"/>
+  <text x="702" y="199" fill="#eef3fb" font-size="9" font-weight="700">battery</text>
+  <text x="792" y="199" fill="#ffc06b" font-size="9.5" font-weight="700">6 mo</text>
+  <text x="789" y="248" fill="#eef3fb" font-size="10.5" text-anchor="middle">found: battery → 6 months</text>
+  <text x="789" y="266" fill="#9aa7c5" font-size="10.5" text-anchor="middle">and from p.7-8 · halve it in high heat</text>
+  <text x="789" y="300" fill="#eef3fb" font-size="12" font-weight="700" text-anchor="middle">enough to answer?</text>
+  <text x="789" y="322" fill="#5a6a8a" font-size="10" text-anchor="middle">the LLM itself decides · no scorer</text>
+  <text x="789" y="352" fill="#5a6a8a" font-size="9.5" text-anchor="middle">it may also follow a reference it just read</text>
+  <text x="789" y="368" fill="#5a6a8a" font-size="9.5" text-anchor="middle">("see Appendix G") back into step 1</text>
+
+  <!-- ================= D · output ================= -->
+  <text x="1061" y="42" fill="#7ee787" font-size="13.5" font-weight="700" text-anchor="middle">output</text>
+  <rect x="942" y="52" width="238" height="330" rx="14" fill="#131b30" stroke="#7ee787" stroke-width="2"/>
+  <text x="1061" y="80" fill="#7ee787" font-size="11" text-anchor="middle">enough → answer</text>
+  <rect x="962" y="92" width="198" height="62" rx="10" fill="rgba(126,231,135,.07)" stroke="#7ee787"/>
+  <text x="1061" y="118" fill="#eef3fb" font-size="12" text-anchor="middle">"every 6 months,</text>
+  <text x="1061" y="138" fill="#7ee787" font-size="12" text-anchor="middle">3 in high heat"</text>
+  <text x="1061" y="186" fill="#9aa7c5" font-size="11" text-anchor="middle">+ the sections it opened</text>
+  <text x="1061" y="208" fill="#c084fc" font-size="10.5" text-anchor="middle" font-family="ui-monospace,monospace">5.3 Battery · 2.1 Operating Env.</text>
+  <text x="1061" y="230" fill="#5a6a8a" font-size="10" text-anchor="middle">as citations</text>
+  <text x="1061" y="286" fill="#5a6a8a" font-size="10" text-anchor="middle">sections, not chunks</text>
+  <text x="1061" y="306" fill="#5a6a8a" font-size="10" text-anchor="middle">a reader, not a retriever</text>
+
+  <!-- arrows between zones -->
+  <line x1="640" y1="200" x2="656" y2="200" stroke="#9aa7c5" stroke-width="2.2" marker-end="url(#ar)"/>
+  <line x1="920" y1="200" x2="936" y2="200" stroke="#7ee787" stroke-width="2.2" marker-end="url(#arG)"/>
+  <!-- the loop -->
+  <path d="M789 384 L789 410 L471 410 L471 386" stroke="#ffc06b" stroke-width="1.8" stroke-dasharray="6 4" fill="none" marker-end="url(#arA)"/>
+  <text x="630" y="404" fill="#ffc06b" font-size="10.5" text-anchor="middle">not enough ↻ pick other titles, call again</text>
+  <text x="600" y="446" fill="#9aa7c5" font-size="11" text-anchor="middle">state between rounds = the <tspan fill="#eef3fb" font-weight="700">tool history already in the prompt</tspan> · what it read stays there, there is no note store</text>
+</svg>
+<ul>
+  <li><b>Reasoning, not similarity</b> · an LLM matches titles, page numbers are looked up · zero embeddings</li>
+</ul>
+
+  </div>
+  <div class="foot">15 / 32</div>
+</div>
+</body></html>

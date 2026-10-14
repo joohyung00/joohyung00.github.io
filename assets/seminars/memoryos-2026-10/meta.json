@@ -1,3 +1,31 @@
 {
- "slides": 26
+ "slides": 26,
+ "html": [
+  "00_cover.html",
+  "01_divider.html",
+  "02_task.html",
+  "03_questions.html",
+  "04_window.html",
+  "05_divider.html",
+  "06_existing.html",
+  "07_problems.html",
+  "08_divider.html",
+  "09_idea.html",
+  "10_structure.html",
+  "11_example.html",
+  "12_overview.html",
+  "13_storage.html",
+  "14_chain.html",
+  "15_stm_mtm.html",
+  "16_heat.html",
+  "17_lpm.html",
+  "18_retrieval.html",
+  "19_algorithm.html",
+  "20_divider.html",
+  "21_setup.html",
+  "22_locomo.html",
+  "23_gvd_efficiency.html",
+  "24_ablation.html",
+  "25_takeaways.html"
+ ]
 }

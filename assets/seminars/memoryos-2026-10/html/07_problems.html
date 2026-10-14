@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — Failure Modes of Existing Memory Methods</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+논문 §4.2 의 진단 그대로. ① MemGPT: OS 식 페이징은 있지만 평평한 FIFO 큐라 대화가 길어지면 토픽이 섞임. ② MemoryBank: 망각 곡선만으로는 관리가 안 됨, 전 벤치마크 최하위. ③ TiM: 생각을 저장하는 건 좋으나 단일 단계 해시 검색이라 토픽 간 의존을 못 살림. ④ A-Mem: 노트 링크 생성에 다단계 LLM 호출(응답당 13회)이라 느리고 오류가 누적.
+공통점: 각자 저장 구조·검색·갱신 중 한 축만 다룸. 네 축을 한 시스템으로 묶은 게 MemoryOS 의 출발점.
+-->
+<div class="slide">
+  <h1>Failure Modes of Existing Memory Methods</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+
+<svg viewBox="0 0 1200 540">
+  <defs><marker id="ar7" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9aa7c5"/></marker></defs>
+  <g font-size="13.5" fill="#eef3fb">
+    <!-- ① MemGPT -->
+    <rect x="20" y="10" width="570" height="210" rx="14" fill="#161f35" stroke="#2a3a58"/>
+    <circle cx="50" cy="42" r="14" fill="#ff7b72"/><text x="50" y="47" font-size="14" font-weight="800" fill="#0a0e1a" text-anchor="middle">1</text>
+    <text x="74" y="47" font-size="17" font-weight="800">MemGPT · flat FIFO queue</text>
+    <text x="40" y="82" fill="#9aa7c5">pages of every topic share one queue,</text>
+    <text x="40" y="104" fill="#9aa7c5">so topics mix as the dialogue grows</text>
+    <text x="40" y="140" font-size="12.5" fill="#5a6a8a">OS-style paging, but no notion of a topic</text>
+    <!-- pictogram: one queue, mixed colors -->
+    <rect x="356" y="78" width="214" height="52" rx="8" fill="#0f1525" stroke="#3a4a6a"/>
+    <g stroke-width="1.2">
+      <rect x="366" y="88" width="22" height="32" rx="3" fill="#10233a" stroke="#7cc4ff"/>
+      <rect x="392" y="88" width="22" height="32" rx="3" fill="#1d1630" stroke="#c084fc"/>
+      <rect x="418" y="88" width="22" height="32" rx="3" fill="#0f2a1c" stroke="#7ee787"/>
+      <rect x="444" y="88" width="22" height="32" rx="3" fill="#10233a" stroke="#7cc4ff"/>
+      <rect x="470" y="88" width="22" height="32" rx="3" fill="#2b2413" stroke="#ffc06b"/>
+      <rect x="496" y="88" width="22" height="32" rx="3" fill="#1d1630" stroke="#c084fc"/>
+      <rect x="522" y="88" width="22" height="32" rx="3" fill="#0f2a1c" stroke="#7ee787"/>
+    </g>
+    <text x="346" y="104" font-size="12" fill="#9aa7c5" text-anchor="end">in →</text>
+    <text x="463" y="152" font-size="12" fill="#ff7b72" text-anchor="middle">one queue · topics interleaved</text>
+    <text x="463" y="172" font-size="12" fill="#5a6a8a" text-anchor="middle">oldest out, regardless of topic</text>
+
+    <!-- ② MemoryBank -->
+    <rect x="610" y="10" width="570" height="210" rx="14" fill="#161f35" stroke="#2a3a58"/>
+    <circle cx="640" cy="42" r="14" fill="#ff7b72"/><text x="640" y="47" font-size="14" font-weight="800" fill="#0a0e1a" text-anchor="middle">2</text>
+    <text x="664" y="47" font-size="17" font-weight="800">MemoryBank · decay alone</text>
+    <text x="630" y="82" fill="#9aa7c5">a forgetting curve decides what fades,</text>
+    <text x="630" y="104" fill="#9aa7c5">but nothing organizes or updates the rest</text>
+    <text x="630" y="140" font-size="12.5" fill="#5a6a8a">worst scores of all compared methods</text>
+    <!-- pictogram: fading curve with pages -->
+    <line x1="950" y1="166" x2="1160" y2="166" stroke="#3a4a6a"/><line x1="950" y1="166" x2="950" y2="70" stroke="#3a4a6a"/>
+    <path d="M952,76 C990,150 1060,160 1158,164" fill="none" stroke="#ff7b72" stroke-width="2.2"/>
+    <g font-size="11.5" text-anchor="middle">
+      <rect x="958" y="80" width="26" height="20" rx="3" fill="#10233a" stroke="#7cc4ff"/>
+      <rect x="1012" y="122" width="26" height="20" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".6"/>
+      <rect x="1072" y="140" width="26" height="20" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".3"/>
+      <rect x="1126" y="144" width="26" height="20" rx="3" fill="#10233a" stroke="#7cc4ff" opacity=".12"/>
+    </g>
+    <text x="1055" y="190" font-size="12" fill="#ff7b72" text-anchor="middle">strength only decays · no structure, no update</text>
+
+    <!-- ③ TiM -->
+    <rect x="20" y="240" width="570" height="210" rx="14" fill="#161f35" stroke="#2a3a58"/>
+    <circle cx="50" cy="272" r="14" fill="#ff7b72"/><text x="50" y="277" font-size="14" font-weight="800" fill="#0a0e1a" text-anchor="middle">3</text>
+    <text x="74" y="277" font-size="17" font-weight="800">TiM · single-stage hash retrieval</text>
+    <text x="40" y="312" fill="#9aa7c5">one hash lookup returns similar thoughts,</text>
+    <text x="40" y="334" fill="#9aa7c5">but cannot preserve cross-topic dependencies</text>
+    <text x="40" y="370" font-size="12.5" fill="#5a6a8a">saving thoughts beats raw turns, retrieval is flat</text>
+    <!-- pictogram: two topic clusters, broken link -->
+    <g stroke-width="1.5">
+      <circle cx="400" cy="320" r="34" fill="#10233a" stroke="#7cc4ff"/>
+      <circle cx="530" cy="320" r="34" fill="#1d1630" stroke="#c084fc"/>
+    </g>
+    <text x="400" y="316" font-size="11.5" fill="#7cc4ff" text-anchor="middle">topic A</text>
+    <text x="400" y="332" font-size="11.5" fill="#9aa7c5" text-anchor="middle">park</text>
+    <text x="530" y="316" font-size="11.5" fill="#c084fc" text-anchor="middle">topic B</text>
+    <text x="530" y="332" font-size="11.5" fill="#9aa7c5" text-anchor="middle">diet goal</text>
+    <line x1="436" y1="320" x2="494" y2="320" stroke="#ff7b72" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="465" y="312" font-size="18" font-weight="800" fill="#ff7b72" text-anchor="middle">✗</text>
+    <text x="465" y="386" font-size="12" fill="#ff7b72" text-anchor="middle">the link between topics is lost</text>
+    <text x="465" y="406" font-size="12" fill="#5a6a8a" text-anchor="middle">one lookup, one bucket at a time</text>
+
+    <!-- ④ A-Mem -->
+    <rect x="610" y="240" width="570" height="210" rx="14" fill="#161f35" stroke="#2a3a58"/>
+    <circle cx="640" cy="272" r="14" fill="#ff7b72"/><text x="640" y="277" font-size="14" font-weight="800" fill="#0a0e1a" text-anchor="middle">4</text>
+    <text x="664" y="277" font-size="17" font-weight="800">A-Mem · heavy link generation</text>
+    <text x="630" y="312" fill="#9aa7c5">every note needs multi-step LLM calls to link,</text>
+    <text x="630" y="334" fill="#9aa7c5">which inflates latency and accumulates errors</text>
+    <text x="630" y="370" font-size="12.5" fill="#5a6a8a">13.0 LLM calls per response (Table 3)</text>
+    <!-- pictogram: chain of 13 pink LLM calls -->
+    <g fill="#ff8fd8">
+      <circle cx="960" cy="320" r="7"/><circle cx="978" cy="320" r="7"/><circle cx="996" cy="320" r="7"/><circle cx="1014" cy="320" r="7"/>
+      <circle cx="1032" cy="320" r="7"/><circle cx="1050" cy="320" r="7"/><circle cx="1068" cy="320" r="7"/><circle cx="1086" cy="320" r="7"/>
+      <circle cx="1104" cy="320" r="7"/><circle cx="1122" cy="320" r="7"/><circle cx="1140" cy="320" r="7"/><circle cx="1158" cy="320" r="7" opacity=".7"/>
+      <circle cx="1176" cy="320" r="7" opacity=".5"/>
+    </g>
+    <line x1="952" y1="320" x2="1180" y2="320" stroke="#ff8fd8" stroke-width="1" opacity=".5"/>
+    <text x="1068" y="300" font-size="12" fill="#ff8fd8" text-anchor="middle">LLM call × 13 per response</text>
+    <text x="1068" y="350" font-size="12" fill="#ff7b72" text-anchor="middle">each step can inject an error</text>
+    <text x="1068" y="370" font-size="12" fill="#5a6a8a" text-anchor="middle">rich graph, slow and fragile to build</text>
+    <text x="1068" y="406" font-size="12" fill="#5a6a8a" text-anchor="middle">(MemoryOS: 4.9 calls)</text>
+
+    <!-- bottom band -->
+    <rect x="20" y="470" width="1160" height="58" rx="12" fill="rgba(255,123,114,.07)" stroke="#ff7b72"/>
+    <text x="600" y="494" font-size="15" font-weight="700" fill="#ff7b72" text-anchor="middle">each method works on a single dimension in isolation · storage structure, retrieval mechanism, or update strategy</text>
+    <text x="600" y="516" font-size="13.5" fill="#eef3fb" text-anchor="middle">no unified system that stores, updates, retrieves and generates together</text>
+  </g>
+</svg>
+
+  </div>
+  <div class="foot">07 / 25</div>
+</div>
+</body></html>

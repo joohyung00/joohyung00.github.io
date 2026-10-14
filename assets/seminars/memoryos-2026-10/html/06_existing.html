@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>memoryos — Three Families of Memory Methods</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0f1525; --panel:#161f35; --panel2:#1b2640;
+    --ink:#eef3fb; --muted:#9aa7c5; --dim:#5a6a8a;
+    --accent:#7cc4ff; --amber:#ffc06b; --ok:#7ee787; --warn:#ff7b72;
+    --purple:#c084fc; --pink:#ff8fd8; --edge:#2a3a58; --code-bg:#050810;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:radial-gradient(ellipse at top,var(--bg2) 0%,var(--bg) 60%) fixed,var(--bg);
+    display:grid; place-items:center; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Roboto,sans-serif;
+    color:var(--ink);
+  }
+  .slide{
+    width:min(100vw,177.78vh); aspect-ratio:16/9;
+    container-type:size; position:relative; overflow:hidden;
+    background:linear-gradient(160deg,#0c1222 0%,#0a0e1a 100%);
+    border:1px solid var(--edge);
+    display:flex; flex-direction:column; padding:5.6cqw 6cqw 5cqw;
+  }
+  /* ---- header ---- */
+  h1{ margin:0; font-weight:800; letter-spacing:-.05cqw; font-size:3.6cqw; line-height:1.08; padding-bottom:1.4cqw; border-bottom:1px solid var(--edge); }
+  /* .grad stays available for the cover only; slide titles are plain formal text. */
+  h1 .grad{ background:linear-gradient(135deg,var(--accent),var(--purple),var(--pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* ---- body ---- */
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:1.4cqw; }
+  /* .lead: legacy only (pre-260916 decks). New slides carry no lead/subtitle line. */
+  .lead{ color:var(--muted); font-size:2.0cqw; margin:0; line-height:1.45; }
+  p,li{ font-size:2.0cqw; line-height:1.45; margin:.4cqw 0; }
+  /* ---- bullets: the default body form — keyword phrases, not sentences ---- */
+  ul{ margin:0; padding-left:2.4cqw; list-style:none; }
+  ul li{ position:relative; margin:.7cqw 0; }
+  ul li::before{ content:"–"; position:absolute; left:-2.2cqw; color:var(--purple); font-weight:700; }
+  ul ul{ margin:.3cqw 0; }
+  ul ul li{ font-size:1.7cqw; color:var(--muted); }
+  ul ul li::before{ content:"·"; color:var(--dim); }
+  .small{ font-size:1.55cqw; color:var(--muted); }
+  b,strong{ color:#fff; }
+  .accent{color:var(--accent);} .ok{color:var(--ok);} .warn{color:var(--warn);}
+  .amber{color:var(--amber);} .purple{color:var(--purple);} .pink{color:var(--pink);} .dim{color:var(--dim);}
+  .math{ font-family:"Cambria Math",Georgia,"Times New Roman",serif; }
+  .slot{ font-family:"Cambria Math",Georgia,serif; color:var(--pink); }
+  code{ font-family:ui-monospace,"JetBrains Mono",monospace; background:var(--panel); color:var(--amber); padding:.1cqw .6cqw; border-radius:.5cqw; border:1px solid var(--edge); font-size:.85em; }
+  /* ---- common components (use as needed; delete unused is fine) ---- */
+  .card{ background:var(--panel); border:1px solid var(--edge); border-radius:1.1cqw; padding:1.4cqw 1.7cqw; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqw; }
+  .three{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  table{ width:100%; border-collapse:collapse; font-size:1.65cqw; }
+  th,td{ border:1px solid var(--edge); padding:.7cqw 1cqw; text-align:left; vertical-align:middle; }
+  th{ background:var(--bg2); color:var(--accent); font-weight:700; }
+  .num{ text-align:right; font-family:ui-monospace,monospace; }
+  .chip{ display:inline-block; padding:.35cqw 1.1cqw; border-radius:5cqw; font-size:1.4cqw; font-weight:700; border:1px solid var(--accent); color:var(--accent); background:rgba(124,196,255,.12); }
+  .chip.ok{ border-color:var(--ok); color:var(--ok); background:rgba(126,231,135,.12); }
+  .chip.warn{ border-color:var(--warn); color:var(--warn); background:rgba(255,123,114,.12); }
+  .note{ background:rgba(124,196,255,.07); border-left:.4cqw solid var(--accent); padding:1cqw 1.5cqw; border-radius:0 .8cqw .8cqw 0; font-size:1.7cqw; }
+  .callout{ background:linear-gradient(135deg,rgba(192,132,252,.10),rgba(124,196,255,.06)); border:1px solid var(--purple); border-radius:1.1cqw; padding:1.3cqw 1.7cqw; font-size:1.9cqw; }
+  svg{ width:100%; height:auto; display:block; }
+  /* ---- footer: page number only ---- */
+  .foot{ position:absolute; right:6cqw; bottom:2.6cqw; font-size:1.3cqw; color:var(--dim); font-family:ui-monospace,monospace; }
+</style><style>
+  .navs{ display:flex; gap:.7cqw; margin:-.3cqw 0 .3cqw; }
+  .nv{ font-family:ui-monospace,monospace; font-size:1.2cqw; padding:.15cqw .9cqw; border:1px solid var(--edge); border-radius:3cqw; color:var(--dim); }
+  .nv.cur{ border-color:var(--amber); color:var(--amber); background:rgba(255,192,107,.12); font-weight:700; }
+  .mapstrip{ margin:-.5cqw 0 .5cqw; }
+  .mapstrip svg{ width:100%; display:block; }
+  .st{ opacity:.1; transition:opacity .3s; }
+  .st.shown{ opacity:1; }
+  .slide.anim{ cursor:pointer; }
+  .ctrl{ position:absolute; left:6cqw; bottom:2.2cqw; display:flex; gap:.8cqw; align-items:center; font-family:ui-monospace,monospace; font-size:1.25cqw; color:var(--dim); }
+  .ctrl button{ font:inherit; color:var(--accent); background:rgba(124,196,255,.1); border:1px solid var(--accent); border-radius:.6cqw; padding:.15cqw .8cqw; cursor:pointer; }
+</style></head>
+<body>
+<!-- notes:
+기존 메모리 방법 세 계열, 방법마다 그림 하나.
+TiM: 원문 턴을 버리고 답한 뒤 "post-think" 로 뽑은 한 줄 생각(thought)만 저장. 검색은 LSH: 비슷한 생각은 같은 bucket 에 해시되므로 질의가 떨어진 bucket 을 읽음. insert/merge/forget 로 생각을 관리.
+A-Mem: 턴마다 LLM 이 구조화된 노트(키워드·태그·문맥)를 쓰고 관련 노트와 링크. 새 노트가 옛 노트의 문맥·태그를 고칠 수 있음(memory evolution). 세션을 넘어 그래프가 자람.
+MemoryBank: 벡터 DB 에 들어가는 것 = 하루치 대화 로그, 이벤트 요약, 사용자 초상(traits). 각 항목은 임베딩+시각. 강도가 Ebbinghaus 곡선으로 줄고, 회상되면 복원. 약한 항목은 잊혀짐.
+MemGPT: 창 안의 main context 와 창 밖의 external context(recall/archival). 모델 자신이 read/write 함수 호출로 페이지를 넣고 뺌. OS 식 계층.
+논문이 같은 계열로 드는 SCM, AI-town, EmotionalRAG 는 실험 비교군이 아니라 생략. 역사 순서가 아니라 "무엇을 하느냐" 분류.
+-->
+<div class="slide">
+  <h1>Three Families of Memory Methods</h1>
+  <div class="body">
+    <!-- optional: one image/diagram (inline <svg>) -->
+    <!-- then bullets (keyword phrases):
+    <ul>
+      <li><b>keyword</b> · short phrase</li>
+      <li>another phrase</li>
+    </ul> -->
+
+<svg viewBox="0 0 1200 470">
+  <defs><marker id="ar6" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9aa7c5"/></marker></defs>
+  <rect x="0" y="0" width="589" height="36" rx="8" fill="#0f1525" stroke="#2a3a58"/><text x="294.5" y="16" font-size="13" font-weight="700" fill="#eef3fb" text-anchor="middle">knowledge-organization</text><text x="294.5" y="30" font-size="11" fill="#5a6a8a" text-anchor="middle">structure what the model has thought or noted</text>
+  <rect x="610" y="0" width="284" height="36" rx="8" fill="#0f1525" stroke="#2a3a58"/><text x="752.0" y="16" font-size="13" font-weight="700" fill="#eef3fb" text-anchor="middle">retrieval-mechanism-oriented</text><text x="752.0" y="30" font-size="11" fill="#5a6a8a" text-anchor="middle">an external library and a recall rule</text>
+  <rect x="915" y="0" width="284" height="36" rx="8" fill="#0f1525" stroke="#2a3a58"/><text x="1057.0" y="16" font-size="13" font-weight="700" fill="#eef3fb" text-anchor="middle">architecture-driven</text><text x="1057.0" y="30" font-size="11" fill="#5a6a8a" text-anchor="middle">change the control flow that reads and writes</text>
+  
+    <rect x="0" y="48" width="284" height="414" rx="14" fill="#161f35" stroke="#2a3a58"/>
+    <text x="142" y="74" font-size="15" font-weight="800" fill="#eef3fb" text-anchor="middle">TiM</text>
+    <text x="142" y="92" font-size="11.5" fill="#5a6a8a" text-anchor="middle">Think-in-Memory · Liu et al. 2023</text>
+    
+    <g fill="#0f1525" stroke="#3a4a6a"><rect x="14" y="112" width="58" height="10" rx="3"/><rect x="14" y="126" width="58" height="10" rx="3"/><rect x="14" y="140" width="58" height="10" rx="3"/></g>
+    <text x="43" y="166" font-size="10.5" fill="#5a6a8a" text-anchor="middle">raw turns</text><text x="43" y="178" font-size="10.5" fill="#5a6a8a" text-anchor="middle">not kept</text>
+    <line x1="76" y1="131" x2="90" y2="131" stroke="#9aa7c5" stroke-width="1.5" marker-end="url(#ar6)"/>
+    <rect x="94" y="119" width="60" height="24" rx="12" fill="rgba(255,143,216,.12)" stroke="#ff8fd8"/>
+    <text x="124" y="135" font-size="10.5" fill="#ff8fd8" text-anchor="middle">post-think</text>
+    <text x="124" y="166" font-size="10.5" fill="#5a6a8a" text-anchor="middle">LLM reflects</text><text x="124" y="178" font-size="10.5" fill="#5a6a8a" text-anchor="middle">after answering</text>
+    <line x1="158" y1="131" x2="172" y2="131" stroke="#9aa7c5" stroke-width="1.5" marker-end="url(#ar6)"/>
+    <rect x="176" y="111" width="96" height="40" rx="7" fill="#10233a" stroke="#7cc4ff"/>
+    <text x="224" y="126" font-size="11.5" font-weight="700" fill="#7cc4ff" text-anchor="middle">thought</text>
+    <text x="224" y="142" font-size="9.5" fill="#9aa7c5" text-anchor="middle">"user runs to get fit"</text>
+    <text x="224" y="166" font-size="10.5" fill="#5a6a8a" text-anchor="middle">this is what</text><text x="224" y="178" font-size="10.5" fill="#5a6a8a" text-anchor="middle">gets stored</text>
+    <line x1="224" y1="184" x2="224" y2="198" stroke="#9aa7c5" stroke-width="1.5" marker-end="url(#ar6)"/>
+    <g font-size="9.5" text-anchor="middle">
+      <rect x="178" y="202" width="92" height="15" rx="3" fill="#0f1525" stroke="#3a4a6a"/><text x="224" y="213" fill="#5a6a8a">bucket 1</text>
+      <rect x="178" y="221" width="92" height="15" rx="3" fill="#10233a" stroke="#7cc4ff"/><text x="224" y="232" fill="#7cc4ff">bucket 2 ← thought</text>
+      <rect x="178" y="240" width="92" height="15" rx="3" fill="#0f1525" stroke="#3a4a6a"/><text x="224" y="251" fill="#5a6a8a">bucket 3</text>
+    </g>
+    <text x="14" y="212" font-size="11" font-weight="700" fill="#eef3fb">LSH recall</text>
+    <text x="14" y="228" font-size="10.5" fill="#9aa7c5">similar thoughts hash to</text>
+    <text x="14" y="242" font-size="10.5" fill="#9aa7c5">one bucket; a query reads</text>
+    <text x="14" y="256" font-size="10.5" fill="#9aa7c5">the bucket it lands in</text>
+    <text x="14" y="284" font-size="10.5" fill="#5a6a8a">memory ops on thoughts · insert · merge · forget</text>
+    <text x="14" y="326" font-size="12.5" fill="#9aa7c5">stores reasoning outcomes, not raw turns</text><text x="14" y="346" font-size="12.5" fill="#9aa7c5">recall by LSH over stored thoughts</text><text x="14" y="366" font-size="12.5" fill="#9aa7c5">memory ops · insert, forget, merge</text>
+    <rect x="14" y="414" width="256" height="32" rx="8" fill="#0f1525" stroke="#2a3a58"/>
+    <text x="142" y="435" font-size="12" fill="#9aa7c5" text-anchor="middle">focus · <tspan fill="#eef3fb" font-weight="700">storage structure</tspan></text>
+  
+    <rect x="305" y="48" width="284" height="414" rx="14" fill="#161f35" stroke="#2a3a58"/>
+    <text x="447" y="74" font-size="15" font-weight="800" fill="#eef3fb" text-anchor="middle">A-Mem</text>
+    <text x="447" y="92" font-size="11.5" fill="#5a6a8a" text-anchor="middle">Agentic Memory · Xu et al. 2025</text>
+    
+    <text x="385" y="116" font-size="10.5" fill="#5a6a8a" text-anchor="middle">earlier sessions</text>
+    <text x="533" y="116" font-size="10.5" fill="#5a6a8a" text-anchor="middle">new session</text>
+    <line x1="477" y1="108" x2="477" y2="240" stroke="#3a4a6a" stroke-dasharray="4 3"/>
+    <line x1="389" y1="144" x2="397" y2="144" stroke="#7cc4ff" stroke-width="1.4"/>
+    <line x1="353" y1="158" x2="379" y2="184" stroke="#7cc4ff" stroke-width="1.4"/>
+    <line x1="433" y1="158" x2="405" y2="184" stroke="#7cc4ff" stroke-width="1.4"/>
+    <line x1="497" y1="172" x2="469" y2="146" stroke="#ffc06b" stroke-width="1.6" stroke-dasharray="5 3"/>
+    <line x1="497" y1="178" x2="427" y2="198" stroke="#ffc06b" stroke-width="1.6" stroke-dasharray="5 3"/>
+    <rect x="317" y="130" width="72" height="28" rx="6" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.3"/><text x="353" y="142" font-size="10" fill="#7cc4ff" text-anchor="middle">note</text><text x="353" y="153" font-size="8.5" fill="#5a6a8a" text-anchor="middle">kw · tags · ctx</text><rect x="397" y="130" width="72" height="28" rx="6" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.3"/><text x="433" y="142" font-size="10" fill="#7cc4ff" text-anchor="middle">note</text><text x="433" y="153" font-size="8.5" fill="#5a6a8a" text-anchor="middle">kw · tags · ctx</text><rect x="355" y="184" width="72" height="28" rx="6" fill="#0f1525" stroke="#7cc4ff" stroke-width="1.3"/><text x="391" y="196" font-size="10" fill="#7cc4ff" text-anchor="middle">note</text><text x="391" y="207" font-size="8.5" fill="#5a6a8a" text-anchor="middle">kw · tags · ctx</text>
+    <text x="469" y="126" font-size="9.5" fill="#ffc06b" text-anchor="end">updated ✎</text>
+    <text x="481" y="206" font-size="9.5" fill="#ffc06b">links</text>
+    <rect x="497" y="160" width="78" height="30" rx="6" fill="#2b2413" stroke="#ffc06b" stroke-width="1.5"/>
+    <text x="536" y="173" font-size="10" font-weight="700" fill="#ffc06b" text-anchor="middle">new note</text>
+    <text x="536" y="184" font-size="8.5" fill="#9aa7c5" text-anchor="middle">kw · tags · ctx</text>
+    <rect x="497" y="208" width="78" height="20" rx="10" fill="rgba(255,143,216,.12)" stroke="#ff8fd8"/>
+    <text x="536" y="222" font-size="9.5" fill="#ff8fd8" text-anchor="middle">LLM writes it</text>
+    <text x="319" y="256" font-size="11" font-weight="700" fill="#eef3fb">memory evolution</text>
+    <text x="319" y="272" font-size="10.5" fill="#9aa7c5">a new note is linked to related notes and</text>
+    <text x="319" y="286" font-size="10.5" fill="#9aa7c5">may rewrite their context and tags</text>
+    <text x="319" y="326" font-size="12.5" fill="#9aa7c5">LLM writes a structured note per turn</text><text x="319" y="346" font-size="12.5" fill="#9aa7c5">links it into a knowledge network</text><text x="319" y="366" font-size="12.5" fill="#9aa7c5">old notes evolve when new ones arrive</text>
+    <rect x="319" y="414" width="256" height="32" rx="8" fill="#0f1525" stroke="#2a3a58"/>
+    <text x="447" y="435" font-size="12" fill="#9aa7c5" text-anchor="middle">focus · <tspan fill="#eef3fb" font-weight="700">storage structure</tspan></text>
+  
+    <rect x="610" y="48" width="284" height="414" rx="14" fill="#161f35" stroke="#2a3a58"/>
+    <text x="752" y="74" font-size="15" font-weight="800" fill="#eef3fb" text-anchor="middle">MemoryBank</text>
+    <text x="752" y="92" font-size="11.5" fill="#5a6a8a" text-anchor="middle">Zhong et al. 2024</text>
+    
+    <path d="M624,116 L624,222 A54,10 0 0 0 732,222 L732,116" fill="#10233a" stroke="#7cc4ff"/>
+    <ellipse cx="678" cy="116" rx="54" ry="10" fill="#10233a" stroke="#7cc4ff"/>
+    <text x="678" y="138" font-size="10.5" font-weight="700" fill="#7cc4ff" text-anchor="middle">vector DB · entries</text>
+    <rect x="630" y="146" width="96" height="18" rx="4" fill="#0f1525" stroke="#3a4a6a"/><text x="678" y="159" font-size="9.5" fill="#eef3fb" text-anchor="middle">daily conversation log</text><rect x="630" y="170" width="96" height="18" rx="4" fill="#0f1525" stroke="#3a4a6a"/><text x="678" y="183" font-size="9.5" fill="#eef3fb" text-anchor="middle">event summaries</text><rect x="630" y="194" width="96" height="18" rx="4" fill="#0f1525" stroke="#3a4a6a"/><text x="678" y="207" font-size="9.5" fill="#eef3fb" text-anchor="middle">user portrait · traits</text>
+    <text x="678" y="248" font-size="9.5" fill="#5a6a8a" text-anchor="middle">each entry · embedding + time</text>
+    <line x1="760" y1="214" x2="880" y2="214" stroke="#3a4a6a"/><line x1="760" y1="214" x2="760" y2="112" stroke="#3a4a6a"/>
+    <path d="M762,120 C782,172 806,198 822,206" fill="none" stroke="#7cc4ff" stroke-width="2"/>
+    <line x1="822" y1="206" x2="822" y2="142" stroke="#ffc06b" stroke-width="1.6" stroke-dasharray="3 2"/>
+    <path d="M822,142 C842,182 864,202 878,208" fill="none" stroke="#7cc4ff" stroke-width="2"/>
+    <circle cx="822" cy="142" r="3.5" fill="#ffc06b"/>
+    <text x="820" y="110" font-size="10" fill="#9aa7c5" text-anchor="middle">memory strength</text>
+    <text x="850" y="132" font-size="9.5" fill="#ffc06b" text-anchor="middle">recalled → restored</text>
+    <text x="878" y="226" font-size="9.5" fill="#5a6a8a" text-anchor="end">time</text>
+    <text x="820" y="248" font-size="9.5" fill="#5a6a8a" text-anchor="middle">Ebbinghaus forgetting curve</text>
+    <text x="624" y="272" font-size="10.5" fill="#9aa7c5">recall · query embedding vs entries; weak</text>
+    <text x="624" y="286" font-size="10.5" fill="#9aa7c5">entries fade out, recalled ones are refreshed</text>
+    <text x="624" y="326" font-size="12.5" fill="#9aa7c5">logs conversations, events, user traits</text><text x="624" y="346" font-size="12.5" fill="#9aa7c5">strength decays on an Ebbinghaus curve</text><text x="624" y="366" font-size="12.5" fill="#9aa7c5">refreshed on recall · portrait grows</text>
+    <rect x="624" y="414" width="256" height="32" rx="8" fill="#0f1525" stroke="#2a3a58"/>
+    <text x="752" y="435" font-size="12" fill="#9aa7c5" text-anchor="middle">focus · <tspan fill="#eef3fb" font-weight="700">retrieval mechanism</tspan></text>
+  
+    <rect x="915" y="48" width="284" height="414" rx="14" fill="#161f35" stroke="#2a3a58"/>
+    <text x="1057" y="74" font-size="15" font-weight="800" fill="#eef3fb" text-anchor="middle">MemGPT</text>
+    <text x="1057" y="92" font-size="11.5" fill="#5a6a8a" text-anchor="middle">Packer et al. 2023</text>
+    
+    <rect x="929" y="110" width="256" height="84" rx="10" fill="#0f1525" stroke="#2a3a58"/>
+    <text x="941" y="126" font-size="10.5" fill="#9aa7c5">LLM</text>
+    <rect x="943" y="132" width="228" height="52" rx="7" fill="#10233a" stroke="#7cc4ff"/>
+    <text x="1057" y="152" font-size="11" font-weight="700" fill="#7cc4ff" text-anchor="middle">main context · the fixed window</text>
+    <text x="1057" y="170" font-size="9.5" fill="#9aa7c5" text-anchor="middle">system prompt · recent messages · working set</text>
+    <line x1="1007" y1="196" x2="1007" y2="226" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#ar6)"/>
+    <line x1="1107" y1="226" x2="1107" y2="196" stroke="#9aa7c5" stroke-width="1.6" marker-end="url(#ar6)"/>
+    <text x="999" y="215" font-size="9.5" fill="#9aa7c5" text-anchor="end">page out</text>
+    <text x="1115" y="215" font-size="9.5" fill="#9aa7c5">page in</text>
+    <rect x="1019" y="201" width="76" height="20" rx="10" fill="rgba(255,143,216,.12)" stroke="#ff8fd8"/>
+    <text x="1057" y="215" font-size="9.5" fill="#ff8fd8" text-anchor="middle">LLM calls</text>
+    <rect x="929" y="230" width="256" height="54" rx="10" fill="#10233a" stroke="#7cc4ff" stroke-dasharray="5 3"/>
+    <text x="1057" y="250" font-size="11" font-weight="700" fill="#7cc4ff" text-anchor="middle">external context · outside the window</text>
+    <text x="1057" y="268" font-size="9.5" fill="#9aa7c5" text-anchor="middle">recall storage (past messages) · archival storage</text>
+    <text x="1057" y="300" font-size="10.5" fill="#5a6a8a" text-anchor="middle">the model itself decides when to read and write</text>
+    <text x="929" y="326" font-size="12.5" fill="#9aa7c5">two contexts in an OS-like hierarchy</text><text x="929" y="346" font-size="12.5" fill="#9aa7c5">explicit read / write calls page data</text><text x="929" y="366" font-size="12.5" fill="#9aa7c5">past the fixed window</text>
+    <rect x="929" y="414" width="256" height="32" rx="8" fill="#0f1525" stroke="#2a3a58"/>
+    <text x="1057" y="435" font-size="12" fill="#9aa7c5" text-anchor="middle">focus · <tspan fill="#eef3fb" font-weight="700">control flow</tspan></text>
+</svg>
+<ul>
+  <li><b>four baselines</b> in the experiments · each family focuses on one dimension of memory management</li>
+</ul>
+
+  </div>
+  <div class="foot">06 / 25</div>
+</div>
+</body></html>
