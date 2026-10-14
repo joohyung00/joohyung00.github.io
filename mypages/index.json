@@ -1,9 +1,20 @@
 {
-  "generated": "2026-10-14T11:56:48+00:00",
+  "generated": "2026-10-14T11:57:00+00:00",
   "site_url": "https://joohyung00.github.io",
   "folder": "mypages",
-  "count": 4,
+  "count": 5,
   "pages": [
+    {
+      "slug": "recg-worked-example",
+      "file": "recg-worked-example.html",
+      "title": "ReCG — Worked Example",
+      "url": "/mypages/recg-worked-example.html",
+      "created": "2026-10-14T11:57:00+00:00",
+      "updated": "2026-10-14T11:57:00+00:00",
+      "excerpt": "ReCG — Worked Example ReCG · PVLDB 2024 · Worked Example Discovering a JSON schema from the leaves up ReCG infers a set of JSON schemas from documents alone. It resolves instance trees bottom-up, clus",
+      "text": "ReCG — Worked Example ReCG · PVLDB 2024 · Worked Example Discovering a JSON schema from the leaves up ReCG infers a set of JSON schemas from documents alone. It resolves instance trees bottom-up, clusters the partially derived objects at each level, generalizes the clusters into a spectrum of candidate schema sets, and lets the minimum description length principle pick the winner inside a beam search. Step through one small collection below. { } Given three JSON documents and no schema, which set of JSON schemas should describe the collection — specific enough to reject junk, general enough to accept the documents we have not seen yet? OUTPUT Z = {S₁, S₂} ◀ Prev 1 / 10 Next ▶ Problem JSON schema discovery: from documents alone, derive a schema set that is neither one-schema-per-document nor accept-anything. Idea Existing algorithms derive schemas top-down and must classify a node before its children are known. ReCG goes bottom-up: children first, so each decision is informed. Stage 1 The lowest level is resolved first: every primitive value becomes a primitive schema node. Arrays would be handled here too (generalized to a single ∗ edge, then clustered once). Stage 2 · cluster At level 2 the three info objects are CD-instances. They are clustered by a Jaccard-style distance over (key, child-schema) pairs: {c₁, c₃} together, c₂ apart. Stage 2 · generalize From the clusters ReCG does not pick one schema set — it enumerates a spectrum, from the initial clusters to repeatedly merged (more general) ones. Each is a sibling state of stage 2. MDL States compete on minimum description length : bits to write the schemas plus bits to write the data given the schemas. The balanced state wins. Stage 3 At the roots the same cluster → generalize → cost loop runs once more. Here the two-schema set beats the merged one: merging would admit key combinations nobody has seen. Search The whole run is a beam search over states: each stage clusters, generalizes into siblings, scores them with MDL and keeps the best three. Output The result is an ordinary JSON Schema set: two document types sharing one info definition with an optional key. ✦ Why it works Informed decisions (bottom-up), a spectrum of candidates (cluster-and-generalize) and a principled judge (MDL) — each fixes one failure of top-down discovery. Navigate with ← → , the buttons, the dots, or swipe on touch · 10 frames",
+      "hash": "8784cf6d6aab01767e108cb522a70783a73987ef"
+    },
     {
       "slug": "lilac-worked-example",
       "file": "lilac-worked-example.html",
